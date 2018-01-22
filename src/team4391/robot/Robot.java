@@ -12,7 +12,10 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import team4391.util.CrashTracker;
+import team4391.loops.Looper;
 import team4391.robot.commands.ExampleCommand;
+import team4391.robot.subsystems.Drive;
 import team4391.robot.subsystems.ExampleSubsystem;
 
 /**
@@ -26,10 +29,19 @@ public class Robot extends TimedRobot {
 	public static final ExampleSubsystem kExampleSubsystem
 			= new ExampleSubsystem();
 	public static OI m_oi;
+	
+	public static Drive driveSubsystem;
+	
+	public int _counter = 0;
 
 	Command m_autonomousCommand;
 	SendableChooser<Command> m_chooser = new SendableChooser<>();
 
+    // Enabled looper is called at 100Hz whenever the robot is enabled
+    Looper mEnabledLooper = new Looper();
+    // Disabled looper is called at 100Hz whenever the robot is disabled
+    Looper mDisabledLooper = new Looper();	
+	
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
@@ -37,11 +49,63 @@ public class Robot extends TimedRobot {
 	@Override
 	public void robotInit() {
 		m_oi = new OI();
+		
+		setupAutonomousChooser();
+		
+		// Initialize subsystems
+		driveSubsystem = new Drive();
+		
+		try{ 
+        	CrashTracker.logRobotInit();           
+        	 
+            // Reset all sensors
+            zeroAllSensors();
+            
+        	// Enable Loops
+        	mEnabledLooper.register(driveSubsystem.getLoop());
+//        	mEnabledLooper.register(intake.getLoop());
+//        	mEnabledLooper.register(shooter.getLoop());
+//        	mEnabledLooper.register(led.getLoop());        
+        	
+        }catch (Throwable t) {
+            CrashTracker.logThrowableCrash(t);
+            throw t;
+        }        
+        
+        SmartDashboard.putData(Scheduler.getInstance());		
+	}
+
+	private void setupAutonomousChooser() {
 		m_chooser.addDefault("Default Auto", new ExampleCommand());
-		// chooser.addObject("My Auto", new MyAutoCommand());
+		// chooser.addObject("My Auto", new MyAutoCommand());		
 		SmartDashboard.putData("Auto mode", m_chooser);
 	}
 
+	   public void outputAllToSmartDashboard() {	    	
+	    	
+	    	driveSubsystem.updateDashboard();
+//	    	shooter.updateDashboard();
+//	    	lifter.updateDashboard();
+//	    	rumble.updateDashboard();
+//	    	intake.updateDashboard();
+//	    	led.updateDashboard();
+	    	
+//	    	SmartDashboard.putBoolean("cameraConnected", mVisionServer.isConnected());
+	    	
+	    	SmartDashboard.putNumber("Counter", _counter++);     	    	
+	        
+//	        SmartDashboard.putBoolean("CompressorEnabled", RobotMap.compressor.enabled());
+	            
+	    }
+
+	    public void stopAll() {
+	        driveSubsystem.stopMotors();
+	    }
+	    
+	    public void zeroAllSensors() {
+	    	driveSubsystem.resetSensors();
+	    }	
+	
 	/**
 	 * This function is called once each time the robot enters Disabled mode.
 	 * You can use it to reset any subsystem information you want to clear when
@@ -49,12 +113,43 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void disabledInit() {
-
+		try{			
+			driveSubsystem.setOpenLoop();
+			
+		    disableLoops();
+		    zeroAllSensors();		    
+		    stopAll();		    		   
+		    
+		}catch(Throwable t){
+			CrashTracker.logThrowableCrash(t);
+            throw t;
+		}
+	}
+	
+	private void disableLoops() {
+		mEnabledLooper.stop();
+		mDisabledLooper.start();
+	}
+    
+	private void enableLoops() {
+		mDisabledLooper.stop();
+		mEnabledLooper.start();
 	}
 
 	@Override
 	public void disabledPeriodic() {
 		Scheduler.getInstance().run();
+		
+		try {        	                	
+            stopAll();                        
+            System.gc();            
+        } 
+		catch (Throwable t) {
+            CrashTracker.logThrowableCrash(t);
+            throw t;
+        }
+		
+		outputAllToSmartDashboard();
 	}
 
 	/**
@@ -82,6 +177,10 @@ public class Robot extends TimedRobot {
 		// schedule the autonomous command (example)
 		if (m_autonomousCommand != null) {
 			m_autonomousCommand.start();
+			
+			// Reset all sensors
+            zeroAllSensors();        
+	        enableLoops();
 		}
 	}
 
@@ -91,6 +190,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void autonomousPeriodic() {
 		Scheduler.getInstance().run();
+		outputAllToSmartDashboard();
 	}
 
 	@Override
@@ -102,6 +202,18 @@ public class Robot extends TimedRobot {
 		if (m_autonomousCommand != null) {
 			m_autonomousCommand.cancel();
 		}
+		
+		try {
+	        
+			driveSubsystem.setOpenLoop();
+        	
+	        // Configure loopers
+	        enableLoops();
+        
+        } catch (Throwable t) {
+            CrashTracker.logThrowableCrash(t);
+            throw t;
+        }
 	}
 
 	/**
@@ -110,6 +222,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
+		outputAllToSmartDashboard();
 	}
 
 	/**
