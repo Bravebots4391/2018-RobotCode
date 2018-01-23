@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import team4391.util.CrashTracker;
 import team4391.loops.Looper;
 import team4391.robot.commands.ExampleCommand;
+import team4391.robot.subsystems.Arm;
 import team4391.robot.subsystems.Drive;
 import team4391.robot.subsystems.ExampleSubsystem;
 
@@ -31,6 +32,7 @@ public class Robot extends TimedRobot {
 	public static OI m_oi;
 	
 	public static Drive driveSubsystem;
+	public static Arm armSubsystem;
 	
 	public int _counter = 0;
 
@@ -63,7 +65,7 @@ public class Robot extends TimedRobot {
             
         	// Enable Loops
         	mEnabledLooper.register(driveSubsystem.getLoop());
-//        	mEnabledLooper.register(intake.getLoop());
+        	mEnabledLooper.register(armSubsystem.getLoop());
 //        	mEnabledLooper.register(shooter.getLoop());
 //        	mEnabledLooper.register(led.getLoop());        
         	
@@ -84,7 +86,7 @@ public class Robot extends TimedRobot {
 	   public void outputAllToSmartDashboard() {	    	
 	    	
 	    	driveSubsystem.updateDashboard();
-//	    	shooter.updateDashboard();
+	    	armSubsystem.updateDashboard();
 //	    	lifter.updateDashboard();
 //	    	rumble.updateDashboard();
 //	    	intake.updateDashboard();

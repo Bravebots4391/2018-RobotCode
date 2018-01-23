@@ -52,4 +52,12 @@ public class Constants {
 	public static final int kFrontRightTurnMotorId = 3;
 	public static final int kBackLeftTurnMotorId = 2;
 	public static final int kBackRightTurnMotorId = 6;
+	
+	public static final int kSuckerInnerOuterId = 5;
+	
+	//
+	// ARM Constants
+	//
+	public static final double kArmInputPctSpeed = 1.0;
+	public static final double kArmOutputPctSpeed = -1.0;
 }
