@@ -3,9 +3,12 @@ package team4391.swerveDrive;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 
+import edu.wpi.first.wpilibj.SendableBase;
+import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class Gyro 
+
+public class Gyro extends SendableBase
 {
 	PigeonIMU _pidgey;
 	
@@ -181,5 +184,16 @@ public class Gyro
 		if(forwardThrot < 0.10)
 			return 0.10;
 		return forwardThrot;
+	}
+	
+	void updateDashboard() {
+		SmartDashboard.putData(this);
+	}
+
+	@Override
+	public void initSendable(SendableBuilder builder) {
+		// TODO Auto-generated method stub
+		builder.setSmartDashboardType("Gyro");
+	    builder.addDoubleProperty("Value", this::gyroGetFusedHeading, null);
 	}
 }

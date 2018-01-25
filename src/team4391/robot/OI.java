@@ -8,6 +8,7 @@
 package team4391.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.XboxController;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -42,6 +43,8 @@ public class OI {
 	// until it is finished as determined by it's isFinished method.
 	// button.whenReleased(new ExampleCommand());
 	
+	public static XboxController xb = new XboxController(0);
+			
 	public static Joystick _xBoxCntrl = new Joystick(0);
 	
 	//double rightStickX = _xBoxCntrl.getRawAxis(4);
@@ -59,4 +62,8 @@ public class OI {
 	
 	//double inny = _xBoxCntrl.getRawAxis(3);
 	//double outty = _xBoxCntrl.getRawAxis(2);
+	
+	public void init() {
+		
+	}
 }

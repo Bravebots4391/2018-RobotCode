@@ -224,9 +224,8 @@ public class SwerveDrive {
 		SmartDashboard.putNumber("Distance(inches)", getDistanceInches(_motorFR));		
 		
 		SmartDashboard.putNumber("Speed",getVelocity(_motorFR));
-		
-		
-		SmartDashboard.putNumber("GyroHeading", _gyro.gyroGetFusedHeading());
+				
+		_gyro.updateDashboard();
 	}	
 	
 	private double ConvertJoystickXYtoAngle(double x, double y)
