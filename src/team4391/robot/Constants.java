@@ -29,6 +29,8 @@ public class Constants {
 	
 	
 	public static double kLooperDt = 0.01;
+
+	public static double kRotateMaxPctSpeed = 0.5;
 	
 	
 	// Wheel position calibration
@@ -43,10 +45,10 @@ public class Constants {
 	public static final double kWheelDiameterInches = 4.0;
 	
 	// Talon CAN Address Number
-	public static final int kFrontLeftDriveMotorId = 1;
-	public static final int kFrontRightDriveMotorId = 7;
-	public static final int kBackLeftDriveMotorId = 9;
-	public static final int kBackRightDriveMotorId = 11;
+	public static final int kFrontLeftDriveMotorId = 9;
+	public static final int kFrontRightDriveMotorId = 1;
+	public static final int kBackLeftDriveMotorId = 11;
+	public static final int kBackRightDriveMotorId = 7;
 	
 	public static final int kFrontLeftTurnMotorId = 4;
 	public static final int kFrontRightTurnMotorId = 3;

@@ -71,7 +71,7 @@ public class Drive extends Subsystem {
     }
     
     public void stopMotors(){
-    	_swerveDrive.setDrive(0.0, 0.0,0.0);
+    	_swerveDrive.setDrive(0.0, 0.0,0.0, false);
     	//myHeadingPid.disable();
     }
     
@@ -85,7 +85,15 @@ public class Drive extends Subsystem {
 	}
 	
 	public void teleopDrive(Joystick cntrl) {
-		_swerveDrive.setDrive(cntrl.getX(), cntrl.getY(), cntrl.getRawAxis(4));
+		_swerveDrive.setDrive(Db(cntrl.getX()), Db(-cntrl.getY()), Db(cntrl.getRawAxis(4)), cntrl.getRawButton(6));
+	}
+	
+	double Db(double axisVal) {
+		if (axisVal < -0.10)
+			return axisVal;
+		if (axisVal > +0.10)
+			return axisVal;
+		return 0;
 	}
 	
 	public synchronized void setOpenLoop(){
@@ -94,7 +102,7 @@ public class Drive extends Subsystem {
             //myHeadingPid.reset();
             //myHeadingPid.disable();
             
-            _swerveDrive.setDrive(0, 0, 0);
+            _swerveDrive.setDrive(0, 0, 0, false);
         }    	    	
     }
 }

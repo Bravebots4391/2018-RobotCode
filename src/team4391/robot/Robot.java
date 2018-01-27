@@ -56,6 +56,7 @@ public class Robot extends TimedRobot {
 		
 		// Initialize subsystems
 		driveSubsystem = new Drive();
+		armSubsystem = new Arm();
 		
 		try{ 
         	CrashTracker.logRobotInit();           

@@ -3,12 +3,13 @@ package team4391.swerveDrive;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 
+import edu.wpi.first.wpilibj.GyroBase;
 import edu.wpi.first.wpilibj.SendableBase;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
-public class Gyro extends SendableBase
+public class Gyro extends GyroBase
 {
 	PigeonIMU _pidgey;
 	
@@ -49,11 +50,16 @@ public class Gyro extends SendableBase
 	
 	public double gyroGetFusedHeading()
 	{
-		PigeonIMU.FusionStatus fusionStatus = new PigeonIMU.FusionStatus();
-		_pidgey.getFusedHeading(fusionStatus);
-		double currentAngle = -fusionStatus.heading;
+		if(_isInitOk){
+			PigeonIMU.FusionStatus fusionStatus = new PigeonIMU.FusionStatus();
+			_pidgey.getFusedHeading(fusionStatus);
+			double currentAngle = -fusionStatus.heading;
 		
-		return currentAngle;
+			return currentAngle;
+		}
+		else{
+			return 0.0;
+		}
 	}
 	
 	public GyroOutput getDriveCorrection(double throttle, double joystickY) 
@@ -68,7 +74,7 @@ public class Gyro extends SendableBase
 		PigeonIMU.FusionStatus fusionStatus = new PigeonIMU.FusionStatus();
 		double [] xyz_dps = new double [3];
 		
-		/* grab some input data from Pigeon and gamepad*/
+		/* grab some input data from Pigeon and gamepad*/		
 		_pidgey.getGeneralStatus(genStatus);
 		_pidgey.getRawGyro(xyz_dps);
 		_pidgey.getFusedHeading(fusionStatus);
@@ -113,39 +119,9 @@ public class Gyro extends SendableBase
 		left = Cap(left, 1.0);
 		right = Cap(right, 1.0);
 	
-		return new GyroOutput(left, right);
-				
-		
-		/* my right side motors need to drive negative to move robot forward */
-//		_leftFront.set(ControlMode.PercentOutput, left);
-//		_leftRear.set(ControlMode.PercentOutput, left);
-//		_rightFront.set(ControlMode.PercentOutput, -1. * right);
-//		_rightRear.set(ControlMode.PercentOutput, -1. * right);
-	
-		/* some printing for easy debugging */
-	//	if (++_printLoops > 50){
-	//		_printLoops = 0;
-	//		
-	//		System.out.println("------------------------------------------");
-	//		System.out.println("error: " + (_targetAngle - currentAngle) );
-	//		System.out.println("angle: "+ currentAngle);
-	//		System.out.println("rate: "+ currentAngularRate);
-	//		System.out.println("noMotionBiasCount: "+ genStatus.noMotionBiasCount);
-	//		System.out.println("tempCompensationCount: "+ genStatus.tempCompensationCount);
-	//		System.out.println( angleIsGood ? "Angle is good" : "Angle is NOT GOOD");
-	//		System.out.println("------------------------------------------");
-	//	}
-	
-		/* press btn 6, top right shoulder, to apply gains from webdash.  This can
-		 * be replaced with your favorite means of changing gains. */
-	//	if (_driveStick.getRawButton(6)) {
-	//		UpdatGains();
-	//	}     
-}
-	
-	
-	
-	
+		return new GyroOutput(left, right);					  
+	}
+
 	
 	/** @return 10% deadband */
 	double Db(double axisVal) {
@@ -187,13 +163,30 @@ public class Gyro extends SendableBase
 	}
 	
 	void updateDashboard() {
-		SmartDashboard.putData(this);
+		//SmartDashboard.putData(this);
+	}
+
+
+	@Override
+	public void calibrate() {
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
-	public void initSendable(SendableBuilder builder) {
+	public void reset() {
 		// TODO Auto-generated method stub
-		builder.setSmartDashboardType("Gyro");
-	    builder.addDoubleProperty("Value", this::gyroGetFusedHeading, null);
+		
+	}
+
+	@Override
+	public double getAngle() {
+		return gyroGetFusedHeading();
+	}
+
+	@Override
+	public double getRate() {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }

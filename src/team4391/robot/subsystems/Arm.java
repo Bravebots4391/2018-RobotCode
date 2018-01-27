@@ -103,7 +103,7 @@ public class Arm extends Subsystem {
 	 }
 	 
 	 public void updateDashboard() {
-		 SmartDashboard.putString("ArmState", myArmState.name());
+		 //SmartDashboard.putString("ArmState", myArmState.toString());
 	 }
 }
 

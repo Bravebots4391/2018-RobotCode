@@ -33,22 +33,26 @@ public class SwerveDrive {
 		init();
 	}
 	
-	public void setDrive(double leftStickX, double leftStickY, double rightStickX) {
+	public void setDrive(double leftStickX, double leftStickY, double rightStickX, boolean isPivot) {
     	
 		if(DB(leftStickX) || DB(leftStickY)) {
 			
-			if(DB(rightStickX)) {
+			if(DB(rightStickX) && !isPivot) {
 				crabDrive(leftStickX, leftStickY, rightStickX);
 			}
+			else if(DB(rightStickX) && isPivot){
+				pivotTurn(rightStickX);
+			}				
 			else {
 				crabDrive(leftStickX, leftStickY, 0);
 			}			
-		}
+		}		
 		else if(!DB(leftStickX) && !DB(leftStickY) && DB(rightStickX)) {
 			rotateInPlace(rightStickX);
 		}		
 		else {
 			_gyro.gyroReset();
+			setAllSpeeds(0, 0);
 		}
 	}
 	
@@ -83,14 +87,17 @@ public class SwerveDrive {
 	
 	private void crabDrive(double leftStickX, double leftStickY, double rotate)
 	{
-		double angle = ConvertJoystickXYtoAngle(leftStickX, leftStickY);    	    	
-    	SmartDashboard.putNumber("JoystickAngle",angle);    	    
-    	
-    	setAllWheelPositions(angle);
-    	
-    	// calculate speed
-    	double speed = Math.pow(Math.sqrt(leftStickX*leftStickX + leftStickY*leftStickY),2);        	        	
-    	setAllSpeeds(speed, leftStickY);
+		if (rotate == 0) {
+			double angle = ConvertJoystickXYtoAngle(leftStickX, leftStickY);
+			SmartDashboard.putNumber("JoystickAngle", angle);
+			setAllWheelPositions(angle);
+			// calculate speed
+			double speed = Math.pow(Math.sqrt(leftStickX * leftStickX + leftStickY * leftStickY), 2);
+			setAllSpeeds(speed, leftStickY);
+		}
+		else if(Math.abs(rotate)>0 && leftStickY > 0){
+			carTurn(leftStickY, rotate);
+		}
 	}
 	
 	private void setAllSpeeds(double speed, double joystickY)
@@ -105,6 +112,8 @@ public class SwerveDrive {
 	
 	private void rotateBot(double speed) {
 		
+		
+		
 		//set all the wheels on the tangent
 		setWheelAngle(45.0, _turnFl);
 		setWheelAngle(315.0, _turnFR);
@@ -112,7 +121,7 @@ public class SwerveDrive {
 		setWheelAngle(45.0, _turnBR);
 		
 		// command forward or backward on the wheels	
-		double rotateSpeed = speed;
+		double rotateSpeed = speed * Constants.kRotateMaxPctSpeed;
 		_motorFR.set(ControlMode.PercentOutput, -rotateSpeed);
 		_motorRR.set(ControlMode.PercentOutput, -rotateSpeed);
 		_motorFL.set(ControlMode.PercentOutput, rotateSpeed);
@@ -150,6 +159,21 @@ public class SwerveDrive {
 			_motorRL.set(ControlMode.PercentOutput, rotateSpeed);
 			_motorRR.set(ControlMode.PercentOutput, rotateShortWheel);
 		}					
+	}
+	
+	public void carTurn(double forwardSpeed, double rotate)
+	{
+		double frontWheelAngle = rotate * 45.0;
+		
+		setWheelAngle(frontWheelAngle, _turnFl);
+		setWheelAngle(frontWheelAngle, _turnFR);
+		setWheelAngle(0.0, _turnBl);
+		setWheelAngle(0.0, _turnBR);
+		
+		_motorFR.set(ControlMode.PercentOutput, forwardSpeed);
+		_motorRR.set(ControlMode.PercentOutput, forwardSpeed);
+		_motorFL.set(ControlMode.PercentOutput, forwardSpeed);
+		_motorRL.set(ControlMode.PercentOutput, forwardSpeed);
 	}
 
 	private void setAllWheelPositions(double targetAngle)
@@ -225,6 +249,8 @@ public class SwerveDrive {
 		
 		SmartDashboard.putNumber("Speed",getVelocity(_motorFR));
 				
+		SmartDashboard.putData("pigeon", _gyro);
+		
 		_gyro.updateDashboard();
 	}	
 	
