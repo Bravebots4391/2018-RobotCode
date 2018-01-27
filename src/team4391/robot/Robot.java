@@ -7,6 +7,7 @@
 
 package team4391.robot;
 
+import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -33,6 +34,7 @@ public class Robot extends TimedRobot {
 	
 	public static Drive driveSubsystem;
 	public static Arm armSubsystem;
+	public static PowerDistributionPanel _pdpModule;
 	
 	public int _counter = 0;
 
@@ -57,6 +59,10 @@ public class Robot extends TimedRobot {
 		// Initialize subsystems
 		driveSubsystem = new Drive();
 		armSubsystem = new Arm();
+		
+		_pdpModule = new PowerDistributionPanel(10);
+		
+		m_oi.init();
 		
 		try{ 
         	CrashTracker.logRobotInit();           
@@ -99,6 +105,7 @@ public class Robot extends TimedRobot {
 	        
 //	        SmartDashboard.putBoolean("CompressorEnabled", RobotMap.compressor.enabled());
 	            
+	    	SmartDashboard.putData("PDP", _pdpModule);
 	    }
 
 	    public void stopAll() {

@@ -9,6 +9,9 @@ package team4391.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.buttons.Button;
+import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import team4391.robot.commands.ArmOpen;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -42,28 +45,13 @@ public class OI {
 	// Start the command when the button is released and let it run the command
 	// until it is finished as determined by it's isFinished method.
 	// button.whenReleased(new ExampleCommand());
-	
-	public static XboxController xb = new XboxController(0);
 			
 	public static Joystick _xBoxCntrl = new Joystick(0);
-	
-	//double rightStickX = _xBoxCntrl.getRawAxis(4);
-	//double rightStickY = -_xBoxCntrl.getRawAxis(5);
-	//double leftStickX = _xBoxCntrl.getX();
-	//double leftStickY = -_xBoxCntrl.getY();
-		
-	//boolean button1 = _xBoxCntrl.getRawButton(1);
-	//boolean button2 = _xBoxCntrl.getRawButton(2);
-	//boolean button3 = _xBoxCntrl.getRawButton(3);
-	//boolean button4 = _xBoxCntrl.getRawButton(4);
-	
-	//boolean buttonLeftPivot = _xBoxCntrl.getRawButton(5);
-	//boolean buttonRightPivot = _xBoxCntrl.getRawButton(6);
-	
-	//double inny = _xBoxCntrl.getRawAxis(3);
-	//double outty = _xBoxCntrl.getRawAxis(2);
-	
+
+	Button armButton = new JoystickButton(_xBoxCntrl, 1);
+
+
 	public void init() {
-		
+		armButton.whileHeld(new ArmOpen());
 	}
 }

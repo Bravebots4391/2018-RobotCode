@@ -3,6 +3,7 @@ package team4391.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import team4391.loops.Loop;
@@ -15,6 +16,7 @@ import team4391.robot.commands.ArmHold;
 public class Arm extends Subsystem {
 
 	private TalonSRX _suckerInnerOuter = new TalonSRX(Constants.kSuckerInnerOuterId);
+	private Solenoid _armCylinder = new Solenoid(Constants.kPCMId, 0);	
 	
 	public enum ArmState {
         Holding, PullIn, PushOut, CubePresent
@@ -27,6 +29,8 @@ public class Arm extends Subsystem {
     public void initDefaultCommand() {
         // Set the default command for a subsystem here.
         setDefaultCommand(new ArmHold());
+        
+        myArmState = ArmState.Holding;
     }
     
 	private final Loop mLoop = new Loop() {
@@ -102,8 +106,16 @@ public class Arm extends Subsystem {
 		 
 	 }
 	 
+	 public void openArm(){
+		 _armCylinder.set(true);
+	 }
+	 
+	 public void closeArm(){
+		 _armCylinder.set(false);
+	 }	 
+	 
 	 public void updateDashboard() {
-		 //SmartDashboard.putString("ArmState", myArmState.toString());
+		 SmartDashboard.putString("ArmState", myArmState.toString());
 	 }
 }
 
