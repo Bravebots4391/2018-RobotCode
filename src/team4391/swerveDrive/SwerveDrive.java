@@ -40,9 +40,12 @@ public class SwerveDrive {
 			if(DB(rightStickX) && !isPivot) {
 				crabDrive(leftStickX, leftStickY, rightStickX);
 			}
-			else if(DB(rightStickX) && isPivot){
+			else if(leftStickY > 0 && DB(rightStickX) && isPivot){
 				pivotTurn(rightStickX);
-			}				
+			}	
+			else if(leftStickY < 0 && DB(rightStickX) && isPivot){
+				pivotTurnReverse(rightStickX);
+			}
 			else {
 				crabDrive(leftStickX, leftStickY, 0);
 			}			
@@ -82,7 +85,7 @@ public class SwerveDrive {
 	}
 	
 	private boolean DB(double x) {
-		return Math.abs(x) > Constants.kJoystickDeadband;
+		return Math.abs(x) > 0;
 	}
 	
 	private void crabDrive(double leftStickX, double leftStickY, double rotate)
@@ -97,6 +100,9 @@ public class SwerveDrive {
 		}
 		else if(Math.abs(rotate)>0 && leftStickY > 0){
 			carTurn(leftStickY, rotate);
+		}
+		else if (Math.abs(rotate)>0 && leftStickY < 0){
+			carTurnReverse(leftStickY, rotate);
 		}
 	}
 	
@@ -127,6 +133,8 @@ public class SwerveDrive {
 		_motorFL.set(ControlMode.PercentOutput, rotateSpeed);
 		_motorRL.set(ControlMode.PercentOutput, rotateSpeed);
 	}
+	
+	
 	
 	public void pivotTurn(double speed)
 	{
@@ -159,6 +167,54 @@ public class SwerveDrive {
 			_motorRL.set(ControlMode.PercentOutput, rotateSpeed);
 			_motorRR.set(ControlMode.PercentOutput, rotateShortWheel);
 		}					
+	}
+	
+	public void pivotTurnReverse(double speed)
+	{
+		setWheelAngle(180.0, _turnBl);
+		setWheelAngle(180.0, _turnBR);
+		
+		// command forward or backward on the wheels	
+		double rotateSpeed = Math.abs(speed);	
+		double hypot = Math.sqrt(Math.pow(Constants.Width, 2) + Math.pow(Constants.Length, 2));
+		double rotateShortWheel = (Constants.Width / hypot) * rotateSpeed;			
+		
+		//set all the wheels on the tangent
+		if(speed < 0)
+		{
+			setWheelAngle(235, _turnFl);
+			setWheelAngle(270.0, _turnFR);
+			
+			_motorFL.set(ControlMode.PercentOutput, rotateShortWheel);
+			_motorFR.set(ControlMode.PercentOutput, rotateSpeed);
+			_motorRL.set(ControlMode.PercentOutput, 0);
+			_motorRR.set(ControlMode.PercentOutput, rotateShortWheel);
+		}
+		if(speed > 0)
+		{
+			setWheelAngle(90.0, _turnFl);
+			setWheelAngle(135.0, _turnFR);
+			
+			_motorFL.set(ControlMode.PercentOutput, rotateSpeed);
+			_motorFR.set(ControlMode.PercentOutput, rotateShortWheel);
+			_motorRL.set(ControlMode.PercentOutput, rotateShortWheel);
+			_motorRR.set(ControlMode.PercentOutput, 0);
+		}					
+	}
+	
+	public void carTurnReverse(double ReverseSpeed, double rotate)
+	{
+		double BackWheelAngle = rotate * 135.0;
+		
+		setWheelAngle(180.0, _turnFl);
+		setWheelAngle(180.0, _turnFR);
+		setWheelAngle(BackWheelAngle, _turnBl);
+		setWheelAngle(BackWheelAngle, _turnBR);
+		
+		_motorFR.set(ControlMode.PercentOutput, ReverseSpeed);
+		_motorRR.set(ControlMode.PercentOutput, ReverseSpeed);
+		_motorFL.set(ControlMode.PercentOutput, ReverseSpeed);
+		_motorRL.set(ControlMode.PercentOutput, ReverseSpeed);
 	}
 	
 	public void carTurn(double forwardSpeed, double rotate)
@@ -256,14 +312,14 @@ public class SwerveDrive {
 	
 	private double ConvertJoystickXYtoAngle(double x, double y)
 	{
-		if(Math.abs(x) < Constants.kJoystickDeadband)
-		{
-			x = 0;
-		}
-		if(Math.abs(y) < Constants.kJoystickDeadband)
-		{
-			y = 0;
-		}
+//		if(Math.abs(x) < Constants.kJoystickDeadband)
+//		{
+//			x = 0;
+//		}
+//		if(Math.abs(y) < Constants.kJoystickDeadband)
+//		{
+//			y = 0;
+//		}
 		
 		double angle = (Math.atan2(y, x) * toDegrees);		
 		

@@ -4,6 +4,7 @@ import team4391.swerveDrive.SwerveDrive;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import team4391.loops.Loop;
+import team4391.robot.Constants;
 import team4391.robot.commands.TeleopDrive;
 
 
@@ -88,12 +89,11 @@ public class Drive extends Subsystem {
 		_swerveDrive.setDrive(Db(cntrl.getX()), Db(-cntrl.getY()), Db(cntrl.getRawAxis(4)), cntrl.getRawButton(6));
 	}
 	
-	double Db(double axisVal) {
-		if (axisVal < -0.10)
+	double Db(double axisVal) {	
+		if(Math.abs(axisVal) > Constants.kJoystickDeadband)
 			return axisVal;
-		if (axisVal > +0.10)
-			return axisVal;
-		return 0;
+		else
+			return 0;
 	}
 	
 	public synchronized void setOpenLoop(){

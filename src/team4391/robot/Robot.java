@@ -233,6 +233,8 @@ public class Robot extends TimedRobot {
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
 		outputAllToSmartDashboard();
+		
+		
 	}
 
 	/**

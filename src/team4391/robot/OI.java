@@ -12,6 +12,8 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import team4391.robot.commands.ArmOpen;
+import team4391.robot.commands.ArmPullIn;
+import team4391.robot.commands.ArmPushOut;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -48,10 +50,14 @@ public class OI {
 			
 	public static Joystick _xBoxCntrl = new Joystick(0);
 
-	Button armButton = new JoystickButton(_xBoxCntrl, 1);
+	Button armButton = new JoystickButton(_xBoxCntrl, 1);	
+	Button inny = new JoystickButton(_xBoxCntrl, 4);
+	Button outty = new JoystickButton(_xBoxCntrl, 2);
 
 
 	public void init() {
-		armButton.whileHeld(new ArmOpen());
+		armButton.whileHeld(new ArmOpen());		
+		inny.whileHeld(new ArmPullIn());		
+		outty.whileHeld(new ArmPushOut());
 	}
 }
