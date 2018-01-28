@@ -175,8 +175,7 @@ public class Gyro extends GyroBase
 
 	@Override
 	public void reset() {
-		// TODO Auto-generated method stub
-		
+		gyroReset();
 	}
 
 	@Override

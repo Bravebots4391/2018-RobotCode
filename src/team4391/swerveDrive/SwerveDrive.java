@@ -28,6 +28,7 @@ public class SwerveDrive {
 	private static Gyro _gyro = new Gyro(_motorFL);
 	
 	double _targetPositionDegrees;
+	private static boolean _isTurning = false;
 	
 	public SwerveDrive(){
 		init();
@@ -91,6 +92,12 @@ public class SwerveDrive {
 	private void crabDrive(double leftStickX, double leftStickY, double rotate)
 	{
 		if (rotate == 0) {
+			
+			if(_isTurning){
+				_isTurning = false;
+				_gyro.reset();
+			}
+			
 			double angle = ConvertJoystickXYtoAngle(leftStickX, leftStickY);
 			SmartDashboard.putNumber("JoystickAngle", angle);
 			setAllWheelPositions(angle);
@@ -117,8 +124,8 @@ public class SwerveDrive {
 	}
 	
 	private void rotateBot(double speed) {
-		
-		
+				
+		_isTurning = true; // let the rest of the module know we are in a turn mode
 		
 		//set all the wheels on the tangent
 		setWheelAngle(45.0, _turnFl);
@@ -132,9 +139,7 @@ public class SwerveDrive {
 		_motorRR.set(ControlMode.PercentOutput, -rotateSpeed);
 		_motorFL.set(ControlMode.PercentOutput, rotateSpeed);
 		_motorRL.set(ControlMode.PercentOutput, rotateSpeed);
-	}
-	
-	
+	}	
 	
 	public void pivotTurn(double speed)
 	{
@@ -145,6 +150,8 @@ public class SwerveDrive {
 		double rotateSpeed = Math.abs(speed);	
 		double hypot = Math.sqrt(Math.pow(Constants.Width, 2) + Math.pow(Constants.Length, 2));
 		double rotateShortWheel = (Constants.Width / hypot) * rotateSpeed;			
+		
+		_isTurning = true; // let the rest of the module know we are in a turn mode
 		
 		//set all the wheels on the tangent
 		if(speed < 0)
@@ -179,6 +186,8 @@ public class SwerveDrive {
 		double hypot = Math.sqrt(Math.pow(Constants.Width, 2) + Math.pow(Constants.Length, 2));
 		double rotateShortWheel = (Constants.Width / hypot) * rotateSpeed;			
 		
+		_isTurning = true; // let the rest of the module know we are in a turn mode
+		
 		//set all the wheels on the tangent
 		if(speed < 0)
 		{
@@ -205,6 +214,7 @@ public class SwerveDrive {
 	public void carTurnReverse(double ReverseSpeed, double rotate)
 	{
 		double BackWheelAngle = rotate * 135.0;
+		_isTurning = true; // let the rest of the module know we are in a turn mode
 		
 		setWheelAngle(180.0, _turnFl);
 		setWheelAngle(180.0, _turnFR);
@@ -220,6 +230,7 @@ public class SwerveDrive {
 	public void carTurn(double forwardSpeed, double rotate)
 	{
 		double frontWheelAngle = rotate * 45.0;
+		_isTurning = true; // let the rest of the module know we are in a turn mode
 		
 		setWheelAngle(frontWheelAngle, _turnFl);
 		setWheelAngle(frontWheelAngle, _turnFR);
@@ -270,22 +281,7 @@ public class SwerveDrive {
 	}
 	
 	public void UpdateDashboard()
-	{
-//		double rightStick = _xBoxCntrl.getRawAxis(4);
-//		double leftStickX = _xBoxCntrl.getX();
-//		double leftStickY = _xBoxCntrl.getY();
-//		double rightStickY = -_xBoxCntrl.getRawAxis(5);
-//		double rightTurn = _xBoxCntrl.getRawAxis(3);
-//		double leftTurn = -_xBoxCntrl.getRawAxis(2);
-		
-//		SmartDashboard.putNumber("rightStick", rightStick);
-//		SmartDashboard.putNumber("leftStickX", leftStickX);
-//		SmartDashboard.putNumber("leftStickY", leftStickY);
-//		SmartDashboard.putNumber("rightStickY", rightStickY);
-//		
-//		SmartDashboard.putNumber("leftTurnJ", leftTurn);
-//		SmartDashboard.putNumber("rightTurnJ", rightTurn);
-		
+	{	
 		SmartDashboard.putNumber("positionRawFL", _turnFl.getSelectedSensorPosition(0));
 		SmartDashboard.putNumber("positionDegreesFL", convertEncoderPositionToAngle(_turnFl.getSelectedSensorPosition(0)));
 		SmartDashboard.putNumber("positionRawFR", _turnFR.getSelectedSensorPosition(0));
@@ -305,22 +301,11 @@ public class SwerveDrive {
 		
 		SmartDashboard.putNumber("Speed",getVelocity(_motorFR));
 				
-		SmartDashboard.putData("pigeon", _gyro);
-		
-		_gyro.updateDashboard();
+		SmartDashboard.putData("pigeon", _gyro);			
 	}	
 	
 	private double ConvertJoystickXYtoAngle(double x, double y)
-	{
-//		if(Math.abs(x) < Constants.kJoystickDeadband)
-//		{
-//			x = 0;
-//		}
-//		if(Math.abs(y) < Constants.kJoystickDeadband)
-//		{
-//			y = 0;
-//		}
-		
+	{	
 		double angle = (Math.atan2(y, x) * toDegrees);		
 		
 		if(x == 0 && y == 0)
