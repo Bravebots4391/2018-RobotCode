@@ -16,7 +16,7 @@ import team4391.robot.commands.ArmHold;
 public class Arm extends Subsystem {
 
 	private TalonSRX _suckerInnerOuter = new TalonSRX(Constants.kSuckerInnerOuterId);
-	private TalonSRX _armPulley = new TalonSRX(Constants.));	
+	private TalonSRX _armPulley = new TalonSRX(Constants.kArmOpenyCloseyId);	
 	
 	public enum ArmState {
         Holding, PullIn, PushOut, CubePresent
@@ -107,11 +107,11 @@ public class Arm extends Subsystem {
 	 }
 	 
 	 public void openArm(double speed){
-		 _armPulley.set(ControlMode.PercentOutput, -1);
+		 _armPulley.set(ControlMode.PercentOutput, 1);
 	 }
 	 
 	 public void closeArm(){
-		 _armPulley.set(ControlMode.PercentOutput, 1);
+		 _armPulley.set(ControlMode.PercentOutput, 0);
 	 }	 
 	 
 	 public void updateDashboard() {
