@@ -26,10 +26,10 @@ public class Gyro extends GyroBase
 
 	private boolean _isInitOk;
 	
-	public Gyro(TalonSRX talon){
-		if(talon != null)
+	public Gyro(int id){
+		if(id != -1)
 		{
-			gyroInit(talon);
+			gyroInit(id);
 			_isInitOk = true;
 		}
 		else
@@ -38,8 +38,8 @@ public class Gyro extends GyroBase
 		}
 	}
 	
-	public void gyroInit(TalonSRX talon){
-		_pidgey = new PigeonIMU(talon);		
+	public void gyroInit(int talonId){
+		_pidgey = new PigeonIMU(talonId);		
 	}
 	
 	public void gyroReset(){

@@ -1,5 +1,7 @@
 package team4391.robot;
 
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+
 import team4391.util.InterpolatingDouble;
 import team4391.util.InterpolatingTreeMap;
 
@@ -31,10 +33,7 @@ public class Constants {
 	public static final double Length = 26;
 		
 	public static double kLooperDt = 0.01;
-	public static double kRotateMaxPctSpeed = 0.5;
-	public static int kPCMId = 9;
-	
-	
+	public static double kRotateMaxPctSpeed = 0.5;		
 	
 	
 	// Wheel position calibration
@@ -48,7 +47,7 @@ public class Constants {
 	public static final double kSwerveDriveRatio = 6.67;
 	public static final double kWheelDiameterInches = 4.0;
 	
-	// Talon CAN Address Number
+	// CAN Address Number
 	public static final int kFrontLeftDriveMotorId = 9;
 	public static final int kFrontRightDriveMotorId = 1;
 	public static final int kBackLeftDriveMotorId = 11;
@@ -62,6 +61,9 @@ public class Constants {
 	public static final int kSuckerInnerOuterId = 5;
 	public static final int kCubevatorId = 10;
 	public static final int kArmOpenyCloseyId = 53;
+	
+	public static final int kPCMId = 9;	
+	public static final int kPigeonGyroId = kSuckerInnerOuterId;  // The pigeon is plugged into the suckerInnerOuter talon.
 	
 	//
 	// ARM Constants
