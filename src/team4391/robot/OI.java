@@ -53,7 +53,8 @@ public class OI {
 	Button armButton = new JoystickButton(_xBoxCntrl, 1);	
 	Button inny = new JoystickButton(_xBoxCntrl, 4);
 	Button outty = new JoystickButton(_xBoxCntrl, 2);
-
+    Button liftUp = new JoystickButton(_xBoxCntrl, 7);
+    Button liftDown= new JoystickButton(_xBoxCntrl,8);
 
 	public void init() {
 		armButton.whileHeld(new ArmOpen());		

@@ -60,7 +60,7 @@ public class Constants {
 	public static final int kBackRightTurnMotorId = 6;
 	
 	public static final int kSuckerInnerOuterId = 5;
-	public static final int kCubevatorId = 52;
+	public static final int kCubevatorId = 10;
 	public static final int kArmOpenyCloseyId = 53;
 	
 	//
