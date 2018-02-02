@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class SwerveDrive {
 
 	private double toDegrees = 180 / Math.PI;
-	
+	private static WPI_TalonSRX _Suckerinneroutter = new WPI_TalonSRX(Constants.kSuckerInnerOuterId);
 	private static WPI_TalonSRX _motorFR = new WPI_TalonSRX(Constants.kFrontRightDriveMotorId);
 	private static WPI_TalonSRX _motorRR = new WPI_TalonSRX(Constants.kBackRightDriveMotorId);
 	private static WPI_TalonSRX _motorFL = new WPI_TalonSRX(Constants.kFrontLeftDriveMotorId);
@@ -26,7 +26,7 @@ public class SwerveDrive {
 	private static WPI_TalonSRX _turnBl = new WPI_TalonSRX(Constants.kBackLeftTurnMotorId);
 	private static WPI_TalonSRX _turnBR = new WPI_TalonSRX(Constants.kBackRightTurnMotorId);
 	
-	private static Gyro _gyro = new Gyro(_motorFL);
+	private static Gyro _gyro = new Gyro(_Suckerinneroutter);
 	
 	double _targetPositionDegrees;
 	private static boolean _isTurning = false;

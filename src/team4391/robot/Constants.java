@@ -33,7 +33,9 @@ public class Constants {
 	public static double kLooperDt = 0.01;
 	public static double kRotateMaxPctSpeed = 0.5;
 	public static int kPCMId = 9;
-		
+	
+	
+	
 	
 	// Wheel position calibration
 	public static final int kFrontLeftCal = 172;
@@ -58,6 +60,8 @@ public class Constants {
 	public static final int kBackRightTurnMotorId = 6;
 	
 	public static final int kSuckerInnerOuterId = 5;
+	public static final int kCubevatorId = 10;
+	public static final int kArmOpenyCloseyId = 53;
 	
 	//
 	// ARM Constants

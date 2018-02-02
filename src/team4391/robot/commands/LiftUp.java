@@ -6,11 +6,11 @@ import team4391.robot.Robot;
 /**
  *
  */
-public class ArmOpen extends Command {
+public class LiftUp extends Command {
 
-    public ArmOpen() {
+    public LiftUp() {
         // Use requires() here to declare subsystem dependencies
-        requires(Robot.armSubsystem);
+        requires(Robot.cubevatorSubsystem);
     }
 
     // Called just before this Command runs the first time
@@ -19,7 +19,7 @@ public class ArmOpen extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	Robot.armSubsystem.openArm(1);
+    	Robot.cubevatorSubsystem.up();
     }
 
     // Make this return true when this Command no longer needs to run execute()
@@ -29,7 +29,7 @@ public class ArmOpen extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
-    	Robot.armSubsystem.closeArm();
+    	Robot.cubevatorSubsystem.stop();
     }
 
     // Called when another command which requires one or more of the same

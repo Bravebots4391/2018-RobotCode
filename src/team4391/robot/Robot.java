@@ -19,6 +19,7 @@ import team4391.robot.commands.ExampleCommand;
 import team4391.robot.subsystems.Arm;
 import team4391.robot.subsystems.Drive;
 import team4391.robot.subsystems.ExampleSubsystem;
+import team4391.robot.subsystems.Lift;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -34,6 +35,7 @@ public class Robot extends TimedRobot {
 	
 	public static Drive driveSubsystem;
 	public static Arm armSubsystem;
+	public static Lift cubevatorSubsystem;
 	public static PowerDistributionPanel _pdpModule;
 	
 	public int _counter = 0;
@@ -59,6 +61,7 @@ public class Robot extends TimedRobot {
 		// Initialize subsystems
 		driveSubsystem = new Drive();
 		armSubsystem = new Arm();
+		cubevatorSubsystem = new Lift();
 		
 		_pdpModule = new PowerDistributionPanel(10);
 		
