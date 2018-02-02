@@ -9,6 +9,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
+import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class SwerveDrive {
@@ -419,6 +420,11 @@ public class SwerveDrive {
         talon.config_kP(Constants.kPIDLoopIdx, 10.0, Constants.kTimeoutMs);
         talon.config_kI(Constants.kPIDLoopIdx, 0.000, Constants.kTimeoutMs);
         talon.config_kD(Constants.kPIDLoopIdx, 0.0, Constants.kTimeoutMs);
+	}
+
+	public PIDSource getGyro() {
+		// TODO Auto-generated method stub
+		return _gyro;
 	}
 
 }

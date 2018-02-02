@@ -1,5 +1,8 @@
 package team4391.robot;
 
+import team4391.util.InterpolatingDouble;
+import team4391.util.InterpolatingTreeMap;
+
 public class Constants {
 	
 	/**
@@ -26,14 +29,11 @@ public class Constants {
 	// Robot wheel dimentions
 	public static final double Width = 26;
 	public static final double Length = 26;
-	
-	
+		
 	public static double kLooperDt = 0.01;
-
 	public static double kRotateMaxPctSpeed = 0.5;
-
 	public static int kPCMId = 9;
-	
+		
 	
 	// Wheel position calibration
 	public static final int kFrontLeftCal = 172;
@@ -64,4 +64,30 @@ public class Constants {
 	//
 	public static final double kArmInputPctSpeed = 1.0;
 	public static final double kArmOutputPctSpeed = -1.0;
+	
+	
+	
+    // Rotation PID Rate Limit Constants. In Auto Mode  Limits rotation rate based on angle from the target.
+    public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> kRateLimitMapAuto = new InterpolatingTreeMap<>();
+
+    static {
+    	kRateLimitMapAuto.put(new InterpolatingDouble(-10.0), new InterpolatingDouble(-8.0));
+    	kRateLimitMapAuto.put(new InterpolatingDouble(-5.0), new InterpolatingDouble(-5.0));
+    	kRateLimitMapAuto.put(new InterpolatingDouble(-1.0), new InterpolatingDouble(-2.5));
+    	kRateLimitMapAuto.put(new InterpolatingDouble(1.0), new InterpolatingDouble(2.5));
+    	kRateLimitMapAuto.put(new InterpolatingDouble(5.0), new InterpolatingDouble(5.0));
+    	kRateLimitMapAuto.put(new InterpolatingDouble(10.0), new InterpolatingDouble(8.0));
+    }    
+    
+    // Rotation PID Rate Limit Constants.  Limits for normal turning commands.
+    public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> kRateLimitMap = new InterpolatingTreeMap<>();
+
+    static {
+    	kRateLimitMap.put(new InterpolatingDouble(-40.0), new InterpolatingDouble(-60.0));
+    	kRateLimitMap.put(new InterpolatingDouble(-10.0), new InterpolatingDouble(-15.0));
+    	kRateLimitMap.put(new InterpolatingDouble(-2.0), new InterpolatingDouble(-7.0));
+    	kRateLimitMap.put(new InterpolatingDouble(2.0), new InterpolatingDouble(7.0));
+    	kRateLimitMap.put(new InterpolatingDouble(10.0), new InterpolatingDouble(15.0));
+    	kRateLimitMap.put(new InterpolatingDouble(40.0), new InterpolatingDouble(60.0));
+    }
 }
