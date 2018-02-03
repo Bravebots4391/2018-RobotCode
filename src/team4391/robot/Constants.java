@@ -75,6 +75,12 @@ public class Constants {
 	public static final double kArmInputPctSpeed = .05;
 	public static final double kArmOutputPctSpeed = -1.0;
 	
+	//
+	// Cubevator Constants
+	//
+	public static final int kCubevatorEncoderCountsPerRev = 1440;
+	public static final double kCubevatorDrumDiameterInches = 3.5;
+	public static final double kCubevatorTopLimitInches = 80;
 	
     // PID gains for rotating in place
     public static double kDriveTurnKp = 0.05;
