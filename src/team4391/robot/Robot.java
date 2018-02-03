@@ -7,7 +7,6 @@
 
 package team4391.robot;
 
-import org.usfirst.frc4391.JavaTest.Constants;
 
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.TimedRobot;

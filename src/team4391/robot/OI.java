@@ -14,6 +14,8 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import team4391.robot.commands.ArmOpen;
 import team4391.robot.commands.ArmPullIn;
 import team4391.robot.commands.ArmPushOut;
+import team4391.robot.commands.LiftDown;
+import team4391.robot.commands.LiftUp;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -60,5 +62,7 @@ public class OI {
 		armButton.whileHeld(new ArmOpen());		
 		inny.whileHeld(new ArmPullIn());		
 		outty.whileHeld(new ArmPushOut());
+		liftUp.whileHeld(new LiftUp());;
+		liftDown.whileHeld(new LiftDown());
 	}
 }

@@ -115,11 +115,11 @@ public class Drive extends Subsystem implements PIDOutput {
 	
 	public void teleopDrive(Joystick cntrl)
 	{
-		double angle = ConvertJoystickXYtoAngle(cntrl.getX(), cntrl.getY());
+		double angle = ConvertJoystickXYtoAngle(cntrl.getX(), -cntrl.getY());
 		double pctSpeed = Math.pow(Math.sqrt(cntrl.getX() * cntrl.getX() + cntrl.getY() * cntrl.getY()), 2);		
 	
 		double X = cntrl.getX();
-		double Y = cntrl.getY();
+		double Y = -cntrl.getY();
 		double rX= cntrl.getRawAxis(4);
 		boolean isPivot = cntrl.getRawButton(6);			
 		
@@ -127,11 +127,11 @@ public class Drive extends Subsystem implements PIDOutput {
 		{		
 			if(DB(rX) && Y > 0 && !isPivot) 
 			{
-				_swerveDrive.setDrive(SwerveMode.carTurn, pctSpeed, angle);
+				_swerveDrive.setDrive(SwerveMode.carTurn, pctSpeed, rX);
 			}
 			else if(DB(rX) && Y < 0 && !isPivot)
 			{
-				_swerveDrive.setDrive(SwerveMode.carTurnReverse, pctSpeed, angle);
+				_swerveDrive.setDrive(SwerveMode.carTurnReverse, pctSpeed, rX);
 			}
 			else if(Y > 0 && DB(rX) && isPivot)
 			{

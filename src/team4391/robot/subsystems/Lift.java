@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import team4391.robot.Constants;
 import team4391.robot.commands.LiftStop;
 
@@ -24,7 +25,12 @@ public class Lift extends Subsystem {
     }
 
 	public void up() {
-		_cubevatorTalon.set(ControlMode.PercentOutput, 0.5);
+		_cubevatorTalon.set(ControlMode.PercentOutput, -1);
+		
+	}
+	
+	public void down() {
+		_cubevatorTalon.set(ControlMode.PercentOutput, .75);
 		
 	}
 
@@ -32,4 +38,8 @@ public class Lift extends Subsystem {
 		_cubevatorTalon.set(ControlMode.PercentOutput, 0.0);
 	}
 }
+
+//public void updateDashboard() {
+//	 SmartDashboard.getNumber(key, defaultValue);
+//}
 

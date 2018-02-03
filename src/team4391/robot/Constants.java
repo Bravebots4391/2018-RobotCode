@@ -1,6 +1,5 @@
 package team4391.robot;
 
-import org.usfirst.frc4391.JavaTest.Constants;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
@@ -42,10 +41,10 @@ public class Constants {
 	
 	
 	// Wheel position calibration
-	public static final int kFrontLeftCal = 172;
-	public static final int kFrontRightCal = 843;
-	public static final int kRearLeftCal = 428;
-	public static final int kRearRightCal = 284;
+	public static final int kFrontLeftCal = 568;
+	public static final int kFrontRightCal = 840;
+	public static final int kRearLeftCal = 372;
+	public static final int kRearRightCal = 328;
 	
 	// Cimcoder constants
 	public static final int kCimcoderPulsesPerRev = 80;
@@ -53,15 +52,15 @@ public class Constants {
 	public static final double kWheelDiameterInches = 4.0;
 	
 	// CAN Address Number
-	public static final int kFrontLeftDriveMotorId = 9;
-	public static final int kFrontRightDriveMotorId = 1;
-	public static final int kBackLeftDriveMotorId = 11;
-	public static final int kBackRightDriveMotorId = 7;
+	public static final int kFrontLeftDriveMotorId = 11;
+	public static final int kFrontRightDriveMotorId = 9;
+	public static final int kBackLeftDriveMotorId = 7;
+	public static final int kBackRightDriveMotorId = 1;
 	
-	public static final int kFrontLeftTurnMotorId = 4;
-	public static final int kFrontRightTurnMotorId = 3;
-	public static final int kBackLeftTurnMotorId = 2;
-	public static final int kBackRightTurnMotorId = 6;
+	public static final int kFrontLeftTurnMotorId = 2;
+	public static final int kFrontRightTurnMotorId = 4;
+	public static final int kBackLeftTurnMotorId = 6;
+	public static final int kBackRightTurnMotorId = 3;
 	
 	public static final int kSuckerInnerOuterId = 5;
 	public static final int kCubevatorId = 10;
@@ -73,7 +72,7 @@ public class Constants {
 	//
 	// ARM Constants
 	//
-	public static final double kArmInputPctSpeed = 1.0;
+	public static final double kArmInputPctSpeed = .05;
 	public static final double kArmOutputPctSpeed = -1.0;
 	
 	
