@@ -7,6 +7,8 @@
 
 package team4391.robot;
 
+import org.usfirst.frc4391.JavaTest.Constants;
+
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
@@ -55,6 +57,8 @@ public class Robot extends TimedRobot {
 	@Override
 	public void robotInit() {
 		m_oi = new OI();
+		
+		Constants.putValuesInNetworkTables();
 		
 		setupAutonomousChooser();
 		

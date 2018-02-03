@@ -7,6 +7,7 @@ import team4391.util.SyncronousRateLimiter;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import team4391.loops.Loop;
@@ -18,6 +19,11 @@ public class Drive extends Subsystem implements PIDOutput {
 	
 	private SwerveDrive _swerveDrive = new SwerveDrive();
 	private double _pidOutput;
+	private double _myTargetAngle;
+	private double _myTurnRate;
+	private double _myHeadingError;
+	private double _myTargetSpeed;
+	private Preferences prefs;
 	
 	public final PIDController _myHeadingPid = new PIDController(0.010, 0, 0, _swerveDrive.getGyro(), this);
     public SyncronousRateLimiter _srl = new SyncronousRateLimiter(Constants.kLooperDt, 1.0 , 0);
@@ -72,10 +78,14 @@ public class Drive extends Subsystem implements PIDOutput {
 			setOpenLoop();
 		}
 		 
-	 };
+	 };	 
 	private double _myTargetSetpoint;
-	private Double _myTurnRate;
-	 
+	
+	public Drive()
+	{
+		prefs = Preferences.getInstance();
+	}
+	
 	 public Loop getLoop() {
 	        return mLoop;
 	    }
@@ -87,22 +97,21 @@ public class Drive extends Subsystem implements PIDOutput {
     
     public void stopMotors(){
     	_swerveDrive.setDrive(SwerveMode.crab, 0, 0);
-    	//myHeadingPid.disable();
+    	_myHeadingPid.disable();
     }
     
     public void updateDashboard() {
     	_swerveDrive.UpdateDashboard();
+    	
     	SmartDashboard.putString("DriveMode", _myDriveState.toString());
+    	SmartDashboard.putNumber("RotateSetpoint", _myTargetAngle);
+    	SmartDashboard.putNumber("RotateError", _myHeadingError);
     }
 
 	public void resetSensors() {
 		// TODO Auto-generated method stub
 		
 	}
-	
-//	public void teleopDrive(Joystick cntrl) {
-//		_swerveDrive.setDrive(Db(cntrl.getX()), Db(-cntrl.getY()), Db(cntrl.getRawAxis(4)), cntrl.getRawButton(6));
-//	}
 	
 	public void teleopDrive(Joystick cntrl)
 	{
@@ -183,6 +192,44 @@ public class Drive extends Subsystem implements PIDOutput {
         }    	    	
     }
 	
+    public synchronized void targetDiscreteAngle(double degreesTarget, double speed){
+    	if (_myDriveState != DriveState.DirectionSetpoint) {            
+            _myDriveState = DriveState.DirectionSetpoint;
+            _myHeadingPid.reset();
+        }    
+    	
+    	_myTargetSpeed = speed;
+    	_myTargetAngle = degreesTarget;
+    	
+    	//SetBrakeEnable(true);
+    	setupPID(1.0);
+    	_myHeadingPid.enable();
+    	updateDegTurnHeadingControl();
+    }
+	
+    private void setupPID(double tolerance){
+    	Double myKp = prefs.getDouble("targetKp", Constants.kDriveTurnKp);
+    	Double myKi = prefs.getDouble("targetKi", Constants.kDriveTurnKi);
+    	Double myKd = prefs.getDouble("targetKd", Constants.kDriveTurnKd);
+    	Double myFF = prefs.getDouble("targetKf", Constants.kDriveTurnKf);
+    	
+    	_myHeadingPid.setPID(myKp, myKi, myKd, myFF);
+    	_myHeadingPid.setAbsoluteTolerance(tolerance);
+    	_myHeadingPid.setOutputRange(-0.6, 0.6);
+    	_myHeadingPid.reset();
+    	
+    	_swerveDrive.resetDistance();
+    	_srl.Reset();
+    	_swerveDrive.getGyro().reset();
+    }
+    
+    private synchronized void updateDegTurnHeadingControl(){
+    	// Calculate rotate error    	
+		_myHeadingError = _myTargetAngle - _swerveDrive.getGyro().gyroGetFusedHeading();
+				
+		updateRotationControl(_myHeadingError);
+    }
+	
     private synchronized void updateRotationControl(double error){
     	
     	// Run Through Lookup
@@ -208,7 +255,7 @@ public class Drive extends Subsystem implements PIDOutput {
 		_myTargetSetpoint = _srl.getOutput();
 		_myHeadingPid.setSetpoint(_srl.getOutput());	
 		
-		//robotDrive.arcadeDrive(-1* m_targetSpeed, m_rotateValue);				
+		_swerveDrive.setDrive(SwerveMode.rotate, _pidOutput, 0);			
     }
 
 	@Override
@@ -216,5 +263,6 @@ public class Drive extends Subsystem implements PIDOutput {
 		// TODO Auto-generated method stub
 		_pidOutput = output;
 	}
+	
 }
 

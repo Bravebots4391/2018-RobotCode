@@ -1,7 +1,10 @@
 package team4391.robot;
 
+import org.usfirst.frc4391.JavaTest.Constants;
+
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+import edu.wpi.first.wpilibj.Preferences;
 import team4391.util.InterpolatingDouble;
 import team4391.util.InterpolatingTreeMap;
 
@@ -74,6 +77,14 @@ public class Constants {
 	public static final double kArmOutputPctSpeed = -1.0;
 	
 	
+    // PID gains for rotating in place
+    public static double kDriveTurnKp = 0.05;
+    public static double kDriveTurnKi = 0.0;
+    public static double kDriveTurnKd = 0.05;
+    public static double kDriveTurnKf = 0.0;
+    public static double kDriveTurnAbsTollerance = 0.8;
+    
+    
 	
     // Rotation PID Rate Limit Constants. In Auto Mode  Limits rotation rate based on angle from the target.
     public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> kRateLimitMapAuto = new InterpolatingTreeMap<>();
@@ -97,5 +108,15 @@ public class Constants {
     	kRateLimitMap.put(new InterpolatingDouble(2.0), new InterpolatingDouble(7.0));
     	kRateLimitMap.put(new InterpolatingDouble(10.0), new InterpolatingDouble(15.0));
     	kRateLimitMap.put(new InterpolatingDouble(40.0), new InterpolatingDouble(60.0));
+    }
+    
+    public static void putValuesInNetworkTables()
+    {
+    	Preferences prefs = Preferences.getInstance();
+    	
+    	prefs.putDouble("targetKp", Constants.kDriveTurnKp);
+    	prefs.putDouble("targetKi", Constants.kDriveTurnKi);
+    	prefs.putDouble("targetKd", Constants.kDriveTurnKd);
+    	prefs.putDouble("targetKf", Constants.kDriveTurnKf);
     }
 }

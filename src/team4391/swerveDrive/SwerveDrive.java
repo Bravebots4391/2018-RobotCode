@@ -1,6 +1,5 @@
 package team4391.swerveDrive;
 
-
 import team4391.robot.Constants;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -17,8 +16,6 @@ public class SwerveDrive {
 	public enum SwerveMode{
 		crab, frontPivot, rearPivot, rotate, carTurn, carTurnReverse
 	}
-	
-	private double toDegrees = 180 / Math.PI;
 	
 	private static WPI_TalonSRX _motorFR = new WPI_TalonSRX(Constants.kFrontRightDriveMotorId);
 	private static WPI_TalonSRX _motorRR = new WPI_TalonSRX(Constants.kBackRightDriveMotorId);
@@ -390,9 +387,14 @@ public class SwerveDrive {
         talon.config_kD(Constants.kPIDLoopIdx, 0.0, Constants.kTimeoutMs);
 	}
 
-	public PIDSource getGyro() {
+	public Gyro getGyro() {
 		// TODO Auto-generated method stub
 		return _gyro;
+	}
+
+	public void resetDistance() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
