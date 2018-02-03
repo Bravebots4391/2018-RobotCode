@@ -62,7 +62,7 @@ public class Gyro extends GyroBase
 		}
 	}
 	
-	public GyroOutput getDriveCorrection(double throttle, double joystickY) 
+	public GyroOutput getDriveCorrection(double throttle, boolean isForward) 
 	{
 		if(!_isInitOk)
 		{
@@ -110,7 +110,7 @@ public class Gyro extends GyroBase
 		double left = forwardThrottle - turnThrottle;
 		double right = forwardThrottle + turnThrottle;
 		
-		if(joystickY < 0)
+		if(isForward)
 		{
 			left = forwardThrottle + turnThrottle;
 			right = forwardThrottle - turnThrottle;

@@ -1,6 +1,7 @@
 package team4391.robot.subsystems;
 
 import team4391.swerveDrive.SwerveDrive;
+import team4391.swerveDrive.SwerveDrive.SwerveMode;
 import team4391.util.InterpolatingDouble;
 import team4391.util.SyncronousRateLimiter;
 import edu.wpi.first.wpilibj.Joystick;
@@ -84,7 +85,7 @@ public class Drive extends Subsystem implements PIDOutput {
     }
     
     public void stopMotors(){
-    	_swerveDrive.setDrive(0.0, 0.0,0.0, false);
+    	_swerveDrive.setDrive(SwerveMode.crab, 0, 0);
     	//myHeadingPid.disable();
     }
     
@@ -97,8 +98,66 @@ public class Drive extends Subsystem implements PIDOutput {
 		
 	}
 	
-	public void teleopDrive(Joystick cntrl) {
-		_swerveDrive.setDrive(Db(cntrl.getX()), Db(-cntrl.getY()), Db(cntrl.getRawAxis(4)), cntrl.getRawButton(6));
+//	public void teleopDrive(Joystick cntrl) {
+//		_swerveDrive.setDrive(Db(cntrl.getX()), Db(-cntrl.getY()), Db(cntrl.getRawAxis(4)), cntrl.getRawButton(6));
+//	}
+	
+	public void teleopDrive(Joystick cntrl)
+	{
+		double angle = ConvertJoystickXYtoAngle(cntrl.getX(), cntrl.getY());
+		double pctSpeed = Math.pow(Math.sqrt(cntrl.getX() * cntrl.getX() + cntrl.getY() * cntrl.getY()), 2);		
+	
+		double X = cntrl.getX();
+		double Y = cntrl.getY();
+		double rX= cntrl.getRawAxis(4);
+		boolean isPivot = cntrl.getRawButton(6);			
+		
+		if(DB(X) || DB(Y)) // Left stick is out of deadband
+		{		
+			if(DB(rX) && Y > 0 && !isPivot) 
+			{
+				_swerveDrive.setDrive(SwerveMode.carTurn, pctSpeed, angle);
+			}
+			else if(DB(rX) && Y < 0 && !isPivot)
+			{
+				_swerveDrive.setDrive(SwerveMode.carTurnReverse, pctSpeed, angle);
+			}
+			else if(Y > 0 && DB(rX) && isPivot)
+			{
+				_swerveDrive.setDrive(SwerveMode.frontPivot, rX, 0);
+			}	
+			else if(Y < 0 && DB(X) && isPivot)
+			{
+				_swerveDrive.setDrive(SwerveMode.rearPivot, rX, 0);
+			}
+			else 
+			{			
+				_swerveDrive.setDrive(SwerveMode.crab, pctSpeed, angle);
+			}
+		}		
+		else if(!DB(X) && !DB(Y) && DB(rX)) // only the right stick is out of deadband
+		{
+			_swerveDrive.setDrive(SwerveMode.rotate, rX, 0);
+		}
+		else
+		{
+			_swerveDrive.setDrive(SwerveMode.crab, 0, 0);
+		}
+	}
+	
+	private double ConvertJoystickXYtoAngle(double x, double y)
+	{	
+		double angle = (Math.atan2(y, x) * Constants.toDegrees);		
+		
+		if(x == 0 && y == 0)
+		{
+			angle = 90;			
+		}
+
+		// convert the polar coordinate to a heading
+		double coordinate = ((450 - angle) % 360);
+		
+		return coordinate;
 	}
 	
 	double Db(double axisVal) {	
@@ -108,13 +167,17 @@ public class Drive extends Subsystem implements PIDOutput {
 			return 0;
 	}
 	
+	private boolean DB(double x) {
+		return Math.abs(x) > Constants.kJoystickDeadband;
+	}
+	
 	public synchronized void setOpenLoop(){
     	if (myDriveState != DriveState.OpenLoop) {            
             myDriveState = DriveState.OpenLoop;
             //myHeadingPid.reset();
             //myHeadingPid.disable();
             
-            _swerveDrive.setDrive(0, 0, 0, false);
+            _swerveDrive.setDrive(SwerveMode.crab, 0, 0);
         }    	    	
     }
 	

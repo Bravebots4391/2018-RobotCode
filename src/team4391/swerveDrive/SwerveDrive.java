@@ -14,6 +14,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class SwerveDrive {
 
+	public enum SwerveMode{
+		crab, frontPivot, rearPivot, rotate, carTurn, carTurnReverse
+	}
+	
 	private double toDegrees = 180 / Math.PI;
 	
 	private static WPI_TalonSRX _motorFR = new WPI_TalonSRX(Constants.kFrontRightDriveMotorId);
@@ -30,36 +34,81 @@ public class SwerveDrive {
 	
 	double _targetPositionDegrees;
 	private static boolean _isTurning = false;
+	private SwerveMode _swerveMode;
 	
 	public SwerveDrive(){
 		init();
 	}
 	
-	public void setDrive(double leftStickX, double leftStickY, double rightStickX, boolean isPivot) {
-    	
-		if(DB(leftStickX) || DB(leftStickY)) {
+	public void setDrive(SwerveMode mode, double pctSpeed, double angle)
+	{
+		_swerveMode = mode;
+		
+		switch(mode)
+		{
+		case crab:
+			if(_isTurning)
+			{
+				_isTurning = false;
+				_gyro.reset();
+			}
 			
-			if(DB(rightStickX) && !isPivot) {
-				crabDrive(leftStickX, leftStickY, rightStickX);
-			}
-			else if(leftStickY > 0 && DB(rightStickX) && isPivot){
-				pivotTurn(rightStickX);
-			}	
-			else if(leftStickY < 0 && DB(rightStickX) && isPivot){
-				pivotTurnReverse(rightStickX);
-			}
-			else {
-				crabDrive(leftStickX, leftStickY, 0);
-			}			
-		}		
-		else if(!DB(leftStickX) && !DB(leftStickY) && DB(rightStickX)) {
-			rotateInPlace(rightStickX);
-		}		
-		else {
-			_gyro.gyroReset();
-			setAllSpeeds(0, 0);
+			crabDrive(pctSpeed, angle);
+			break;
+			
+		case frontPivot:
+			_isTurning = true;
+			pivotTurn(pctSpeed);
+			break;
+			
+		case rearPivot:
+			_isTurning = true;
+			pivotTurnReverse(pctSpeed);
+			break;
+			
+		case rotate:
+			_isTurning = true;
+			rotateInPlace(pctSpeed);
+			break;
+			
+		case carTurn:
+			_isTurning = true;
+			carTurn(pctSpeed, angle);
+			break;
+			
+		case carTurnReverse:
+			_isTurning = true;
+			carTurnReverse(pctSpeed, angle);
+			break;
+			
 		}
 	}
+	
+//	public void setDrive(double leftStickX, double leftStickY, double rightStickX, boolean isPivot) {
+//    	
+//		if(DB(leftStickX) || DB(leftStickY)) {
+//			
+//			if(DB(rightStickX) && !isPivot) {
+//				crabDrive(leftStickX, leftStickY, rightStickX);
+//			}
+//			else if(leftStickY > 0 && DB(rightStickX) && isPivot){
+//				pivotTurn(rightStickX);
+//			}	
+//			else if(leftStickY < 0 && DB(rightStickX) && isPivot){
+//				pivotTurnReverse(rightStickX);
+//			}
+//			else {
+//				crabDrive(leftStickX, leftStickY, 0);
+//			}			
+//		}		
+//		else if(!DB(leftStickX) && !DB(leftStickY) && DB(rightStickX)) {
+//			rotateInPlace(rightStickX);
+//		}		
+//		else {
+//			_gyro.gyroReset();
+//			setAllSpeeds(0, true);
+//		}
+//	}
 	
 	public void rotateInPlace (double rotatePct) {
 		rotateBot(rotatePct);
@@ -90,6 +139,16 @@ public class SwerveDrive {
 		return Math.abs(x) > 0;
 	}
 	
+	private void crabDrive(double pctSpeed, double angle)
+	{
+		SmartDashboard.putNumber("JoystickAngle", angle);
+		setAllWheelPositions(angle);
+		
+		boolean isForward = (angle > 0 && angle <= 90 || angle >= 270 && angle <=360);
+		
+		setAllSpeeds(pctSpeed, isForward);
+	}
+	
 	private void crabDrive(double leftStickX, double leftStickY, double rotate)
 	{
 		if (rotate == 0) {
@@ -104,7 +163,7 @@ public class SwerveDrive {
 			setAllWheelPositions(angle);
 			// calculate speed
 			double speed = Math.pow(Math.sqrt(leftStickX * leftStickX + leftStickY * leftStickY), 2);
-			setAllSpeeds(speed, leftStickY);
+			setAllSpeeds(speed, leftStickY>0);
 		}
 		else if(Math.abs(rotate)>0 && leftStickY > 0){
 			carTurn(leftStickY, rotate);
@@ -114,9 +173,9 @@ public class SwerveDrive {
 		}
 	}
 	
-	private void setAllSpeeds(double speed, double joystickY)
+	private void setAllSpeeds(double speed, boolean isForward)
 	{
-		GyroOutput data = _gyro.getDriveCorrection(speed, joystickY);
+		GyroOutput data = _gyro.getDriveCorrection(speed, isForward);
 		
 		_motorFR.set(ControlMode.PercentOutput, data.get_right());
 		_motorRR.set(ControlMode.PercentOutput, data.get_right());
@@ -302,7 +361,9 @@ public class SwerveDrive {
 		
 		SmartDashboard.putNumber("Speed",getVelocity(_motorFR));
 				
-		SmartDashboard.putData("pigeon", _gyro);			
+		SmartDashboard.putData("pigeon", _gyro);	
+		
+		SmartDashboard.putString("SwerveMode", _swerveMode.toString());
 	}	
 	
 	private double ConvertJoystickXYtoAngle(double x, double y)

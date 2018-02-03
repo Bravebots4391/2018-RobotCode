@@ -7,6 +7,8 @@ import team4391.util.InterpolatingTreeMap;
 
 public class Constants {
 	
+	public static final double toDegrees = 180 / Math.PI;
+	
 	/**
 	 * Which PID slot to pull gains from.  Starting 2018, you can choose 
 	 * from 0,1,2 or 3.  Only the first two (0,1) are visible in web-based configuration.
