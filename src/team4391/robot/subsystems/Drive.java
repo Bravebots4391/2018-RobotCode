@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import team4391.loops.Loop;
 import team4391.robot.Constants;
 import team4391.robot.commands.TeleopDrive;
@@ -27,7 +28,7 @@ public class Drive extends Subsystem implements PIDOutput {
         OpenLoop, DirectionSetpoint, CameraHeadingControl
     }
 	
-	private DriveState myDriveState;
+	private DriveState _myDriveState;
 	
 	private final Loop mLoop = new Loop() {
 		 
@@ -40,7 +41,7 @@ public class Drive extends Subsystem implements PIDOutput {
 		public void onLoop() {		
 			synchronized (Drive.this) {							
 				
-			switch(myDriveState)
+			switch(_myDriveState)
 			{
 				case OpenLoop:
 					break;
@@ -54,7 +55,7 @@ public class Drive extends Subsystem implements PIDOutput {
 					break;
 					
 				default:
-					System.out.println("Unexpected drive control state: " + myDriveState);
+					System.out.println("Unexpected drive control state: " + _myDriveState);
 	           break;
 		}									
 					
@@ -91,6 +92,7 @@ public class Drive extends Subsystem implements PIDOutput {
     
     public void updateDashboard() {
     	_swerveDrive.UpdateDashboard();
+    	SmartDashboard.putString("DriveMode", _myDriveState.toString());
     }
 
 	public void resetSensors() {
@@ -172,8 +174,8 @@ public class Drive extends Subsystem implements PIDOutput {
 	}
 	
 	public synchronized void setOpenLoop(){
-    	if (myDriveState != DriveState.OpenLoop) {            
-            myDriveState = DriveState.OpenLoop;
+    	if (_myDriveState != DriveState.OpenLoop) {            
+            _myDriveState = DriveState.OpenLoop;
             //myHeadingPid.reset();
             //myHeadingPid.disable();
             
@@ -185,7 +187,7 @@ public class Drive extends Subsystem implements PIDOutput {
     	
     	// Run Through Lookup
     	InterpolatingDouble rate = Constants.kRateLimitMap.getInterpolated(new InterpolatingDouble(error));
-    	if(myDriveState == DriveState.CameraHeadingControl)
+    	if(_myDriveState == DriveState.CameraHeadingControl)
     	{
     		rate = Constants.kRateLimitMapAuto.getInterpolated(new InterpolatingDouble(error));
     	}

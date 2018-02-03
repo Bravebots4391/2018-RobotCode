@@ -84,31 +84,6 @@ public class SwerveDrive {
 		}
 	}
 	
-//	public void setDrive(double leftStickX, double leftStickY, double rightStickX, boolean isPivot) {
-//    	
-//		if(DB(leftStickX) || DB(leftStickY)) {
-//			
-//			if(DB(rightStickX) && !isPivot) {
-//				crabDrive(leftStickX, leftStickY, rightStickX);
-//			}
-//			else if(leftStickY > 0 && DB(rightStickX) && isPivot){
-//				pivotTurn(rightStickX);
-//			}	
-//			else if(leftStickY < 0 && DB(rightStickX) && isPivot){
-//				pivotTurnReverse(rightStickX);
-//			}
-//			else {
-//				crabDrive(leftStickX, leftStickY, 0);
-//			}			
-//		}		
-//		else if(!DB(leftStickX) && !DB(leftStickY) && DB(rightStickX)) {
-//			rotateInPlace(rightStickX);
-//		}		
-//		else {
-//			_gyro.gyroReset();
-//			setAllSpeeds(0, true);
-//		}
-//	}
 	
 	public void rotateInPlace (double rotatePct) {
 		rotateBot(rotatePct);
@@ -135,10 +110,6 @@ public class SwerveDrive {
 		_motorFR.setSensorPhase(true);
 	}
 	
-	private boolean DB(double x) {
-		return Math.abs(x) > 0;
-	}
-	
 	private void crabDrive(double pctSpeed, double angle)
 	{
 		SmartDashboard.putNumber("JoystickAngle", angle);
@@ -147,30 +118,6 @@ public class SwerveDrive {
 		boolean isForward = (angle > 0 && angle <= 90 || angle >= 270 && angle <=360);
 		
 		setAllSpeeds(pctSpeed, isForward);
-	}
-	
-	private void crabDrive(double leftStickX, double leftStickY, double rotate)
-	{
-		if (rotate == 0) {
-			
-			if(_isTurning){
-				_isTurning = false;
-				_gyro.reset();
-			}
-			
-			double angle = ConvertJoystickXYtoAngle(leftStickX, leftStickY);
-			SmartDashboard.putNumber("JoystickAngle", angle);
-			setAllWheelPositions(angle);
-			// calculate speed
-			double speed = Math.pow(Math.sqrt(leftStickX * leftStickX + leftStickY * leftStickY), 2);
-			setAllSpeeds(speed, leftStickY>0);
-		}
-		else if(Math.abs(rotate)>0 && leftStickY > 0){
-			carTurn(leftStickY, rotate);
-		}
-		else if (Math.abs(rotate)>0 && leftStickY < 0){
-			carTurnReverse(leftStickY, rotate);
-		}
 	}
 	
 	private void setAllSpeeds(double speed, boolean isForward)
@@ -366,22 +313,6 @@ public class SwerveDrive {
 		SmartDashboard.putString("SwerveMode", _swerveMode.toString());
 	}	
 	
-	private double ConvertJoystickXYtoAngle(double x, double y)
-	{	
-		double angle = (Math.atan2(y, x) * toDegrees);		
-		
-		if(x == 0 && y == 0)
-		{
-			angle = 90;
-			_gyro.gyroReset();
-		}
-
-		// convert the polar coordinate to a heading
-		double coordinate = ((450 - angle) % 360);
-		
-		return coordinate;
-	}
-	
 	private double convertAngleToEncoderPosition(double angle) 
 	{	
 		double position = (angle / 360.0) * Constants.kEncoderCountsPerRev;		
@@ -424,30 +355,6 @@ public class SwerveDrive {
 		talon.setSelectedSensorPosition(0,  Constants.kPIDLoopIdx, Constants.kTimeoutMs);
 	}
 	
-//	private void resetPosition()
-//	{
-//		_turnFl.getSensorCollection().setQuadraturePosition(0, 10);
-//		
-//		_turnFl.setSelectedSensorPosition(0, Constants.kPIDLoopIdx, Constants.kTimeoutMs);		
-//		_turnFR.setSelectedSensorPosition(0, Constants.kPIDLoopIdx, Constants.kTimeoutMs);
-//		_turnBl.setSelectedSensorPosition(0, Constants.kPIDLoopIdx, Constants.kTimeoutMs);
-//		_turnBR.setSelectedSensorPosition(0, Constants.kPIDLoopIdx, Constants.kTimeoutMs);
-//	}
-	
-//	private void updatePositionForWrapAround()
-//	{
-//		int pos = _turnFl.getSelectedSensorPosition(Constants.kPIDLoopIdx);
-//		_turnFl.setSelectedSensorPosition(pos%Constants.kEncoderCountsPerRev, Constants.kPIDLoopIdx, Constants.kTimeoutMs);				
-//		
-//		int pos2 = _turnFR.getSelectedSensorPosition(Constants.kPIDLoopIdx);
-//		_turnFR.setSelectedSensorPosition(pos2%Constants.kEncoderCountsPerRev, Constants.kPIDLoopIdx, Constants.kTimeoutMs);
-//		
-//		int pos3 = _turnBl.getSelectedSensorPosition(Constants.kPIDLoopIdx);
-//		_turnBl.setSelectedSensorPosition(pos3%Constants.kEncoderCountsPerRev, Constants.kPIDLoopIdx, Constants.kTimeoutMs);
-//		
-//		int pos4 = _turnBR.getSelectedSensorPosition(Constants.kPIDLoopIdx);
-//		_turnBR.setSelectedSensorPosition(pos4%Constants.kEncoderCountsPerRev, Constants.kPIDLoopIdx, Constants.kTimeoutMs);
-//	}
 		
 	private void SetupPIDAnalog(TalonSRX talon, int positionCal)
 	{
