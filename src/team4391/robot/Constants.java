@@ -72,8 +72,9 @@ public class Constants {
 	//
 	// ARM Constants
 	//
-	public static final double kArmInputPctSpeed = .05;
+	public static final double kArmInputPctSpeed = .2;
 	public static final double kArmOutputPctSpeed = -1.0;
+	public static final double kArmFastOutputPctSpeed = 1;
 	
 	//
 	// Cubevator Constants

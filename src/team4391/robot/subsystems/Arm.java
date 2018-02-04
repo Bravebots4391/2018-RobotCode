@@ -97,6 +97,13 @@ public class Arm extends Subsystem {
 		 _suckerInnerOuter.set(ControlMode.PercentOutput, Constants.kArmOutputPctSpeed);
 	 }
 	 
+	 public void setFastPushOut() {
+		 if(myArmState != ArmState.PushOut)
+			 myArmState = ArmState.PushOut;
+		 
+		 _suckerInnerOuter.set(ControlMode.PercentOutput, Constants.kArmFastOutputPctSpeed);
+	 }
+	 
 	 private void checkForCubePresent() {
 		 // TODO Add a sensor to determine if the cube is present
 		 
