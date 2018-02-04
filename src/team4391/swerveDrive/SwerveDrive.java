@@ -186,7 +186,7 @@ public class SwerveDrive {
 		setWheelAngle(180.0, _turnBR);
 		
 		// command forward or backward on the wheels	
-		double rotateSpeed = Math.abs(speed);	
+		double rotateSpeed = Math.abs(speed);
 		double hypot = Math.sqrt(Math.pow(Constants.Width, 2) + Math.pow(Constants.Length, 2));
 		double rotateShortWheel = (Constants.Width / hypot) * rotateSpeed;			
 		
@@ -217,7 +217,7 @@ public class SwerveDrive {
 	
 	public void carTurnReverse(double ReverseSpeed, double rotate)
 	{
-		double BackWheelAngle = rotate * 135.0;
+		double BackWheelAngle = rotate * 135;
 		_isTurning = true; // let the rest of the module know we are in a turn mode
 		
 		setWheelAngle(180.0, _turnFl);

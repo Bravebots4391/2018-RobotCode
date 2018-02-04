@@ -137,7 +137,7 @@ public class Drive extends Subsystem implements PIDOutput {
 			{
 				_swerveDrive.setDrive(SwerveMode.frontPivot, rX, 0);
 			}	
-			else if(Y < 0 && DB(X) && isPivot)
+			else if(Y < 0 && DB(rX) && isPivot)I k	
 			{
 				_swerveDrive.setDrive(SwerveMode.rearPivot, rX, 0);
 			}
