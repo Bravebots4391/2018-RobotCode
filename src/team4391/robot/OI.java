@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import team4391.robot.commands.ArmOpen;
 import team4391.robot.commands.ArmPullIn;
 import team4391.robot.commands.ArmPushOut;
+import team4391.robot.commands.FastArmPushOut;
 import team4391.robot.commands.LiftDown;
 import team4391.robot.commands.LiftUp;
 
@@ -57,11 +58,13 @@ public class OI {
 	Button outty = new JoystickButton(_xBoxCntrl, 2);
     Button liftUp = new JoystickButton(_xBoxCntrl, 7);
     Button liftDown= new JoystickButton(_xBoxCntrl,8);
-
+    Button fastoutty = new JoystickButton(_xBoxCntrl,3);
+    
 	public void init() {
 		armButton.whileHeld(new ArmOpen());		
 		inny.whileHeld(new ArmPullIn());		
 		outty.whileHeld(new ArmPushOut());
+		fastoutty.whileHeld(new FastArmPushOut());
 		liftUp.whileHeld(new LiftUp());;
 		liftDown.whileHeld(new LiftDown());
 	}
