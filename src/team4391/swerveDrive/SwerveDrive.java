@@ -32,6 +32,7 @@ public class SwerveDrive {
 	double _targetPositionDegrees;
 	private static boolean _isTurning = false;
 	private SwerveMode _swerveMode;
+	private boolean _useSpeedControl = false;
 	
 	public SwerveDrive(){
 		init();
@@ -116,15 +117,39 @@ public class SwerveDrive {
 		
 		setAllSpeeds(pctSpeed, isForward);
 	}
-	
+			
 	private void setAllSpeeds(double speed, boolean isForward)
 	{
+		if(_useSpeedControl )
+		{
+			setAllSpeedsFps(speed);
+		}
+		
 		GyroOutput data = _gyro.getDriveCorrection(speed, isForward);
 		
 		_motorFR.set(ControlMode.PercentOutput, data.get_right());
 		_motorRR.set(ControlMode.PercentOutput, data.get_right());
 		_motorFL.set(ControlMode.PercentOutput, data.get_left());
 		_motorRL.set(ControlMode.PercentOutput, data.get_left());
+	}
+	
+	private void setAllSpeedsFps(double speedFps)
+	{
+		// Convert Fps to RPM
+		double rpm = speedFps * ((720)/(Math.PI * Constants.kWheelDiameterInches))*Constants.kSwerveDriveRatio;
+		
+		// Convert RPM to units / 100ms.
+		// 4096 Units/Rev * RPM / 600 100ms/min in either direction:
+		// velocity setpoint is in units/100ms		 
+
+		double targetVelocity_UnitsPer100ms = rpm * Constants.kCimcoderPulsesPerRev / 600;
+
+		/* 500 RPM in either direction */
+		
+		_motorFR.set(ControlMode.Velocity, targetVelocity_UnitsPer100ms);
+		_motorRR.set(ControlMode.Velocity, targetVelocity_UnitsPer100ms);
+		_motorFL.set(ControlMode.Velocity, targetVelocity_UnitsPer100ms);
+		_motorRL.set(ControlMode.Velocity, targetVelocity_UnitsPer100ms);
 	}
 	
 	private void rotateBot(double speed) {
@@ -247,6 +272,24 @@ public class SwerveDrive {
 		_motorRL.set(ControlMode.PercentOutput, forwardSpeed);
 	}
 
+	private void StraightDriveMcRotate(double forwardSpeedFps, double rotateRateFps) 
+	{
+		// set all wheel positions to the negative of Heading
+		// wheelPos = 360 - getHeading();
+		
+		// get Theta for each wheel
+		// FLt = heading + 315;
+		// FRt = heading + 45;
+		// RLt = heading + 225;
+		// RRt = heading + 135;
+		
+		// Calculate each wheel speed offset
+		//FLs = forwardSpeedFps + (-rotateRateFps)*Math.sin(FLt);
+		//FRs = forwardSpeedFps + (-rotateRateFps)*Math.sin(FRt);
+		//RLs = forwardSpeedFps + (-rotateRateFps)*Math.sin(RLt);
+		//RRs = forwardSpeedFps + (-rotateRateFps)*Math.sin(RRt);
+	}	
+	
 	private void setAllWheelPositions(double targetAngle)
 	{
 		setWheelAngle(targetAngle, _turnFl);
@@ -351,8 +394,25 @@ public class SwerveDrive {
 	private void resetDistance(TalonSRX talon){
 		talon.setSelectedSensorPosition(0,  Constants.kPIDLoopIdx, Constants.kTimeoutMs);
 	}
-	
 		
+	private void SetupDriveWheelPID(TalonSRX talon)
+	{
+		talon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, Constants.kTimeoutMs);
+		talon.setSensorPhase(true);
+
+		/* set the peak, nominal outputs */
+		talon.configNominalOutputForward(0, Constants.kTimeoutMs);
+		talon.configNominalOutputReverse(0, Constants.kTimeoutMs);
+		talon.configPeakOutputForward(1, Constants.kTimeoutMs);
+		talon.configPeakOutputReverse(-1, Constants.kTimeoutMs);
+
+		/* set closed loop gains in slot0 */
+		talon.config_kF(Constants.kPIDLoopIdx, 0.1097, Constants.kTimeoutMs);
+		talon.config_kP(Constants.kPIDLoopIdx, 0.113333, Constants.kTimeoutMs);
+		talon.config_kI(Constants.kPIDLoopIdx, 0, Constants.kTimeoutMs);
+		talon.config_kD(Constants.kPIDLoopIdx, 0, Constants.kTimeoutMs);
+	}
+	
 	private void SetupPIDAnalog(TalonSRX talon, int positionCal)
 	{
 		int raw = talon.getSensorCollection().getAnalogInRaw();
