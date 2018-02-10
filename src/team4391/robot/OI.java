@@ -11,9 +11,11 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import team4391.robot.commands.ArmOpen;
 import team4391.robot.commands.ArmPullIn;
 import team4391.robot.commands.ArmPushOut;
+import team4391.robot.commands.DriveForDistance;
 import team4391.robot.commands.FastArmPushOut;
 import team4391.robot.commands.LiftDown;
 import team4391.robot.commands.LiftUp;
@@ -82,5 +84,7 @@ public class OI {
 		fastoutty2.whileHeld(new FastArmPushOut());
 		liftUp2.whileHeld(new LiftUp());;
 		liftDown2.whileHeld(new LiftDown());
+		
+		SmartDashboard.putData("DriveForDistance", new DriveForDistance(24.0, 1.0, 0.0));
 	}
 }

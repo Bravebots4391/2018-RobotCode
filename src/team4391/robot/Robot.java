@@ -100,7 +100,7 @@ public class Robot extends TimedRobot {
 	    	
 	    	driveSubsystem.updateDashboard();
 	    	armSubsystem.updateDashboard();
-//	    	lifter.updateDashboard();
+	    	cubevatorSubsystem.updateDashboard();
 //	    	rumble.updateDashboard();
 //	    	intake.updateDashboard();
 //	    	led.updateDashboard();

@@ -3,6 +3,7 @@ package team4391.robot.subsystems;
 import team4391.swerveDrive.SwerveDrive;
 import team4391.swerveDrive.SwerveDrive.SwerveMode;
 import team4391.util.InterpolatingDouble;
+import team4391.util.InterpolatingTreeMap;
 import team4391.util.SyncronousRateLimiter;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PIDController;
@@ -12,6 +13,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import team4391.loops.Loop;
 import team4391.robot.Constants;
+import team4391.robot.commands.DriveForDistance;
 import team4391.robot.commands.TeleopDrive;
 
 
@@ -19,19 +21,22 @@ public class Drive extends Subsystem implements PIDOutput {
 	
 	private SwerveDrive _swerveDrive = new SwerveDrive();
 	private double _pidOutput;
-	private double _myTargetAngle;
+	private double _myTargetHeading;
 	private double _myTurnRate;
 	private double _myHeadingError;
 	private double _myTargetSpeed;
+	private double _myTargetDistanceIn;
 	private Preferences prefs;
 	
 	public final PIDController _myHeadingPid = new PIDController(0.010, 0, 0, _swerveDrive.getGyro(), this);
     public SyncronousRateLimiter _srl = new SyncronousRateLimiter(Constants.kLooperDt, 1.0 , 0);
     public SyncronousRateLimiter _accelRateLimiter = new SyncronousRateLimiter(Constants.kLooperDt, 1.0, 0);
     
+    private InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> _distanceSpeedProfile = new InterpolatingTreeMap<>();
+    
 	
 	public enum DriveState {
-        OpenLoop, DirectionSetpoint, CameraHeadingControl
+        OpenLoop, DirectionSetpoint, CameraHeadingControl, DriveForDistance
     }
 	
 	private DriveState _myDriveState;
@@ -52,6 +57,9 @@ public class Drive extends Subsystem implements PIDOutput {
 				case OpenLoop:
 					break;
 				
+				case DriveForDistance:
+					//updateDriveForDistance();
+					
 				case DirectionSetpoint:					
 					//updateDegTurnHeadingControl();
 					break;
@@ -84,6 +92,8 @@ public class Drive extends Subsystem implements PIDOutput {
 	public Drive()
 	{
 		prefs = Preferences.getInstance();
+		
+		
 	}
 	
 	 public Loop getLoop() {
@@ -104,10 +114,17 @@ public class Drive extends Subsystem implements PIDOutput {
     	_swerveDrive.UpdateDashboard();
     	
     	SmartDashboard.putString("DriveMode", _myDriveState.toString());
-    	SmartDashboard.putNumber("RotateSetpoint", _myTargetAngle);
+    	SmartDashboard.putNumber("RotateSetpoint", _myTargetHeading);
     	SmartDashboard.putNumber("RotateError", _myHeadingError);
+    	
+    	SmartDashboard.putData(this);    	    
     }
 
+    public DriveState getDriveState()
+    {
+    	return _myDriveState;
+    }
+    
 	public void resetSensors() {
 		// TODO Auto-generated method stub
 		
@@ -152,7 +169,7 @@ public class Drive extends Subsystem implements PIDOutput {
 		}
 		else
 		{
-			_swerveDrive.setDrive(SwerveMode.crab, 0, 0);
+			_swerveDrive.setDrive(SwerveMode.coast, 0, 0);
 		}
 	}
 	
@@ -199,7 +216,7 @@ public class Drive extends Subsystem implements PIDOutput {
         }    
     	
     	_myTargetSpeed = speed;
-    	_myTargetAngle = degreesTarget;
+    	_myTargetHeading = degreesTarget;
     	
     	//SetBrakeEnable(true);
     	setupPID(1.0);
@@ -225,7 +242,7 @@ public class Drive extends Subsystem implements PIDOutput {
     
     private synchronized void updateDegTurnHeadingControl(){
     	// Calculate rotate error    	
-		_myHeadingError = _myTargetAngle - _swerveDrive.getGyro().gyroGetFusedHeading();
+		_myHeadingError = _myTargetHeading - _swerveDrive.getGyro().gyroGetFusedHeading();
 				
 		updateRotationControl(_myHeadingError);
     }
@@ -256,6 +273,57 @@ public class Drive extends Subsystem implements PIDOutput {
 		_myHeadingPid.setSetpoint(_srl.getOutput());	
 		
 		_swerveDrive.setDrive(SwerveMode.rotate, _pidOutput, 0);			
+    }
+    
+    public void driveForDistance(double distanceInches, double speedFps, double heading)
+    {    
+    	// This gets called only once
+    	if(_myDriveState != DriveState.DriveForDistance)
+    	{
+    		_myDriveState = DriveState.DriveForDistance;
+    		_myTargetSpeed = speedFps;
+        	_myTargetHeading = heading;
+        	_myTargetDistanceIn = distanceInches;
+        	
+        	_swerveDrive.resetDistance();
+        	
+        	// Setup lookup table
+        	
+        	
+        	// Setup the Drive
+        	_swerveDrive.setDrive(SwerveMode.crab, 0, _myTargetHeading);
+    	}
+    }
+    
+    public void setupDistanceProfile(double distanceInches, double speedFps)
+    {
+        // Rotation PID Rate Limit Constants.  Limits for normal turning commands.
+        _distanceSpeedProfile = new InterpolatingTreeMap<>();
+
+        _distanceSpeedProfile.put(new InterpolatingDouble(0.0), new InterpolatingDouble(.5));
+        _distanceSpeedProfile.put(new InterpolatingDouble(6.0), new InterpolatingDouble(speedFps));
+        _distanceSpeedProfile.put(new InterpolatingDouble(distanceInches - 6), new InterpolatingDouble(speedFps));
+        _distanceSpeedProfile.put(new InterpolatingDouble(distanceInches), new InterpolatingDouble(.5));
+        
+    }
+    
+    public void updateDriveForDistance()
+    {
+    	if(_myDriveState == DriveState.DriveForDistance)
+    	{
+    		double distance = _swerveDrive.getDistanceInches();
+    		
+    		if(distance >= _myTargetDistanceIn)
+    		{
+    			setOpenLoop();
+    			return;
+    		}
+    		
+    		// Get drive info from the lookup
+    		double speed = _distanceSpeedProfile.getInterpolated(new InterpolatingDouble(distance)).value;  		
+    		
+    		_swerveDrive.setDrive(SwerveMode.crab, speed, _myTargetHeading);
+    	}
     }
 
 	@Override
