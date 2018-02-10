@@ -52,13 +52,21 @@ public class OI {
 	// button.whenReleased(new ExampleCommand());
 			
 	public static Joystick _xBoxCntrl = new Joystick(0);
-
+    public static Joystick _xBoxCntrl2 = new Joystick(1);
+    
 	Button armButton = new JoystickButton(_xBoxCntrl, 1);	
 	Button inny = new JoystickButton(_xBoxCntrl, 4);
 	Button outty = new JoystickButton(_xBoxCntrl, 2);
     Button liftUp = new JoystickButton(_xBoxCntrl, 7);
     Button liftDown= new JoystickButton(_xBoxCntrl,8);
     Button fastoutty = new JoystickButton(_xBoxCntrl,3);
+    
+    Button armButton2 = new JoystickButton(_xBoxCntrl2, 1);	
+	Button inny2 = new JoystickButton(_xBoxCntrl2, 4);
+	Button outty2 = new JoystickButton(_xBoxCntrl2, 2);
+    Button liftUp2 = new JoystickButton(_xBoxCntrl2, 7);
+    Button liftDown2= new JoystickButton(_xBoxCntrl2,8);
+    Button fastoutty2 = new JoystickButton(_xBoxCntrl2,3);
     
 	public void init() {
 		armButton.whileHeld(new ArmOpen());		
@@ -67,5 +75,12 @@ public class OI {
 		fastoutty.whileHeld(new FastArmPushOut());
 		liftUp.whileHeld(new LiftUp());;
 		liftDown.whileHeld(new LiftDown());
+		
+		armButton2.whileHeld(new ArmOpen());		
+		inny2.whileHeld(new ArmPullIn());		
+		outty2.whileHeld(new ArmPushOut());
+		fastoutty2.whileHeld(new FastArmPushOut());
+		liftUp2.whileHeld(new LiftUp());;
+		liftDown2.whileHeld(new LiftDown());
 	}
 }

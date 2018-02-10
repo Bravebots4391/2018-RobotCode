@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.GyroBase;
 import edu.wpi.first.wpilibj.SendableBase;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import team4391.robot.Robot;
 
 
 public class Gyro extends GyroBase
@@ -38,8 +39,9 @@ public class Gyro extends GyroBase
 		}
 	}
 	
-	public void gyroInit(int talonId){
-		_pidgey = new PigeonIMU(talonId);		
+	public void gyroInit(int talonId){			
+		//_pidgey = new PigeonIMU(talonId);
+		_pidgey = new PigeonIMU(Robot.armSubsystem._suckerInnerOuter);
 	}
 	
 	public void gyroReset(){

@@ -62,11 +62,11 @@ public class Robot extends TimedRobot {
 		setupAutonomousChooser();
 		
 		// Initialize subsystems
-		driveSubsystem = new Drive();
 		armSubsystem = new Arm();
-		cubevatorSubsystem = new Lift();
-		
+		cubevatorSubsystem = new Lift();		
 		_pdpModule = new PowerDistributionPanel(10);
+		
+		driveSubsystem = new Drive();
 		
 		m_oi.init();
 		

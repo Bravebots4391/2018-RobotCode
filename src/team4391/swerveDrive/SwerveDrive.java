@@ -25,7 +25,7 @@ public class SwerveDrive {
 	private static WPI_TalonSRX _turnFl = new WPI_TalonSRX(Constants.kFrontLeftTurnMotorId);
 	private static WPI_TalonSRX _turnFR = new WPI_TalonSRX(Constants.kFrontRightTurnMotorId);
 	private static WPI_TalonSRX _turnBl = new WPI_TalonSRX(Constants.kBackLeftTurnMotorId);
-	private static WPI_TalonSRX _turnBR = new WPI_TalonSRX(Constants.kBackRightTurnMotorId);
+	private static WPI_TalonSRX _turnBR = new WPI_TalonSRX(Constants.kBackRightTurnMotorId);		
 	
 	private static Gyro _gyro = new Gyro(Constants.kPigeonGyroId);
 	
@@ -102,18 +102,23 @@ public class SwerveDrive {
 		SetupPIDAnalog(_turnFl, Constants.kFrontLeftCal);
 		SetupPIDAnalog(_turnFR, Constants.kFrontRightCal);
 		SetupPIDAnalog(_turnBl, Constants.kRearLeftCal);
-		SetupPIDAnalog(_turnBR, Constants.kRearRightCal);	 	
+		SetupPIDAnalog(_turnBR, Constants.kRearRightCal);		
+		
+		SetupDriveWheelPID(_motorFR);
+		SetupDriveWheelPID(_motorRR);
+		SetupDriveWheelPID(_motorFL);
+		SetupDriveWheelPID(_motorRL);
 		
 		_motorFR.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 10);
 		_motorFR.setSensorPhase(true);
 	}
 	
-	private void crabDrive(double pctSpeed, double angle)
+	private void crabDrive(double pctSpeed, double heading)
 	{
-		SmartDashboard.putNumber("JoystickAngle", angle);
-		setAllWheelPositions(angle);
+		SmartDashboard.putNumber("JoystickAngle", heading);
+		setAllWheelPositions(heading);
 		
-		boolean isForward = (angle > 0 && angle <= 90 || angle >= 270 && angle <=360);
+		boolean isForward = (heading > 0 && heading <= 90 || heading >= 270 && heading <=360);
 		
 		setAllSpeeds(pctSpeed, isForward);
 	}
@@ -121,8 +126,8 @@ public class SwerveDrive {
 	private void setAllSpeeds(double speed, boolean isForward)
 	{
 		if(_useSpeedControl )
-		{
-			setAllSpeedsFps(speed);
+		{			
+			setAllSpeedsFps(11.0 * speed);
 		}
 		
 		GyroOutput data = _gyro.getDriveCorrection(speed, isForward);
@@ -211,7 +216,7 @@ public class SwerveDrive {
 		setWheelAngle(180.0, _turnBR);
 		
 		// command forward or backward on the wheels	
-		double rotateSpeed = Math.abs(speed);	
+		double rotateSpeed = Math.abs(speed);
 		double hypot = Math.sqrt(Math.pow(Constants.Width, 2) + Math.pow(Constants.Length, 2));
 		double rotateShortWheel = (Constants.Width / hypot) * rotateSpeed;			
 		
@@ -242,7 +247,7 @@ public class SwerveDrive {
 	
 	public void carTurnReverse(double ReverseSpeed, double rotate)
 	{
-		double BackWheelAngle = rotate * 135.0;
+		double BackWheelAngle = rotate * 135;
 		_isTurning = true; // let the rest of the module know we are in a turn mode
 		
 		setWheelAngle(180.0, _turnFl);
@@ -346,7 +351,11 @@ public class SwerveDrive {
 		
 		SmartDashboard.putNumber("Distance(inches)", getDistanceInches(_motorFR));		
 		
-		SmartDashboard.putNumber("Speed",getVelocity(_motorFR));
+		
+		SmartDashboard.putNumber("SpeedFR",getVelocity(_motorFR));
+		SmartDashboard.putNumber("SpeedFL",getVelocity(_motorFL));
+		SmartDashboard.putNumber("SpeedRR",getVelocity(_motorRR));
+		SmartDashboard.putNumber("SpeedRL",getVelocity(_motorRL));
 				
 		SmartDashboard.putData("pigeon", _gyro);	
 		
@@ -397,8 +406,8 @@ public class SwerveDrive {
 		
 	private void SetupDriveWheelPID(TalonSRX talon)
 	{
-		talon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, Constants.kTimeoutMs);
-		talon.setSensorPhase(true);
+		talon.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, Constants.kTimeoutMs);
+		talon.setSensorPhase(false);
 
 		/* set the peak, nominal outputs */
 		talon.configNominalOutputForward(0, Constants.kTimeoutMs);
@@ -407,9 +416,9 @@ public class SwerveDrive {
 		talon.configPeakOutputReverse(-1, Constants.kTimeoutMs);
 
 		/* set closed loop gains in slot0 */
-		talon.config_kF(Constants.kPIDLoopIdx, 0.1097, Constants.kTimeoutMs);
-		talon.config_kP(Constants.kPIDLoopIdx, 0.113333, Constants.kTimeoutMs);
-		talon.config_kI(Constants.kPIDLoopIdx, 0, Constants.kTimeoutMs);
+		talon.config_kF(Constants.kPIDLoopIdx, 0.0, Constants.kTimeoutMs);
+		talon.config_kP(Constants.kPIDLoopIdx, 2.0, Constants.kTimeoutMs);
+		talon.config_kI(Constants.kPIDLoopIdx, 0.001, Constants.kTimeoutMs);
 		talon.config_kD(Constants.kPIDLoopIdx, 0, Constants.kTimeoutMs);
 	}
 	
