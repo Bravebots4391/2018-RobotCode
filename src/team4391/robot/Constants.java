@@ -66,6 +66,8 @@ public class Constants {
 	public static final int kCubevatorId = 10;
 	public static final int kArmOpenyCloseyId = 53;
 	
+	public static final int kClimberId = 12;
+	
 	public static final int kPCMId = 9;	
 	public static final int kPigeonGyroId = kSuckerInnerOuterId;  // The pigeon is plugged into the suckerInnerOuter talon.
 	
@@ -106,6 +108,8 @@ public class Constants {
     
     // Rotation PID Rate Limit Constants.  Limits for normal turning commands.
     public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> kRateLimitMap = new InterpolatingTreeMap<>();
+
+	
 
     static {
     	kRateLimitMap.put(new InterpolatingDouble(-40.0), new InterpolatingDouble(-60.0));
