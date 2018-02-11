@@ -406,6 +406,12 @@ public class SwerveDrive {
 		double rotations = position / countsPerRev;
 		
 		double angle = (rotations * 360) % 360;
+		
+		// always express as a positive angle
+		if(angle < 0) {
+			angle+=360;
+		}
+		
 		return angle;
 	}
 	

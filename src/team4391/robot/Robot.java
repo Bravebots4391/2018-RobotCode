@@ -101,10 +101,7 @@ public class Robot extends TimedRobot {
 	    	driveSubsystem.updateDashboard();
 	    	armSubsystem.updateDashboard();
 	    	cubevatorSubsystem.updateDashboard();
-//	    	rumble.updateDashboard();
-//	    	intake.updateDashboard();
-//	    	led.updateDashboard();
-	    	
+
 //	    	SmartDashboard.putBoolean("cameraConnected", mVisionServer.isConnected());
 	    	
 	    	SmartDashboard.putNumber("Counter", _counter++);     	    	
