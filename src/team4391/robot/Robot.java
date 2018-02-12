@@ -18,6 +18,7 @@ import team4391.util.CrashTracker;
 import team4391.loops.Looper;
 import team4391.robot.commands.ExampleCommand;
 import team4391.robot.subsystems.Arm;
+import team4391.robot.subsystems.Climb;
 import team4391.robot.subsystems.Drive;
 import team4391.robot.subsystems.ExampleSubsystem;
 import team4391.robot.subsystems.Lift;
@@ -37,6 +38,7 @@ public class Robot extends TimedRobot {
 	public static Drive driveSubsystem;
 	public static Arm armSubsystem;
 	public static Lift cubevatorSubsystem;
+	public static Climb climbSubsystem;
 	public static PowerDistributionPanel _pdpModule;
 	
 	public int _counter = 0;
@@ -65,6 +67,8 @@ public class Robot extends TimedRobot {
 		armSubsystem = new Arm();
 		cubevatorSubsystem = new Lift();		
 		_pdpModule = new PowerDistributionPanel(10);
+		climbSubsystem = new Climb();
+		climbSubsystem.init();
 		
 		driveSubsystem = new Drive();
 		
@@ -100,11 +104,9 @@ public class Robot extends TimedRobot {
 	    	
 	    	driveSubsystem.updateDashboard();
 	    	armSubsystem.updateDashboard();
-//	    	lifter.updateDashboard();
-//	    	rumble.updateDashboard();
-//	    	intake.updateDashboard();
-//	    	led.updateDashboard();
-	    	
+	    	cubevatorSubsystem.updateDashboard();
+	    	climbSubsystem.updateDashboard();
+
 //	    	SmartDashboard.putBoolean("cameraConnected", mVisionServer.isConnected());
 	    	
 	    	SmartDashboard.putNumber("Counter", _counter++);     	    	

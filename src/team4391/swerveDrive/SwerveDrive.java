@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class SwerveDrive {
 
 	public enum SwerveMode{
-		crab, frontPivot, rearPivot, rotate, carTurn, carTurnReverse
+		crab, frontPivot, rearPivot, rotate, carTurn, carTurnReverse, stop, coast
 	}
 	
 	private static WPI_TalonSRX _motorFR = new WPI_TalonSRX(Constants.kFrontRightDriveMotorId);
@@ -32,7 +32,7 @@ public class SwerveDrive {
 	double _targetPositionDegrees;
 	private static boolean _isTurning = false;
 	private SwerveMode _swerveMode;
-	private boolean _useSpeedControl = false;
+	private boolean _useSpeedControl = true;
 	
 	public SwerveDrive(){
 		init();
@@ -78,6 +78,16 @@ public class SwerveDrive {
 			_isTurning = true;
 			carTurnReverse(pctSpeed, angle);
 			break;
+		
+		case stop:
+			crabDrive(0, 0);
+			_gyro.reset();
+			break;
+			
+		case coast:
+			coast();
+			_gyro.reset();
+			break;
 			
 		}
 	}
@@ -122,12 +132,29 @@ public class SwerveDrive {
 		
 		setAllSpeeds(pctSpeed, isForward);
 	}
+	
+	private void coast()
+	{
+		setAllSpeeds(0, true);
+	}
 			
 	private void setAllSpeeds(double speed, boolean isForward)
 	{
-		if(_useSpeedControl )
-		{			
-			setAllSpeedsFps(11.0 * speed);
+		if(_useSpeedControl)
+		{		
+			if(Math.abs(speed) == 0)
+			{
+				_motorFR.set(ControlMode.Disabled, 0);
+				_motorRR.set(ControlMode.Disabled, 0);
+				_motorFL.set(ControlMode.Disabled, 0);
+				_motorRL.set(ControlMode.Disabled, 0);
+			}
+			else
+			{
+				setAllSpeedsFps(11.0 * speed);			
+			}
+			
+			return;
 		}
 		
 		GyroOutput data = _gyro.getDriveCorrection(speed, isForward);
@@ -137,6 +164,7 @@ public class SwerveDrive {
 		_motorFL.set(ControlMode.PercentOutput, data.get_left());
 		_motorRL.set(ControlMode.PercentOutput, data.get_left());
 	}
+	
 	
 	private void setAllSpeedsFps(double speedFps)
 	{
@@ -378,6 +406,12 @@ public class SwerveDrive {
 		double rotations = position / countsPerRev;
 		
 		double angle = (rotations * 360) % 360;
+		
+		// always express as a positive angle
+		if(angle < 0) {
+			angle+=360;
+		}
+		
 		return angle;
 	}
 	
@@ -389,6 +423,18 @@ public class SwerveDrive {
 		double velocity = talon.getSelectedSensorVelocity(0);
 		
 		return velocity*x*(10.0/12.0);
+	}
+	
+	public double getDistanceInches()
+	{
+		double d1 = getDistanceInches(_motorFR);
+		double d2 = getDistanceInches(_motorRR);
+		double d3 = getDistanceInches(_motorFL);
+		double d4 = getDistanceInches(_motorRL);
+		
+		double distanceAvg = (d1 + d2 + d3 + d4)/4.0;
+		
+		return distanceAvg;
 	}
 	
 	private double getDistanceInches(TalonSRX talon)
@@ -406,6 +452,10 @@ public class SwerveDrive {
 		
 	private void SetupDriveWheelPID(TalonSRX talon)
 	{
+		talon.setNeutralMode(NeutralMode.Coast);
+		
+		talon.configClosedloopRamp(0.5, Constants.kTimeoutMs);
+		
 		talon.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, Constants.kTimeoutMs);
 		talon.setSensorPhase(false);
 
@@ -417,8 +467,8 @@ public class SwerveDrive {
 
 		/* set closed loop gains in slot0 */
 		talon.config_kF(Constants.kPIDLoopIdx, 0.0, Constants.kTimeoutMs);
-		talon.config_kP(Constants.kPIDLoopIdx, 2.0, Constants.kTimeoutMs);
-		talon.config_kI(Constants.kPIDLoopIdx, 0.001, Constants.kTimeoutMs);
+		talon.config_kP(Constants.kPIDLoopIdx, 5.0, Constants.kTimeoutMs);
+		talon.config_kI(Constants.kPIDLoopIdx, 0.00, Constants.kTimeoutMs);
 		talon.config_kD(Constants.kPIDLoopIdx, 0, Constants.kTimeoutMs);
 	}
 	
@@ -462,8 +512,10 @@ public class SwerveDrive {
 	}
 
 	public void resetDistance() {
-		// TODO Auto-generated method stub
-		
+		resetDistance(_motorFR);
+		resetDistance(_motorRR);
+		resetDistance(_motorFL);
+		resetDistance(_motorRL);
 	}
 
 }

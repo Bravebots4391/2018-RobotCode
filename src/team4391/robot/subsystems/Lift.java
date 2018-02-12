@@ -19,10 +19,14 @@ public class Lift extends Subsystem {
 	
 	TalonSRX _cubevatorTalon = new TalonSRX(Constants.kCubevatorId);
 	
+	public Lift()
+	{
+		init();
+	}
 
 	public void init()
 	{
-		_cubevatorTalon.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, Constants.kTimeoutMs);
+		_cubevatorTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, Constants.kTimeoutMs);
 		
 		_cubevatorTalon.setSensorPhase(true); // Change this to false if not counting positive numbers when going up
 			
@@ -75,7 +79,7 @@ public class Lift extends Subsystem {
 	}
 	
 	public void updateDashboard() {
-		 SmartDashboard.getNumber("CubevatorHeightInches", getHeightInches());
+		 SmartDashboard.putNumber("CubevatorHeightInches", getHeightInches());
 	}
 }
 
