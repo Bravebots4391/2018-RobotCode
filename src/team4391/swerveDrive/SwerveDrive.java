@@ -308,7 +308,7 @@ public class SwerveDrive {
 		SmartDashboard.putNumber("setWheelPos_targetAngle", targetAngle);
 		
 		// get current encoder position
-		double position = srx.getSelectedSensorPosition(Constants.kPIDLoopIdx);			
+		double position = (double)srx.getSelectedSensorPosition(Constants.kPIDLoopIdx);			
 		SmartDashboard.putNumber("setWheelPos_position", position);
 		
 		// convert position to heading angle.
