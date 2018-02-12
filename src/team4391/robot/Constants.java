@@ -1,8 +1,6 @@
 package team4391.robot;
 
 
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-
 import edu.wpi.first.wpilibj.Preferences;
 import team4391.util.InterpolatingDouble;
 import team4391.util.InterpolatingTreeMap;
@@ -81,9 +79,9 @@ public class Constants {
 	//
 	// Cubevator Constants
 	//
-	public static final int kCubevatorEncoderCountsPerRev = 1440;
+	public static final int kCubevatorEncoderCountsPerRev = 409600; //4096 from relative encoder + 100:1 gear ratio
 	public static final double kCubevatorDrumDiameterInches = 3.5;
-	public static final double kCubevatorTopLimitInches = 80;
+	public static final double kCubevatorTopLimitInches = 84;
 	
     // PID gains for rotating in place
     public static double kDriveTurnKp = 0.05;

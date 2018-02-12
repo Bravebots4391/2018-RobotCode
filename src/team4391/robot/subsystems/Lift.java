@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import team4391.robot.Constants;
@@ -18,6 +19,7 @@ public class Lift extends Subsystem {
     // here. Call these from Commands.
 	
 	TalonSRX _cubevatorTalon = new TalonSRX(Constants.kCubevatorId);
+	DigitalInput _limitSwitch = new DigitalInput(0);
 	
 	public Lift()
 	{
@@ -31,9 +33,9 @@ public class Lift extends Subsystem {
 		_cubevatorTalon.setSensorPhase(true); // Change this to false if not counting positive numbers when going up
 			
 		// May want to enable a "soft" limit on distance
-//		_cubevatorTalon.configForwardSoftLimitEnable(true, Constants.kTimeoutMs);
-//		int softLimitPosition = getEncoderPositionFromInches(Constants.kCubevatorTopLimitInches);
-//		_cubevatorTalon.configForwardSoftLimitThreshold(softLimitPosition, Constants.kTimeoutMs);			
+		_cubevatorTalon.configForwardSoftLimitEnable(true, Constants.kTimeoutMs);
+		int softLimitPosition = getEncoderPositionFromInches(Constants.kCubevatorTopLimitInches);
+		_cubevatorTalon.configForwardSoftLimitThreshold(softLimitPosition, Constants.kTimeoutMs);			
 	}	
 	
     public void initDefaultCommand() {
@@ -47,7 +49,15 @@ public class Lift extends Subsystem {
 	}
 	
 	public void down() {
-		_cubevatorTalon.set(ControlMode.PercentOutput, .75);
+		
+		if(!IsAtBottomLimit())
+		{
+			_cubevatorTalon.set(ControlMode.PercentOutput, .75);
+		}
+		else
+		{
+			stop();
+		}
 		
 	}
 
@@ -78,8 +88,21 @@ public class Lift extends Subsystem {
 		return inches;
 	}
 	
+	public boolean IsAtTopLimit()
+	{
+		return _cubevatorTalon.getSensorCollection().isFwdLimitSwitchClosed();
+	}
+	
+	public boolean IsAtBottomLimit()
+	{
+		resetPosition();		
+		return _limitSwitch.get();
+	}
+	
 	public void updateDashboard() {
 		 SmartDashboard.putNumber("CubevatorHeightInches", getHeightInches());
+		 SmartDashboard.putBoolean("IsAtBottom", IsAtBottomLimit());
+		 SmartDashboard.putBoolean("IsAtTop", IsAtTopLimit());
 	}
 }
 
