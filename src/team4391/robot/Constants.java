@@ -64,7 +64,7 @@ public class Constants {
 	public static final int kCubevatorId = 10;
 	public static final int kArmOpenyCloseyId = 53;
 	
-	public static final int kClimberId = 12;
+	public static final int kClimberId = 13;
 	
 	public static final int kPCMId = 9;	
 	public static final int kPigeonGyroId = kSuckerInnerOuterId;  // The pigeon is plugged into the suckerInnerOuter talon.

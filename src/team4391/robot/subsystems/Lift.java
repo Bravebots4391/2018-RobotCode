@@ -29,6 +29,7 @@ public class Lift extends Subsystem {
 	public void init()
 	{
 		_cubevatorTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, Constants.kTimeoutMs);
+		_cubevatorTalon.setInverted(true);
 		
 		_cubevatorTalon.setSensorPhase(true); // Change this to false if not counting positive numbers when going up
 			
@@ -44,7 +45,7 @@ public class Lift extends Subsystem {
     }
 
 	public void up() {
-		_cubevatorTalon.set(ControlMode.PercentOutput, -1);
+		_cubevatorTalon.set(ControlMode.PercentOutput, 1);
 		
 	}
 	
@@ -52,10 +53,11 @@ public class Lift extends Subsystem {
 		
 		if(!IsAtBottomLimit())
 		{
-			_cubevatorTalon.set(ControlMode.PercentOutput, .75);
+			_cubevatorTalon.set(ControlMode.PercentOutput, -.75);
 		}
 		else
 		{
+			resetPosition();	
 			stop();
 		}
 		
@@ -81,6 +83,7 @@ public class Lift extends Subsystem {
 	public double getHeightInches()
 	{
 		int position = _cubevatorTalon.getSelectedSensorPosition(0);
+		SmartDashboard.putNumber("cubevatorPossition", position);
 		
 		double revolutions = ((double)position / (double)Constants.kCubevatorEncoderCountsPerRev);
 		double inches = (revolutions * (Constants.kCubevatorDrumDiameterInches * Math.PI));
@@ -94,8 +97,7 @@ public class Lift extends Subsystem {
 	}
 	
 	public boolean IsAtBottomLimit()
-	{
-		resetPosition();		
+	{		
 		return _limitSwitch.get();
 	}
 	

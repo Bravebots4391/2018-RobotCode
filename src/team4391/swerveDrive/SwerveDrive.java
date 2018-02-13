@@ -8,7 +8,6 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
-import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class SwerveDrive {
@@ -118,6 +117,8 @@ public class SwerveDrive {
 		SetupDriveWheelPID(_motorRR);
 		SetupDriveWheelPID(_motorFL);
 		SetupDriveWheelPID(_motorRL);
+		
+		SetNeutralModeForDrive(NeutralMode.Coast);
 		
 		_motorFR.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 10);
 		_motorFR.setSensorPhase(true);
@@ -450,10 +451,16 @@ public class SwerveDrive {
 		talon.setSelectedSensorPosition(0,  Constants.kPIDLoopIdx, Constants.kTimeoutMs);
 	}
 		
-	private void SetupDriveWheelPID(TalonSRX talon)
+	public void SetNeutralModeForDrive(NeutralMode mode)
 	{
-		talon.setNeutralMode(NeutralMode.Coast);
-		
+		_motorFR.setNeutralMode(mode);
+		_motorRR.setNeutralMode(mode);
+		_motorFL.setNeutralMode(mode);
+		_motorRL.setNeutralMode(mode);
+	}
+	
+	private void SetupDriveWheelPID(TalonSRX talon)
+	{	
 		talon.configClosedloopRamp(0.5, Constants.kTimeoutMs);
 		
 		talon.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, Constants.kTimeoutMs);

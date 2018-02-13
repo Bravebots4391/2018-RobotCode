@@ -5,6 +5,9 @@ import team4391.swerveDrive.SwerveDrive.SwerveMode;
 import team4391.util.InterpolatingDouble;
 import team4391.util.InterpolatingTreeMap;
 import team4391.util.SyncronousRateLimiter;
+
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
@@ -58,7 +61,7 @@ public class Drive extends Subsystem implements PIDOutput {
 					break;
 				
 				case DriveForDistance:
-					//updateDriveForDistance();
+					updateDriveForDistance();
 					
 				case DirectionSetpoint:					
 					//updateDegTurnHeadingControl();
@@ -200,12 +203,12 @@ public class Drive extends Subsystem implements PIDOutput {
 	}
 	
 	public synchronized void setOpenLoop(){
-    	if (_myDriveState != DriveState.OpenLoop) {            
-            _myDriveState = DriveState.OpenLoop;
-            //myHeadingPid.reset();
-            //myHeadingPid.disable();
-            
+    	if (_myDriveState != DriveState.OpenLoop) {                            	
+    		
+    		_swerveDrive.SetNeutralModeForDrive(NeutralMode.Coast);
             _swerveDrive.setDrive(SwerveMode.crab, 0, 0);
+            
+            _myDriveState = DriveState.OpenLoop;
         }    	    	
     }
 	
@@ -280,7 +283,7 @@ public class Drive extends Subsystem implements PIDOutput {
     	// This gets called only once
     	if(_myDriveState != DriveState.DriveForDistance)
     	{
-    		_myDriveState = DriveState.DriveForDistance;
+    		_swerveDrive.SetNeutralModeForDrive(NeutralMode.Brake);
     		_myTargetSpeed = speedFps;
         	_myTargetHeading = heading;
         	_myTargetDistanceIn = distanceInches;
@@ -288,10 +291,12 @@ public class Drive extends Subsystem implements PIDOutput {
         	_swerveDrive.resetDistance();
         	
         	// Setup lookup table
-        	
+        	setupDistanceProfile(distanceInches, speedFps);
         	
         	// Setup the Drive
         	_swerveDrive.setDrive(SwerveMode.crab, 0, _myTargetHeading);
+        	
+    		_myDriveState = DriveState.DriveForDistance;
     	}
     }
     
