@@ -85,6 +85,6 @@ public class OI {
 		liftUp2.whileHeld(new LiftUp());;
 		liftDown2.whileHeld(new LiftDown());
 		
-		SmartDashboard.putData("DriveForDistance", new DriveForDistance(24.0, 1.0, 0.0));
+		SmartDashboard.putData("DriveForDistance", new DriveForDistance(2.0, 1.0, 45.0));
 	}
 }
