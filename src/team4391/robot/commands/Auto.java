@@ -10,7 +10,9 @@ public class Auto extends Command {
 
     public Auto() {
         // Use requires() here to declare subsystem dependencies
-    	requires(Robot.autonomousSubsystem);
+    	requires(Robot.driveSubsystem);
+    	requires(Robot.armSubsystem);
+    	requires(Robot.cubevatorSubsystem);
     }
 
     // Called just before this Command runs the first time
