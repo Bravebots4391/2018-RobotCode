@@ -62,8 +62,6 @@ public class Robot extends TimedRobot {
 		
 		Constants.putValuesInNetworkTables();
 		
-		setupAutonomousChooser();
-		
 		// Initialize subsystems
 		armSubsystem = new Arm();
 		cubevatorSubsystem = new Lift();		
@@ -74,6 +72,8 @@ public class Robot extends TimedRobot {
 		driveSubsystem = new Drive();
 		
 		m_oi.init();
+		setupAutonomousChooser();
+		
 		
 		try{ 
         	CrashTracker.logRobotInit();           
