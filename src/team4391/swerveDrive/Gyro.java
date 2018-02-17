@@ -18,7 +18,7 @@ public class Gyro extends GyroBase
 	 * Some gains for heading servo, these were tweaked by using the web-based
 	 * config (CAN Talon) and pressing gamepad button 6 to load them.
 	 */
-	double kPgain = 0.04; /* percent throttle per degree of error */
+	double kPgain = 0.05; /* percent throttle per degree of error */
 	double kDgain = 0.0004; /* percent throttle per angular velocity dps */
 	double kMaxCorrectionRatio = 0.30; /* cap corrective turning throttle to 30 percent of forward throttle */
 	/** holds the current angle to servo to */
@@ -97,7 +97,7 @@ public class Gyro extends GyroBase
 		double error = _targetAngle - currentAngle;
 		SmartDashboard.putNumber("turnError", error);
 		
-		turnThrottle = (error) * kPgain - (currentAngularRate) * kDgain;		
+		turnThrottle = (-error) * kPgain - (currentAngularRate) * kDgain;		
 		SmartDashboard.putNumber("turnThrottle", turnThrottle);
 		
 		/* the max correction is the forward throttle times a scalar,

@@ -39,7 +39,7 @@ public class Drive extends Subsystem implements PIDOutput {
     
 	
 	public enum DriveState {
-        OpenLoop, DirectionSetpoint, CameraHeadingControl, DriveForDistance
+        OpenLoop, DirectionSetpoint, CameraHeadingControl, DriveForDistance, McTwist
     }
 	
 	private DriveState _myDriveState;
@@ -62,6 +62,9 @@ public class Drive extends Subsystem implements PIDOutput {
 				
 				case DriveForDistance:
 					updateDriveForDistance();
+					
+				case McTwist:
+					updateMcTwist();
 					
 				case DirectionSetpoint:					
 					//updateDegTurnHeadingControl();
@@ -129,7 +132,7 @@ public class Drive extends Subsystem implements PIDOutput {
     }
     
 	public void resetSensors() {
-		// TODO Auto-generated method stub
+		_swerveDrive.resetDistance();
 		
 	}
 	
@@ -202,14 +205,22 @@ public class Drive extends Subsystem implements PIDOutput {
 		return Math.abs(x) > Constants.kJoystickDeadband;
 	}
 	
-	public synchronized void setOpenLoop(){
-    	if (_myDriveState != DriveState.OpenLoop) {                            	
+	public synchronized void setOpenLoop(boolean updateNeutralDriveMode){
+		if (_myDriveState != DriveState.OpenLoop) {                            	
     		
-    		_swerveDrive.SetNeutralModeForDrive(NeutralMode.Coast);
+			if(updateNeutralDriveMode)
+			{
+				_swerveDrive.SetNeutralModeForDrive(NeutralMode.Coast);
+			}
+			
             _swerveDrive.setDrive(SwerveMode.crab, 0, 0);
             
             _myDriveState = DriveState.OpenLoop;
-        }    	    	
+        } 
+	}
+	
+	public synchronized void setOpenLoop(){
+    	setOpenLoop(true);   	    	
     }
 	
     public synchronized void targetDiscreteAngle(double degreesTarget, double speed){
@@ -305,10 +316,10 @@ public class Drive extends Subsystem implements PIDOutput {
         // Rotation PID Rate Limit Constants.  Limits for normal turning commands.
         _distanceSpeedProfile = new InterpolatingTreeMap<>();
 
-        _distanceSpeedProfile.put(new InterpolatingDouble(0.0), new InterpolatingDouble(.5));
-        _distanceSpeedProfile.put(new InterpolatingDouble(6.0), new InterpolatingDouble(speedFps));
-        _distanceSpeedProfile.put(new InterpolatingDouble(distanceInches - 6), new InterpolatingDouble(speedFps));
-        _distanceSpeedProfile.put(new InterpolatingDouble(distanceInches), new InterpolatingDouble(.5));
+        _distanceSpeedProfile.put(new InterpolatingDouble(0.0), new InterpolatingDouble(.3));
+        _distanceSpeedProfile.put(new InterpolatingDouble(12.0), new InterpolatingDouble(speedFps));
+        _distanceSpeedProfile.put(new InterpolatingDouble(distanceInches - 12), new InterpolatingDouble(speedFps));
+        _distanceSpeedProfile.put(new InterpolatingDouble(distanceInches), new InterpolatingDouble(.3));
         
     }
     
@@ -320,7 +331,7 @@ public class Drive extends Subsystem implements PIDOutput {
     		
     		if(distance >= _myTargetDistanceIn)
     		{
-    			setOpenLoop();
+    			setOpenLoop(false);
     			return;
     		}
     		
@@ -330,11 +341,36 @@ public class Drive extends Subsystem implements PIDOutput {
     		_swerveDrive.setDrive(SwerveMode.crab, speed, _myTargetHeading);
     	}
     }
+    
+    public void setupMcTwist(double forwardSpeedFps, double rotateRateFps)
+    {
+    	if(_myDriveState != DriveState.McTwist)
+    	{
+    		_myTargetSpeed = forwardSpeedFps;
+    		_myTurnRate = rotateRateFps;
+    		
+    		_swerveDrive.resetDistance();
+    		_swerveDrive.getGyro().reset();
+    		
+    		_myDriveState = DriveState.McTwist;
+    	}    	
+    }
+    
+    private void updateMcTwist()
+    {    	
+    	_swerveDrive.setDrive(SwerveMode.mcTwist, _myTargetSpeed, _myTurnRate);
+    }
 
 	@Override
 	public void pidWrite(double output) {
+		
 		// TODO Auto-generated method stub
 		_pidOutput = output;
+	}
+
+	public void mcTwist(double d, double e) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

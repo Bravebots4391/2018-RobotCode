@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class SwerveDrive {
 
 	public enum SwerveMode{
-		crab, frontPivot, rearPivot, rotate, carTurn, carTurnReverse, stop, coast
+		crab, frontPivot, rearPivot, rotate, carTurn, carTurnReverse, stop, coast, mcTwist
 	}
 	
 	private static WPI_TalonSRX _motorFR = new WPI_TalonSRX(Constants.kFrontRightDriveMotorId);
@@ -31,7 +31,7 @@ public class SwerveDrive {
 	double _targetPositionDegrees;
 	private static boolean _isTurning = false;
 	private SwerveMode _swerveMode;
-	private boolean _useSpeedControl = true;
+	private boolean _useSpeedControl = false;
 	
 	public SwerveDrive(){
 		init();
@@ -86,6 +86,10 @@ public class SwerveDrive {
 		case coast:
 			coast();
 			_gyro.reset();
+			break;
+			
+		case mcTwist:
+			mcTwist(pctSpeed, angle);
 			break;
 			
 		}
@@ -152,7 +156,7 @@ public class SwerveDrive {
 			}
 			else
 			{
-				setAllSpeedsFps(11.0 * speed);			
+				setAllSpeedsFps(speed);			
 			}
 			
 			return;
@@ -168,7 +172,16 @@ public class SwerveDrive {
 	
 	
 	private void setAllSpeedsFps(double speedFps)
-	{
+	{	
+		double speed = 11*speedToTargetVelocity(speedFps);
+		
+		_motorFR.set(ControlMode.Velocity, speed);
+		_motorRR.set(ControlMode.Velocity, speed);
+		_motorFL.set(ControlMode.Velocity, speed);
+		_motorRL.set(ControlMode.Velocity, speed);
+	}
+
+	private double speedToTargetVelocity(double speedFps) {
 		// Convert Fps to RPM
 		double rpm = speedFps * ((720)/(Math.PI * Constants.kWheelDiameterInches))*Constants.kSwerveDriveRatio;
 		
@@ -177,13 +190,8 @@ public class SwerveDrive {
 		// velocity setpoint is in units/100ms		 
 
 		double targetVelocity_UnitsPer100ms = rpm * Constants.kCimcoderPulsesPerRev / 600;
-
-		/* 500 RPM in either direction */
 		
-		_motorFR.set(ControlMode.Velocity, targetVelocity_UnitsPer100ms);
-		_motorRR.set(ControlMode.Velocity, targetVelocity_UnitsPer100ms);
-		_motorFL.set(ControlMode.Velocity, targetVelocity_UnitsPer100ms);
-		_motorRL.set(ControlMode.Velocity, targetVelocity_UnitsPer100ms);
+		return targetVelocity_UnitsPer100ms;
 	}
 	
 	private void rotateBot(double speed) {
@@ -306,22 +314,37 @@ public class SwerveDrive {
 		_motorRL.set(ControlMode.PercentOutput, forwardSpeed);
 	}
 
-	private void StraightDriveMcRotate(double forwardSpeedFps, double rotateRateFps) 
-	{
-		// set all wheel positions to the negative of Heading
-		// wheelPos = 360 - getHeading();
+	public void mcTwist(double forwardSpeedFps, double rotateRateFps) 
+	{			
+		// set all wheel positions to the negative of Heading		
+		double heading = _gyro.getAngle();
+		double wheelPos = -_gyro.getAngle();
+		
+		setAllWheelPositions(wheelPos);
 		
 		// get Theta for each wheel
-		// FLt = heading + 315;
-		// FRt = heading + 45;
-		// RLt = heading + 225;
-		// RRt = heading + 135;
+		double FLt = heading + 315;
+		double FRt = heading + 45;
+		double RLt = heading + 225;
+		double RRt = heading + 135;
 		
 		// Calculate each wheel speed offset
-		//FLs = forwardSpeedFps + (-rotateRateFps)*Math.sin(FLt);
-		//FRs = forwardSpeedFps + (-rotateRateFps)*Math.sin(FRt);
-		//RLs = forwardSpeedFps + (-rotateRateFps)*Math.sin(RLt);
-		//RRs = forwardSpeedFps + (-rotateRateFps)*Math.sin(RRt);
+		double FLs = forwardSpeedFps + (-rotateRateFps)*Math.sin(FLt)*0.5;
+		double FRs = forwardSpeedFps + (-rotateRateFps)*Math.sin(FRt)*0.5;
+		double RLs = forwardSpeedFps + (-rotateRateFps)*Math.sin(RLt)*0.5;
+		double RRs = forwardSpeedFps + (-rotateRateFps)*Math.sin(RRt)*0.5;
+		
+		SmartDashboard.putNumber("mcTwistSpeed", FLs);
+		SmartDashboard.putNumber("mcTwistSpeed1", FRs);
+		SmartDashboard.putNumber("mcTwistSpeed2", RLs);
+		SmartDashboard.putNumber("mcTwistSpeed3", RRs);
+		
+		//11*speedToTargetVelocity(speedFps)
+		
+		_motorFL.set(ControlMode.Velocity, 11*speedToTargetVelocity(FLs));
+		_motorFR.set(ControlMode.Velocity, 11*speedToTargetVelocity(FRs));
+		_motorRL.set(ControlMode.Velocity, 11*speedToTargetVelocity(RLs));
+		_motorRR.set(ControlMode.Velocity, 11*speedToTargetVelocity(RRs));			
 	}	
 	
 	private void setAllWheelPositions(double targetAngle)
@@ -461,7 +484,7 @@ public class SwerveDrive {
 	
 	private void SetupDriveWheelPID(TalonSRX talon)
 	{	
-		talon.configClosedloopRamp(0.5, Constants.kTimeoutMs);
+		//talon.configClosedloopRamp(0.5, Constants.kTimeoutMs);
 		
 		talon.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, Constants.kTimeoutMs);
 		talon.setSensorPhase(false);
@@ -474,8 +497,8 @@ public class SwerveDrive {
 
 		/* set closed loop gains in slot0 */
 		talon.config_kF(Constants.kPIDLoopIdx, 0.0, Constants.kTimeoutMs);
-		talon.config_kP(Constants.kPIDLoopIdx, 5.0, Constants.kTimeoutMs);
-		talon.config_kI(Constants.kPIDLoopIdx, 0.00, Constants.kTimeoutMs);
+		talon.config_kP(Constants.kPIDLoopIdx, 7.0, Constants.kTimeoutMs);
+		talon.config_kI(Constants.kPIDLoopIdx, 0.0001, Constants.kTimeoutMs);
 		talon.config_kD(Constants.kPIDLoopIdx, 0, Constants.kTimeoutMs);
 	}
 	
