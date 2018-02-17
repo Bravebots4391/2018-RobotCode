@@ -30,9 +30,10 @@ public class Constants {
 	
 	public static final double kJoystickDeadband = 0.1;
 	
-	// Robot wheel dimentions
+	// Robot wheel dimensions
 	public static final double Width = 26;
 	public static final double Length = 26;
+	public static final int kRobotRadius = 13;
 		
 	public static double kLooperDt = 0.01;
 	public static double kRotateMaxPctSpeed = 0.5;		
@@ -106,8 +107,6 @@ public class Constants {
     
     // Rotation PID Rate Limit Constants.  Limits for normal turning commands.
     public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> kRateLimitMap = new InterpolatingTreeMap<>();
-
-	
 
     static {
     	kRateLimitMap.put(new InterpolatingDouble(-40.0), new InterpolatingDouble(-60.0));

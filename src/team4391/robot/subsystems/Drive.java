@@ -16,7 +16,6 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import team4391.loops.Loop;
 import team4391.robot.Constants;
-import team4391.robot.commands.DriveForDistance;
 import team4391.robot.commands.TeleopDrive;
 
 
@@ -278,6 +277,15 @@ public class Drive extends Subsystem implements PIDOutput {
 		_swerveDrive.setDrive(SwerveMode.rotate, _pidOutput, 0);			
     }
     
+    public void rotateDegrees(double degrees)
+    {
+    	// (calculate arc length = 2*PI*R*theta)/360
+    	
+    	double arcLenInches = (2*Math.PI*Constants.kRobotRadius*degrees)/360;
+    	
+    	double position = get
+    }
+    
     public void driveForDistance(double distanceInches, double speedFps, double heading)
     {    
     	// This gets called only once
@@ -298,7 +306,7 @@ public class Drive extends Subsystem implements PIDOutput {
         	
     		_myDriveState = DriveState.DriveForDistance;
     	}
-    }
+    }   
     
     public void setupDistanceProfile(double distanceInches, double speedFps)
     {
