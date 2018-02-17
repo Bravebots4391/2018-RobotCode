@@ -19,6 +19,8 @@ import team4391.robot.commands.DriveForDistance;
 import team4391.robot.commands.FastArmPushOut;
 import team4391.robot.commands.LiftDown;
 import team4391.robot.commands.LiftUp;
+import team4391.robot.commands.WinchDown;
+import team4391.robot.commands.WinchUp;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -53,6 +55,8 @@ public class OI {
 	// until it is finished as determined by it's isFinished method.
 	// button.whenReleased(new ExampleCommand());
 			
+	public static XboxController xb = new XboxController(0);
+	
 	public static Joystick _xBoxCntrl = new Joystick(0);
     public static Joystick _xBoxCntrl2 = new Joystick(1);
     
@@ -70,6 +74,10 @@ public class OI {
     Button liftDown2= new JoystickButton(_xBoxCntrl2,8);
     Button fastoutty2 = new JoystickButton(_xBoxCntrl2,3);
     
+    Button winchUp = new JoystickButton(_xBoxCntrl2, 5);
+    Button winchDown = new JoystickButton(_xBoxCntrl2, 6);
+    
+    
 	public void init() {
 		armButton.whileHeld(new ArmOpen());		
 		inny.whileHeld(new ArmPullIn());		
@@ -84,6 +92,9 @@ public class OI {
 		fastoutty2.whileHeld(new FastArmPushOut());
 		liftUp2.whileHeld(new LiftUp());;
 		liftDown2.whileHeld(new LiftDown());
+		
+		winchUp.whileHeld(new WinchUp());
+		winchDown.whileHeld(new WinchDown());
 		
 		SmartDashboard.putData("DriveForDistance", new DriveForDistance(2.0, 1.0, 45.0));
 	}
