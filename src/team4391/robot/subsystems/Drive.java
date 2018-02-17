@@ -28,6 +28,7 @@ public class Drive extends Subsystem implements PIDOutput {
 	private double _myHeadingError;
 	private double _myTargetSpeed;
 	private double _myTargetDistanceIn;
+	private double _myTargetSetpoint;
 	private Preferences prefs;
 	
 	public final PIDController _myHeadingPid = new PIDController(0.010, 0, 0, _swerveDrive.getGyro(), this);
@@ -35,13 +36,17 @@ public class Drive extends Subsystem implements PIDOutput {
     public SyncronousRateLimiter _accelRateLimiter = new SyncronousRateLimiter(Constants.kLooperDt, 1.0, 0);
     
     private InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> _distanceSpeedProfile = new InterpolatingTreeMap<>();
-    
-	
+    	
 	public enum DriveState {
         OpenLoop, DirectionSetpoint, CameraHeadingControl, DriveForDistance, McTwist
     }
 	
 	private DriveState _myDriveState;
+	
+	public Drive()
+	{
+		prefs = Preferences.getInstance();				
+	}
 	
 	private final Loop mLoop = new Loop() {
 		 
@@ -91,19 +96,12 @@ public class Drive extends Subsystem implements PIDOutput {
 			setOpenLoop();
 		}
 		 
-	 };	 
-	private double _myTargetSetpoint;
+	 };	 		
 	
-	public Drive()
+	public Loop getLoop() 
 	{
-		prefs = Preferences.getInstance();
-		
-		
+		return mLoop;
 	}
-	
-	 public Loop getLoop() {
-	        return mLoop;
-	    }
 	
     public void initDefaultCommand() {
         // Set the default command for a subsystem here.
@@ -193,7 +191,8 @@ public class Drive extends Subsystem implements PIDOutput {
 		return coordinate;
 	}
 	
-	double Db(double axisVal) {	
+	private double Db(double axisVal) 
+	{	
 		if(Math.abs(axisVal) > Constants.kJoystickDeadband)
 			return axisVal;
 		else
@@ -294,7 +293,7 @@ public class Drive extends Subsystem implements PIDOutput {
     	
     	double arcLenInches = (2*Math.PI*Constants.kRobotRadius*degrees)/360;
     	
-    	double position = get
+    	
     }
     
     public void driveForDistance(double distanceInches, double speedFps, double heading)
@@ -319,7 +318,7 @@ public class Drive extends Subsystem implements PIDOutput {
     	}
     }   
     
-    public void setupDistanceProfile(double distanceInches, double speedFps)
+    private void setupDistanceProfile(double distanceInches, double speedFps)
     {
         // Rotation PID Rate Limit Constants.  Limits for normal turning commands.
         _distanceSpeedProfile = new InterpolatingTreeMap<>();
@@ -331,7 +330,7 @@ public class Drive extends Subsystem implements PIDOutput {
         
     }
     
-    public void updateDriveForDistance()
+    public synchronized void updateDriveForDistance()
     {
     	if(_myDriveState == DriveState.DriveForDistance)
     	{
@@ -374,11 +373,6 @@ public class Drive extends Subsystem implements PIDOutput {
 		
 		// TODO Auto-generated method stub
 		_pidOutput = output;
-	}
-
-	public void mcTwist(double d, double e) {
-		// TODO Auto-generated method stub
-		
 	}
 	
 }
