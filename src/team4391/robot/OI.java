@@ -19,6 +19,7 @@ import team4391.robot.commands.DriveForDistance;
 import team4391.robot.commands.FastArmPushOut;
 import team4391.robot.commands.LiftDown;
 import team4391.robot.commands.LiftUp;
+import team4391.robot.commands.McTwist180;
 import team4391.robot.commands.WinchDown;
 import team4391.robot.commands.WinchUp;
 import team4391.util.XboxControllerPOVButton;
@@ -78,8 +79,10 @@ public class OI {
     Button winchUp1 = new XboxControllerPOVButton(xb, 0);
     Button winchDown1 = new XboxControllerPOVButton(xb, 180);
     
-    Button winchUp = new JoystickButton(_xBoxCntrl2, 5);
-    Button winchDown = new JoystickButton(_xBoxCntrl2, 6);
+    Button mcTwist = new XboxControllerPOVButton(xb, 90);
+    
+    //Button winchUp = new JoystickButton(_xBoxCntrl2, 5);
+    //Button winchDown = new JoystickButton(_xBoxCntrl2, 6);
     
     
 	public void init() {
@@ -97,12 +100,14 @@ public class OI {
 		liftUp2.whileHeld(new LiftUp());;
 		liftDown2.whileHeld(new LiftDown());
 		
-		winchUp.whileHeld(new WinchUp());
-		winchDown.whileHeld(new WinchDown());
+		//winchUp.whileHeld(new WinchUp());
+		//winchDown.whileHeld(new WinchDown());
 		
 		winchUp1.whileHeld(new WinchUp());
 		winchDown1.whileHeld(new WinchDown());
 		
-		SmartDashboard.putData("DriveForDistance", new DriveForDistance(2.0, 1.0, 45.0));
+		mcTwist.whenPressed(new McTwist180());
+		
+		SmartDashboard.putData("DriveForDistance", new DriveForDistance(290.0, 0.5, 0.0));
 	}
 }
