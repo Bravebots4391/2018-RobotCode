@@ -41,7 +41,7 @@ public class Gyro extends GyroBase
 	
 	public void gyroInit(int talonId){			
 		//_pidgey = new PigeonIMU(talonId);
-		_pidgey = new PigeonIMU(Robot.armSubsystem._suckerInnerOuter);
+		_pidgey = new PigeonIMU(Robot.armSubsystem._suckerInnerOuter);			
 	}
 	
 	public void gyroReset(){
@@ -80,7 +80,7 @@ public class Gyro extends GyroBase
 		_pidgey.getGeneralStatus(genStatus);
 		_pidgey.getRawGyro(xyz_dps);
 		_pidgey.getFusedHeading(fusionStatus);
-		double currentAngle = fusionStatus.heading;
+		double currentAngle = -fusionStatus.heading;
 		boolean angleIsGood = (_pidgey.getState() == PigeonIMU.PigeonState.Ready) ? true : false;
 		double currentAngularRate = xyz_dps[2];
 		
@@ -97,7 +97,7 @@ public class Gyro extends GyroBase
 		double error = _targetAngle - currentAngle;
 		SmartDashboard.putNumber("turnError", error);
 		
-		turnThrottle = (-error) * kPgain - (currentAngularRate) * kDgain;		
+		turnThrottle = (error) * kPgain - (currentAngularRate) * kDgain;		
 		SmartDashboard.putNumber("turnThrottle", turnThrottle);
 		
 		/* the max correction is the forward throttle times a scalar,

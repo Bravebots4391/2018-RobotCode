@@ -191,14 +191,6 @@ public class Drive extends Subsystem implements PIDOutput {
 		return coordinate;
 	}
 	
-	private double Db(double axisVal) 
-	{	
-		if(Math.abs(axisVal) > Constants.kJoystickDeadband)
-			return axisVal;
-		else
-			return 0;
-	}
-	
 	private boolean DB(double x) {
 		return Math.abs(x) > Constants.kJoystickDeadband;
 	}
