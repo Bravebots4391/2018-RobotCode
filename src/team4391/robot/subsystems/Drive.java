@@ -1,12 +1,16 @@
 package team4391.robot.subsystems;
 
+import team4391.swerveDrive.Gyro;
 import team4391.swerveDrive.SwerveDrive;
 import team4391.swerveDrive.SwerveDrive.SwerveMode;
+import team4391.swerveDrive.SwerveDriveMotorGroup;
 import team4391.util.InterpolatingDouble;
 import team4391.util.InterpolatingTreeMap;
 import team4391.util.SyncronousRateLimiter;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PIDController;
@@ -21,7 +25,7 @@ import team4391.robot.commands.TeleopDrive;
 
 public class Drive extends Subsystem implements PIDOutput {
 	
-	private SwerveDrive _swerveDrive = new SwerveDrive();
+	private SwerveDrive _swerveDrive;
 	private double _pidOutput;
 	private double _myTargetHeading;
 	private double _myTurnRate;
@@ -30,6 +34,16 @@ public class Drive extends Subsystem implements PIDOutput {
 	private double _myTargetDistanceIn;
 	private double _myTargetSetpoint;
 	private Preferences prefs;
+	
+	private static WPI_TalonSRX _motorFR = new WPI_TalonSRX(Constants.kFrontRightDriveMotorId);
+	private static WPI_TalonSRX _motorRR = new WPI_TalonSRX(Constants.kBackRightDriveMotorId);
+	private static WPI_TalonSRX _motorFL = new WPI_TalonSRX(Constants.kFrontLeftDriveMotorId);
+	private static WPI_TalonSRX _motorRL = new WPI_TalonSRX(Constants.kBackLeftDriveMotorId);	
+	private static WPI_TalonSRX _turnFl = new WPI_TalonSRX(Constants.kFrontLeftTurnMotorId);
+	private static WPI_TalonSRX _turnFR = new WPI_TalonSRX(Constants.kFrontRightTurnMotorId);
+	private static WPI_TalonSRX _turnBl = new WPI_TalonSRX(Constants.kBackLeftTurnMotorId);
+	private static WPI_TalonSRX _turnBR = new WPI_TalonSRX(Constants.kBackRightTurnMotorId);	
+	private static Gyro _gyro = new Gyro(new TalonSRX(Constants.kPigeonGyroId));
 	
 	public final PIDController _myHeadingPid = new PIDController(0.010, 0, 0, _swerveDrive.getGyro(), this);
     public SyncronousRateLimiter _srl = new SyncronousRateLimiter(Constants.kLooperDt, 1.0 , 0);
@@ -45,7 +59,10 @@ public class Drive extends Subsystem implements PIDOutput {
 	
 	public Drive()
 	{
-		prefs = Preferences.getInstance();				
+		prefs = Preferences.getInstance();	
+		
+		SwerveDriveMotorGroup sdmg = new SwerveDriveMotorGroup(_motorFR, _motorFL, _motorRR, _motorRL, _turnFl, _turnFR, _turnBl, _turnBR);		
+		_swerveDrive = new SwerveDrive(sdmg, _gyro);
 	}
 	
 	private final Loop mLoop = new Loop() {
@@ -56,47 +73,50 @@ public class Drive extends Subsystem implements PIDOutput {
 		}
 	
 		@Override
-		public void onLoop() {		
-			synchronized (Drive.this) {							
+		public void onLoop() 
+		{		
+			synchronized (Drive.this) 
+			{											
+				// make sure the Gyro updates
+				_gyro.updateFusedHeading();				
 				
-			switch(_myDriveState)
-			{
-				case OpenLoop:
-					break;
+				switch(_myDriveState)
+				{
+					case OpenLoop:
+						break;
+					
+					case DriveForDistance:
+						updateDriveForDistance();
+						
+					case McTwist:
+						updateMcTwist();
+						
+					case DirectionSetpoint:					
+						//updateDegTurnHeadingControl();
+						break;
+						
+					case CameraHeadingControl:					
+						//updateCameraHeadingControl();
+						break;
+						
+					default:
+						System.out.println("Unexpected drive control state: " + _myDriveState);
+		           break;
+				}								
+					
+			//updateDistanceCheck();		
+			//putTargetHeadingOnDashboard();	
 				
-				case DriveForDistance:
-					updateDriveForDistance();
-					
-				case McTwist:
-					updateMcTwist();
-					
-				case DirectionSetpoint:					
-					//updateDegTurnHeadingControl();
-					break;
-					
-				case CameraHeadingControl:					
-					//updateCameraHeadingControl();
-					break;
-					
-				default:
-					System.out.println("Unexpected drive control state: " + _myDriveState);
-	           break;
-		}									
-					
-		//updateDistanceCheck();
-		
-		//putTargetHeadingOnDashboard();
-		
+			}
 		}
-	}
 	
-	@Override
-	public void onStop() {
-		// TODO Auto-generated method stub		
-			setOpenLoop();
-		}
-		 
-	 };	 		
+		@Override
+		public void onStop() 
+		{
+			// TODO Auto-generated method stub		
+				setOpenLoop();
+		}			
+	};	 		
 	
 	public Loop getLoop() 
 	{
@@ -281,8 +301,7 @@ public class Drive extends Subsystem implements PIDOutput {
     
     public void rotateDegrees(double degrees)
     {
-    	// (calculate arc length = 2*PI*R*theta)/360
-    	
+    	// (calculate arc length = 2*PI*R*theta)/360    	
     	double arcLenInches = (2*Math.PI*Constants.kRobotRadius*degrees)/360;
     	
     	

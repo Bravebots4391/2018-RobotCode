@@ -7,36 +7,35 @@ import edu.wpi.first.wpilibj.GyroBase;
 import edu.wpi.first.wpilibj.SendableBase;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import team4391.loops.Loop;
 import team4391.robot.Robot;
+import team4391.robot.subsystems.Drive;
 
 
 public class Gyro extends GyroBase
 {
 	PigeonIMU _pidgey;
 	
-	/*
-	 * Some gains for heading servo, these were tweaked by using the web-based
-	 * config (CAN Talon) and pressing gamepad button 6 to load them.
-	 */
 	double kPgain = 0.05; /* percent throttle per degree of error */
 	double kDgain = 0.0004; /* percent throttle per angular velocity dps */
 	double kMaxCorrectionRatio = 0.30; /* cap corrective turning throttle to 30 percent of forward throttle */
+	
 	/** holds the current angle to servo to */
 	double _targetAngle = 0;
+	private double _fusedHeading;
 		
 
 	private boolean _isInitOk;
 	
+	public Gyro(TalonSRX talon)
+	{
+		_pidgey = new PigeonIMU(talon);
+		_isInitOk = true;
+	}
+	
 	public Gyro(int id){
-		if(id != -1)
-		{
-			gyroInit(id);
-			_isInitOk = true;
-		}
-		else
-		{
-			_isInitOk = false;
-		}
+		_pidgey = new PigeonIMU(id);
+		_isInitOk = true;
 	}
 	
 	public void gyroInit(int talonId){			
@@ -73,14 +72,12 @@ public class Gyro extends GyroBase
 		
 		/* some temps for Pigeon API */
 		PigeonIMU.GeneralStatus genStatus = new PigeonIMU.GeneralStatus();
-		PigeonIMU.FusionStatus fusionStatus = new PigeonIMU.FusionStatus();
 		double [] xyz_dps = new double [3];
 		
 		/* grab some input data from Pigeon and gamepad*/		
 		_pidgey.getGeneralStatus(genStatus);
-		_pidgey.getRawGyro(xyz_dps);
-		_pidgey.getFusedHeading(fusionStatus);
-		double currentAngle = -fusionStatus.heading;
+		_pidgey.getRawGyro(xyz_dps);		
+		double currentAngle = _fusedHeading;		
 		boolean angleIsGood = (_pidgey.getState() == PigeonIMU.PigeonState.Ready) ? true : false;
 		double currentAngularRate = xyz_dps[2];
 		
@@ -106,9 +103,7 @@ public class Gyro extends GyroBase
 		double maxThrot = MaxCorrection(forwardThrottle, kMaxCorrectionRatio);
 		turnThrottle = Cap(turnThrottle, maxThrot);
 
-
 		/* positive turnThrottle means turn to the left, this can be replaced with ArcadeDrive object, or teams drivetrain object */
-	
 		double left = forwardThrottle - turnThrottle;
 		double right = forwardThrottle + turnThrottle;
 		
@@ -182,12 +177,16 @@ public class Gyro extends GyroBase
 
 	@Override
 	public double getAngle() {
-		return gyroGetFusedHeading();
+		return _fusedHeading;
 	}
 
 	@Override
 	public double getRate() {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+	public void updateFusedHeading() {
+		_fusedHeading = gyroGetFusedHeading();		
 	}
 }

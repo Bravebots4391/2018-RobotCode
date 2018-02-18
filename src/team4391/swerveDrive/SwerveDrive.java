@@ -16,30 +16,41 @@ public class SwerveDrive {
 		crab, frontPivot, rearPivot, rotate, carTurn, carTurnReverse, stop, coast, mcTwist
 	}
 	
-	private static WPI_TalonSRX _motorFR = new WPI_TalonSRX(Constants.kFrontRightDriveMotorId);
-	private static WPI_TalonSRX _motorRR = new WPI_TalonSRX(Constants.kBackRightDriveMotorId);
-	private static WPI_TalonSRX _motorFL = new WPI_TalonSRX(Constants.kFrontLeftDriveMotorId);
-	private static WPI_TalonSRX _motorRL = new WPI_TalonSRX(Constants.kBackLeftDriveMotorId);
-	
-	private static WPI_TalonSRX _turnFl = new WPI_TalonSRX(Constants.kFrontLeftTurnMotorId);
-	private static WPI_TalonSRX _turnFR = new WPI_TalonSRX(Constants.kFrontRightTurnMotorId);
-	private static WPI_TalonSRX _turnBl = new WPI_TalonSRX(Constants.kBackLeftTurnMotorId);
-	private static WPI_TalonSRX _turnBR = new WPI_TalonSRX(Constants.kBackRightTurnMotorId);		
-	
-	private static Gyro _gyro = new Gyro(Constants.kPigeonGyroId);
+	private static WPI_TalonSRX _motorFR;
+	private static WPI_TalonSRX _motorRR;
+	private static WPI_TalonSRX _motorFL;
+	private static WPI_TalonSRX _motorRL;	
+	private static WPI_TalonSRX _turnFl;
+	private static WPI_TalonSRX _turnFR;
+	private static WPI_TalonSRX _turnBl;
+	private static WPI_TalonSRX _turnBR;			
+	private static Gyro _gyro;
 	
 	double _targetPositionDegrees;
 	private static boolean _isTurning = false;
 	private SwerveMode _swerveMode;
 	private boolean _useSpeedControl = false;
 	
-	public SwerveDrive(){
+	public SwerveDrive(SwerveDriveMotorGroup motors, Gyro gyro)
+	{
+		_gyro = gyro;
+		
+		_motorFR = motors.get_motorFR();
+		_motorRR = motors.get_motorRR();
+		_motorFL = motors.get_motorFL();
+		_motorRL = motors.get_motorRL();
+		
+		_turnFl = motors.get_turnFl();
+		_turnFR = motors.get_turnFR();
+		_turnBl = motors.get_turnBl();
+		_turnBR = motors.get_turnBR();
+		
 		init();
 	}
 	
 	public void setDrive(SwerveMode mode, double pctSpeed, double angle)
 	{
-		_swerveMode = mode;
+		_swerveMode = mode;						
 		
 		switch(mode)
 		{
@@ -94,8 +105,7 @@ public class SwerveDrive {
 			
 		}
 	}
-	
-	
+		
 	public void rotateInPlace (double rotatePct) {
 		rotateBot(rotatePct);
 	}
@@ -143,11 +153,11 @@ public class SwerveDrive {
 		setAllSpeeds(0, true);
 	}
 			
-	private void setAllSpeeds(double speed, boolean isForward)
+	private void setAllSpeeds(double pctSpeed, boolean isForward)
 	{
 		if(_useSpeedControl)
 		{		
-			if(Math.abs(speed) == 0)
+			if(Math.abs(pctSpeed) == 0)
 			{
 				_motorFR.set(ControlMode.Disabled, 0);
 				_motorRR.set(ControlMode.Disabled, 0);
@@ -156,33 +166,36 @@ public class SwerveDrive {
 			}
 			else
 			{
-				setAllSpeedsFps(speed);			
+				setAllSpeedsFps(pctSpeed, isForward);			
 			}
 			
 			return;
 		}
 		
-		GyroOutput data = _gyro.getDriveCorrection(speed, isForward);
+		GyroOutput data = _gyro.getDriveCorrection(pctSpeed, isForward);
 		
 		_motorFR.set(ControlMode.PercentOutput, data.get_right());
 		_motorRR.set(ControlMode.PercentOutput, data.get_right());
 		_motorFL.set(ControlMode.PercentOutput, data.get_left());
 		_motorRL.set(ControlMode.PercentOutput, data.get_left());
 	}
-	
-	
-	private void setAllSpeedsFps(double speedFps)
-	{	
-		double speed = speedToTargetVelocity(speedFps);
 		
-		_motorFR.set(ControlMode.Velocity, speed);
-		_motorRR.set(ControlMode.Velocity, speed);
-		_motorFL.set(ControlMode.Velocity, speed);
-		_motorRL.set(ControlMode.Velocity, speed);
+	private void setAllSpeedsFps(double pctSpeed, boolean isForward)
+	{	
+		GyroOutput data = _gyro.getDriveCorrection(pctSpeed, isForward);
+		
+		//double speed = speedToTargetVelocity(pctSpeed);
+		
+		_motorFR.set(ControlMode.Velocity, speedToTargetVelocity(data.get_right()));
+		_motorRR.set(ControlMode.Velocity, speedToTargetVelocity(data.get_right()));
+		_motorFL.set(ControlMode.Velocity, speedToTargetVelocity(data.get_left()));
+		_motorRL.set(ControlMode.Velocity, speedToTargetVelocity(data.get_left()));
 	}
 
-	private double speedToTargetVelocity(double speedFps) {
+	private double speedToTargetVelocity(double pctSpeed) {
 		// Convert Fps to RPM
+		
+		double speedFps = pctSpeed * Constants.kMaxDriveFPS;		
 		double rpm = speedFps * ((720)/(Math.PI * Constants.kWheelDiameterInches))*Constants.kSwerveDriveRatio;
 		
 		// Convert RPM to units / 100ms.
@@ -395,15 +408,11 @@ public class SwerveDrive {
 		SmartDashboard.putNumber("positionRawBR", _turnBR.getSelectedSensorPosition(0));
 		SmartDashboard.putNumber("positionDegreesBR", convertEncoderPositionToAngle(_turnBR.getSelectedSensorPosition(0)));
 		
-		SmartDashboard.putNumber("motorCurrent", _motorFR.getOutputCurrent());
-		
-		SmartDashboard.putNumber("targetPosition", _targetPositionDegrees);
-		
-		SmartDashboard.putNumber("closedLoopError", _turnFl.getClosedLoopError(0));
-		
+		SmartDashboard.putNumber("motorCurrent", _motorFR.getOutputCurrent());		
+		SmartDashboard.putNumber("targetPosition", _targetPositionDegrees);		
+		SmartDashboard.putNumber("closedLoopError", _turnFl.getClosedLoopError(0));		
 		SmartDashboard.putNumber("Distance(inches)", getDistanceInches(_motorFR));		
-		
-		
+				
 		SmartDashboard.putNumber("SpeedFR",getVelocity(_motorFR));
 		SmartDashboard.putNumber("SpeedFL",getVelocity(_motorFL));
 		SmartDashboard.putNumber("SpeedRR",getVelocity(_motorRR));

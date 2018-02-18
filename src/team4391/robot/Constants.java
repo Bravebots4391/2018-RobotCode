@@ -26,9 +26,10 @@ public class Constants {
 	 */
 	public static final int kTimeoutMs = 10;
 	
-	public static final int kEncoderCountsPerRev = 1024; //1024 when using the analog input
-	
+	public static final int kEncoderCountsPerRev = 1024; //1024 when using the analog input	
 	public static final double kJoystickDeadband = 0.1;
+	
+	public static double kMaxDriveFPS = 11;
 	
 	// Robot wheel dimensions
 	public static final double Width = 26;
@@ -68,7 +69,7 @@ public class Constants {
 	public static final int kClimberId = 13;
 	
 	public static final int kPCMId = 9;	
-	public static final int kPigeonGyroId = kSuckerInnerOuterId;  // The pigeon is plugged into the suckerInnerOuter talon.
+	public static final int kPigeonGyroId = kSuckerInnerOuterId;  // The pigeon is plugged into the suckerInnerOuter talon.	
 	
 	//
 	// ARM Constants
