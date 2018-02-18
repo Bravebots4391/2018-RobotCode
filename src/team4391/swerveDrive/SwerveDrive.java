@@ -173,7 +173,7 @@ public class SwerveDrive {
 	
 	private void setAllSpeedsFps(double speedFps)
 	{	
-		double speed = 11*speedToTargetVelocity(speedFps);
+		double speed = speedToTargetVelocity(speedFps);
 		
 		_motorFR.set(ControlMode.Velocity, speed);
 		_motorRR.set(ControlMode.Velocity, speed);
