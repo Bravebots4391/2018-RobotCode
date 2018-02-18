@@ -20,6 +20,7 @@ public class Lift extends Subsystem {
 	
 	TalonSRX _cubevatorTalon = new TalonSRX(Constants.kCubevatorId);
 	DigitalInput _limitSwitch = new DigitalInput(0);
+	private double _targetHeight;
 	
 	public Lift()
 	{
@@ -101,6 +102,19 @@ public class Lift extends Subsystem {
 		return _limitSwitch.get();
 	}
 	
+	public void goToPosition(double heightInches)
+	{
+		_targetHeight = heightInches;
+		
+		// assume the talon will do  this for us
+	}
+	
+	public boolean isAtPosition()
+	{
+		boolean weAreThereMan = Math.abs(_targetHeight - getHeightInches()) < 2.0;
+		return weAreThereMan;
+	}
+
 	public void updateDashboard() {
 		 SmartDashboard.putNumber("CubevatorHeightInches", getHeightInches());
 		 SmartDashboard.putBoolean("IsAtBottom", IsAtBottomLimit());

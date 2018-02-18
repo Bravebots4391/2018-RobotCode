@@ -84,6 +84,9 @@ public class Constants {
 	public static final double kCubevatorDrumDiameterInches = 3.5;
 	public static final double kCubevatorTopLimitInches = 100;
 	
+	public static final double kCubevatorClimbHeight = 80.5;  // height to get above to the rung
+	
+	
     // PID gains for rotating in place
     public static double kDriveTurnKp = 0.05;
     public static double kDriveTurnKi = 0.0;
@@ -107,6 +110,8 @@ public class Constants {
     
     // Rotation PID Rate Limit Constants.  Limits for normal turning commands.
     public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> kRateLimitMap = new InterpolatingTreeMap<>();
+
+
 
     static {
     	kRateLimitMap.put(new InterpolatingDouble(-40.0), new InterpolatingDouble(-60.0));
