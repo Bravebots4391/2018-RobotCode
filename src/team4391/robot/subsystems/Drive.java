@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import team4391.loops.Loop;
 import team4391.robot.Constants;
+import team4391.robot.Robot;
 import team4391.robot.commands.TeleopDrive;
 
 
@@ -43,9 +44,10 @@ public class Drive extends Subsystem implements PIDOutput {
 	private static WPI_TalonSRX _turnFR = new WPI_TalonSRX(Constants.kFrontRightTurnMotorId);
 	private static WPI_TalonSRX _turnBl = new WPI_TalonSRX(Constants.kBackLeftTurnMotorId);
 	private static WPI_TalonSRX _turnBR = new WPI_TalonSRX(Constants.kBackRightTurnMotorId);	
-	private static Gyro _gyro = new Gyro(new TalonSRX(Constants.kPigeonGyroId));
 	
-	public final PIDController _myHeadingPid = new PIDController(0.010, 0, 0, _swerveDrive.getGyro(), this);
+	private static Gyro _gyro = new Gyro(Robot._gyroTalon );
+	
+	public final PIDController _myHeadingPid = new PIDController(0.010, 0, 0, _gyro, this);
     public SyncronousRateLimiter _srl = new SyncronousRateLimiter(Constants.kLooperDt, 1.0 , 0);
     public SyncronousRateLimiter _accelRateLimiter = new SyncronousRateLimiter(Constants.kLooperDt, 1.0, 0);
     

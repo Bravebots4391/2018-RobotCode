@@ -8,6 +8,8 @@
 package team4391.robot;
 
 
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
@@ -42,6 +44,8 @@ public class Robot extends TimedRobot {
 	public static Climb climbSubsystem;
 	public static PowerDistributionPanel _pdpModule;
 	
+	public static TalonSRX _gyroTalon;
+	
 	public int _counter = 0;
 
 	Command m_autonomousCommand;
@@ -65,7 +69,7 @@ public class Robot extends TimedRobot {
 		// Initialize subsystems
 		armSubsystem = new Arm();
 		cubevatorSubsystem = new Lift();		
-		_pdpModule = new PowerDistributionPanel(10);
+		_pdpModule = new PowerDistributionPanel(Constants.kPDP);
 		climbSubsystem = new Climb();
 		climbSubsystem.init();
 		

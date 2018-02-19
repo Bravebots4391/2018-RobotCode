@@ -15,7 +15,9 @@ import team4391.robot.commands.ArmHold;
  */
 public class Arm extends Subsystem {
 
-	public TalonSRX _suckerInnerOuter = new TalonSRX(Constants.kSuckerInnerOuterId);
+	public TalonSRX _suckerInnerOuter = new TalonSRX(Constants.kArmRightId);
+	public TalonSRX _suckerInnerOuterSlave = new TalonSRX(Constants.kArmLeftId);
+	
 	private TalonSRX _armPulley = new TalonSRX(Constants.kArmOpenyCloseyId);	
 	
 	public enum ArmState {
@@ -26,14 +28,17 @@ public class Arm extends Subsystem {
     // Put methods for controlling this subsystem
     // here. Call these from Commands.
 
+	public Arm()
+	{
+		_suckerInnerOuterSlave.follow(_suckerInnerOuter);
+	}
+	
     public void initDefaultCommand() {
         // Set the default command for a subsystem here.
         setDefaultCommand(new ArmHold());
         
         myArmState = ArmState.Holding;
         
-        int id = _suckerInnerOuter.getDeviceID();
-        SmartDashboard.putNumber("pidgeyId", id);
     }
     
 	private final Loop mLoop = new Loop() {

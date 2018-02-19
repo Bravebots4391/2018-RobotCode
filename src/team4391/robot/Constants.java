@@ -41,10 +41,10 @@ public class Constants {
 	
 	
 	// Wheel position calibration
-	public static final int kFrontLeftCal = 417;
-	public static final int kFrontRightCal = 840;
-	public static final int kRearLeftCal = 372;
-	public static final int kRearRightCal = 328;
+	public static final int kFrontLeftCal = 415;
+	public static final int kFrontRightCal = 846;
+	public static final int kRearLeftCal = 375;
+	public static final int kRearRightCal = 332;
 	
 	// Cimcoder constants
 	public static final int kCimcoderPulsesPerRev = 80;
@@ -62,14 +62,17 @@ public class Constants {
 	public static final int kBackLeftTurnMotorId = 6;
 	public static final int kBackRightTurnMotorId = 3;
 	
-	public static final int kSuckerInnerOuterId = 5;
+	public static final int kArmRightId = 5;
+	public static final int kArmLeftId = 8;
 	public static final int kCubevatorId = 10;
+	public static final int kCubevatorSlaveId = 12;
 	public static final int kArmOpenyCloseyId = 53;
 	
 	public static final int kClimberId = 13;
 	
 	public static final int kPCMId = 9;	
-	public static final int kPigeonGyroId = kSuckerInnerOuterId;  // The pigeon is plugged into the suckerInnerOuter talon.	
+	public static final int kPDP = 0;
+	public static final int kPigeonGyroId = kCubevatorSlaveId;  // The pigeon is plugged into the suckerInnerOuter talon.	
 	
 	//
 	// ARM Constants

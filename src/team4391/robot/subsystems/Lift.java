@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import team4391.robot.Constants;
+import team4391.robot.Robot;
 import team4391.robot.commands.LiftStop;
 
 /**
@@ -19,6 +20,8 @@ public class Lift extends Subsystem {
     // here. Call these from Commands.
 	
 	TalonSRX _cubevatorTalon = new TalonSRX(Constants.kCubevatorId);
+	TalonSRX _cubevatorSlave = new TalonSRX(Constants.kCubevatorSlaveId);
+	
 	DigitalInput _limitSwitch = new DigitalInput(0);
 	private double _targetHeight;
 	
@@ -38,6 +41,10 @@ public class Lift extends Subsystem {
 		_cubevatorTalon.configForwardSoftLimitEnable(true, Constants.kTimeoutMs);
 		int softLimitPosition = getEncoderPositionFromInches(Constants.kCubevatorTopLimitInches);
 		_cubevatorTalon.configForwardSoftLimitThreshold(softLimitPosition, Constants.kTimeoutMs);			
+		
+		_cubevatorSlave.setInverted(true);
+		_cubevatorSlave.follow(_cubevatorTalon);
+		Robot._gyroTalon = _cubevatorSlave;
 	}	
 	
     public void initDefaultCommand() {
