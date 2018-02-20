@@ -3,6 +3,7 @@ package team4391.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -18,7 +19,8 @@ public class Arm extends Subsystem {
 	public TalonSRX _suckerInnerOuter = new TalonSRX(Constants.kArmRightId);
 	public TalonSRX _suckerInnerOuterSlave = new TalonSRX(Constants.kArmLeftId);
 	
-	private TalonSRX _armPulley = new TalonSRX(Constants.kArmOpenyCloseyId);	
+	private TalonSRX _armPulley = new TalonSRX(Constants.kArmOpenyCloseyId);
+	DigitalInput _cubeSensor = new DigitalInput(1);
 	
 	public enum ArmState {
         Holding, PullIn, PushOut, CubePresent
@@ -115,10 +117,15 @@ public class Arm extends Subsystem {
 	 private void checkForCubePresent() {
 		 // TODO Add a sensor to determine if the cube is present
 		 
-		 // if(cubeIsPresent){
-		 // 	setHolding();
-		 // }
+		 if(isCubeSensed()){
+		  	setHolding();
+		 }
 		 
+	 }
+	 
+	 public boolean isCubeSensed()
+	 {
+		 return !_cubeSensor.get();
 	 }
 	 
 	 public void openArm(double speed){
@@ -131,6 +138,7 @@ public class Arm extends Subsystem {
 	 
 	 public void updateDashboard() {
 		 SmartDashboard.putString("ArmState", myArmState.toString());
+		 SmartDashboard.putBoolean("CubePresent", isCubeSensed());
 	 }
 }
 	

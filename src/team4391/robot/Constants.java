@@ -44,7 +44,7 @@ public class Constants {
 	public static final int kFrontLeftCal = 415;
 	public static final int kFrontRightCal = 846;
 	public static final int kRearLeftCal = 375;
-	public static final int kRearRightCal = 332;
+	public static final int kRearRightCal = 846;
 	
 	// Cimcoder constants
 	public static final int kCimcoderPulsesPerRev = 80;
@@ -84,7 +84,7 @@ public class Constants {
 	//
 	// Cubevator Constants
 	//
-	public static final int kCubevatorEncoderCountsPerRev = 368640; //4096 from relative encoder + 90:1 gear ratio
+	public static final int kCubevatorEncoderCountsPerRev = 286720; //4096 from relative encoder + 70:1 gear ratio
 	public static final double kCubevatorDrumDiameterInches = 3.5;
 	public static final double kCubevatorTopLimitInches = 100;
 	

@@ -2,6 +2,7 @@ package team4391.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -33,7 +34,7 @@ public class Lift extends Subsystem {
 	public void init()
 	{
 		_cubevatorTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, Constants.kTimeoutMs);
-		_cubevatorTalon.setInverted(true);
+		_cubevatorTalon.setInverted(true);			
 		
 		_cubevatorTalon.setSensorPhase(true); // Change this to false if not counting positive numbers when going up
 			
@@ -45,6 +46,10 @@ public class Lift extends Subsystem {
 		_cubevatorSlave.setInverted(true);
 		_cubevatorSlave.follow(_cubevatorTalon);
 		Robot._gyroTalon = _cubevatorSlave;
+		
+		// Enable brake mode on both talons.
+		_cubevatorSlave.setNeutralMode(NeutralMode.Brake);
+		_cubevatorTalon.setNeutralMode(NeutralMode.Brake);
 	}	
 	
     public void initDefaultCommand() {

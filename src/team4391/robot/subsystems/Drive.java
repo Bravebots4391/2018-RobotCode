@@ -6,6 +6,8 @@ import team4391.swerveDrive.SwerveDrive.SwerveMode;
 import team4391.swerveDrive.SwerveDriveMotorGroup;
 import team4391.util.InterpolatingDouble;
 import team4391.util.InterpolatingTreeMap;
+import team4391.util.MaxSonar_MB1033;
+import team4391.util.MaxSonar_MB1200;
 import team4391.util.SyncronousRateLimiter;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -46,6 +48,8 @@ public class Drive extends Subsystem implements PIDOutput {
 	private static WPI_TalonSRX _turnBR = new WPI_TalonSRX(Constants.kBackRightTurnMotorId);	
 	
 	private static Gyro _gyro = new Gyro(Robot._gyroTalon );
+	
+	MaxSonar_MB1200 _sonarRight = new MaxSonar_MB1200(1);
 	
 	public final PIDController _myHeadingPid = new PIDController(0.010, 0, 0, _gyro, this);
     public SyncronousRateLimiter _srl = new SyncronousRateLimiter(Constants.kLooperDt, 1.0 , 0);
@@ -142,7 +146,9 @@ public class Drive extends Subsystem implements PIDOutput {
     	SmartDashboard.putNumber("RotateSetpoint", _myTargetHeading);
     	SmartDashboard.putNumber("RotateError", _myHeadingError);
     	
-    	SmartDashboard.putData(this);    	    
+    	SmartDashboard.putData(this);    
+    	
+    	SmartDashboard.putNumber("LeftSonarInches", _sonarRight.getDistanceInInches());
     }
 
     public DriveState getDriveState()
