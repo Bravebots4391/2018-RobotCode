@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import team4391.robot.commands.ArmOpen;
 import team4391.robot.commands.ArmPullIn;
 import team4391.robot.commands.ArmPushOut;
+import team4391.robot.commands.CubevatorClimbHeight;
 import team4391.robot.commands.DriveForDistance;
 import team4391.robot.commands.FastArmPushOut;
 import team4391.robot.commands.LiftDown;
@@ -75,6 +76,7 @@ public class OI {
     Button liftUp2 = new JoystickButton(_xBoxCntrl2, 7);
     Button liftDown2= new JoystickButton(_xBoxCntrl2,8);
     Button fastoutty2 = new JoystickButton(_xBoxCntrl2,3);
+    Button climbheight = new JoystickButton(_xBoxCntrl2, 5);
     
     Button winchUp1 = new XboxControllerPOVButton(xb, 0);
     Button winchDown1 = new XboxControllerPOVButton(xb, 180);
@@ -86,6 +88,8 @@ public class OI {
     
     
 	public void init() {
+		
+		climbheight.whileHeld(new CubevatorClimbHeight());
 		armButton.whileHeld(new ArmOpen());		
 		inny.whileHeld(new ArmPullIn());		
 		outty.whileHeld(new ArmPushOut());
