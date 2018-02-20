@@ -84,7 +84,7 @@ public class Constants {
 	//
 	// Cubevator Constants
 	//
-	public static final int kCubevatorEncoderCountsPerRev = 307200; //4096 from relative encoder + 75:1 gear ratio
+	public static final int kCubevatorEncoderCountsPerRev = 4096; // 1:1 with the output shaft
 	public static final double kCubevatorDrumDiameterInches = 3.5;
 	public static final double kCubevatorTopLimitInches = 100;
 	
