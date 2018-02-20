@@ -74,10 +74,10 @@ public class OI {
     Button armButton2 = new JoystickButton(_xBoxCntrl2, 1);	
 	Button inny2 = new JoystickButton(_xBoxCntrl2, 4);
 	Button outty2 = new JoystickButton(_xBoxCntrl2, 2);
-    Button liftUp2 = new JoystickButton(_xBoxCntrl2, 7);
-    Button liftDown2= new JoystickButton(_xBoxCntrl2,8);
+    Button liftUp2 = new JoystickButton(_xBoxCntrl2, 5);
+    Button liftDown2= new JoystickButton(_xBoxCntrl2,6);
     Button fastoutty2 = new JoystickButton(_xBoxCntrl2,3);
-    Button climbheight = new JoystickButton(_xBoxCntrl2, 5);
+    Button climbheight = new JoystickButton(_xBoxCntrl2, 7);
     
     Button winchUp1 = new XboxControllerPOVButton(xb, 0);
     Button winchDown1 = new XboxControllerPOVButton(xb, 180);

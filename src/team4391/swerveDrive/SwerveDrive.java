@@ -313,7 +313,7 @@ public class SwerveDrive {
 	
 	public void carTurn(double forwardSpeed, double rotate)
 	{
-		double frontWheelAngle = rotate * 45.0;
+		double frontWheelAngle = rotate * 60.0;
 		_isTurning = true; // let the rest of the module know we are in a turn mode
 		
 		setWheelAngle(frontWheelAngle, _turnFl);

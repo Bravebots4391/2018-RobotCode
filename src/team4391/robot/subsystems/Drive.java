@@ -167,7 +167,7 @@ public class Drive extends Subsystem implements PIDOutput {
 	public void teleopDrive(Joystick cntrl)
 	{
 		double angle = ConvertJoystickXYtoAngle(cntrl.getX(), -cntrl.getY());
-		double pctSpeed = Math.pow(Math.sqrt(cntrl.getX() * cntrl.getX() + cntrl.getY() * cntrl.getY()), 2);		
+		double pctSpeed = Math.pow(Math.sqrt(cntrl.getX() * cntrl.getX() + cntrl.getY() * cntrl.getY()), 3);		
 	
 		double X = cntrl.getX();
 		double Y = -cntrl.getY();
@@ -178,7 +178,7 @@ public class Drive extends Subsystem implements PIDOutput {
 		{		
 			if(DB(rX) && Y > 0 && !isPivot) 
 			{
-				//_swerveDrive.setDrive(SwerveMode.carTurn, pctSpeed, rX);
+				_swerveDrive.setDrive(SwerveMode.carTurn, pctSpeed, rX);
 			}
 			else if(DB(rX) && Y < 0 && !isPivot)
 			{
