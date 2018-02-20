@@ -50,6 +50,19 @@ public class Lift extends Subsystem {
 		// Enable brake mode on both talons.
 		_cubevatorSlave.setNeutralMode(NeutralMode.Brake);
 		_cubevatorTalon.setNeutralMode(NeutralMode.Brake);
+		
+        /* set the peak and nominal outputs, 12V means full */
+		_cubevatorTalon.configNominalOutputForward(0, Constants.kTimeoutMs);
+		_cubevatorTalon.configNominalOutputReverse(0, Constants.kTimeoutMs);
+		_cubevatorTalon.configPeakOutputForward(1, Constants.kTimeoutMs);
+		_cubevatorTalon.configPeakOutputReverse(-1, Constants.kTimeoutMs);
+		
+		_cubevatorTalon.configAllowableClosedloopError(3, Constants.kPIDLoopIdx, Constants.kTimeoutMs); /* always servo */
+        /* set closed loop gains in slot0 */
+		_cubevatorTalon.config_kF(Constants.kPIDLoopIdx, 0.0, Constants.kTimeoutMs);
+		_cubevatorTalon.config_kP(Constants.kPIDLoopIdx, 5.0, Constants.kTimeoutMs);
+		_cubevatorTalon.config_kI(Constants.kPIDLoopIdx, 0.000, Constants.kTimeoutMs);
+		_cubevatorTalon.config_kD(Constants.kPIDLoopIdx, 0.0, Constants.kTimeoutMs);
 	}	
 	
     public void initDefaultCommand() {
@@ -119,11 +132,14 @@ public class Lift extends Subsystem {
 		_targetHeight = heightInches;
 		
 		// assume the talon will do  this for us
+		_cubevatorTalon.set(ControlMode.Position, getEncoderPositionFromInches(heightInches));
 	}
 	
 	public boolean isAtPosition()
 	{
-		boolean weAreThereMan = Math.abs(_targetHeight - getHeightInches()) < 2.0;
+		boolean weAreThereMan = Math.abs(_targetHeight - getHeightInches()) < 2.0;		
+		_cubevatorTalon.set(ControlMode.PercentOutput, 0);
+		
 		return weAreThereMan;
 	}
 

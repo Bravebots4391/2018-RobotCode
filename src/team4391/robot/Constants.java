@@ -84,11 +84,12 @@ public class Constants {
 	//
 	// Cubevator Constants
 	//
-	public static final int kCubevatorEncoderCountsPerRev = 286720; //4096 from relative encoder + 70:1 gear ratio
+	public static final int kCubevatorEncoderCountsPerRev = 307200; //4096 from relative encoder + 75:1 gear ratio
 	public static final double kCubevatorDrumDiameterInches = 3.5;
 	public static final double kCubevatorTopLimitInches = 100;
 	
 	public static final double kCubevatorClimbHeight = 80.5;  // height to get above to the rung
+	public static final double kCubevatorDefaultHeight = 20.5;
 	
 	
     // PID gains for rotating in place
@@ -114,6 +115,8 @@ public class Constants {
     
     // Rotation PID Rate Limit Constants.  Limits for normal turning commands.
     public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> kRateLimitMap = new InterpolatingTreeMap<>();
+
+	
 
 
 

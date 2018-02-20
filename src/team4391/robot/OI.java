@@ -16,6 +16,7 @@ import team4391.robot.commands.ArmOpen;
 import team4391.robot.commands.ArmPullIn;
 import team4391.robot.commands.ArmPushOut;
 import team4391.robot.commands.CubevatorClimbHeight;
+import team4391.robot.commands.CubevatorDefaultHeight;
 import team4391.robot.commands.DriveForDistance;
 import team4391.robot.commands.FastArmPushOut;
 import team4391.robot.commands.LiftDown;
@@ -112,6 +113,7 @@ public class OI {
 		
 		mcTwist.whenPressed(new McTwist180());
 		
-		SmartDashboard.putData("DriveForDistance", new DriveForDistance(290.0, 0.5, 0.0));
+		SmartDashboard.putData("DriveForDistance", new DriveForDistance(290.0, 0.5, 0.0));		
+		SmartDashboard.putData("CubevatorDefault", new CubevatorDefaultHeight());
 	}
 }

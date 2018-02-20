@@ -49,7 +49,8 @@ public class Drive extends Subsystem implements PIDOutput {
 	
 	private static Gyro _gyro = new Gyro(Robot._gyroTalon );
 	
-	MaxSonar_MB1200 _sonarRight = new MaxSonar_MB1200(1);
+	MaxSonar_MB1200 _sonarLeft = new MaxSonar_MB1200(1);
+	MaxSonar_MB1033 _sonarRight = new MaxSonar_MB1033(0);
 	
 	public final PIDController _myHeadingPid = new PIDController(0.010, 0, 0, _gyro, this);
     public SyncronousRateLimiter _srl = new SyncronousRateLimiter(Constants.kLooperDt, 1.0 , 0);
@@ -148,8 +149,10 @@ public class Drive extends Subsystem implements PIDOutput {
     	
     	SmartDashboard.putData(this);    
     	
-    	SmartDashboard.putNumber("LeftSonarInches", _sonarRight.getDistanceInInches());
+    	SmartDashboard.putNumber("LeftSonarInches", _sonarLeft.getDistanceInInches());
+    	SmartDashboard.putNumber("RightSonarInches", _sonarRight.getDistanceInInches());
     }
+    
 
     public DriveState getDriveState()
     {
