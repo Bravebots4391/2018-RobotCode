@@ -77,7 +77,7 @@ public class Constants {
 	//
 	// ARM Constants
 	//
-	public static final double kArmInputPctSpeed = .2;
+	public static final double kArmInputPctSpeed = .5;
 	public static final double kArmOutputPctSpeed = -1.0;
 	public static final double kArmFastOutputPctSpeed = 1;
 	
@@ -115,6 +115,11 @@ public class Constants {
     
     // Rotation PID Rate Limit Constants.  Limits for normal turning commands.
     public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> kRateLimitMap = new InterpolatingTreeMap<>();
+
+	public static double kCubevatorFirstStageHeightInches = 40;
+
+	public static double kDriveWhileHighLimit = 0.45;
+	public static double kDriveWhileHighLimit2 = 0.25;
 
 	
 

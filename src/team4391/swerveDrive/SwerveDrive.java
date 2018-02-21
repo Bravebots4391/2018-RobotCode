@@ -493,7 +493,7 @@ public class SwerveDrive {
 	
 	private void SetupDriveWheelPID(TalonSRX talon)
 	{	
-		//talon.configClosedloopRamp(0.5, Constants.kTimeoutMs);
+		talon.configClosedloopRamp(0.5, Constants.kTimeoutMs);
 		
 		talon.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, Constants.kTimeoutMs);
 		talon.setSensorPhase(false);

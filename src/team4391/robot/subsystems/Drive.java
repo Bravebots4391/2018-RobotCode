@@ -174,6 +174,16 @@ public class Drive extends Subsystem implements PIDOutput {
 		double rX= cntrl.getRawAxis(4);
 		boolean isPivot = cntrl.getRawButton(6);			
 		
+		if(Robot.cubevatorSubsystem.getHeightInches() > Constants.kCubevatorFirstStageHeightInches)
+		{
+			pctSpeed = pctSpeed * Constants.kDriveWhileHighLimit2;
+			rX = rX*Constants.kDriveWhileHighLimit;
+		}
+		
+		SmartDashboard.putNumber("X", X);
+		SmartDashboard.putNumber("Y", Y);
+		SmartDashboard.putNumber("rX", rX);
+		
 		if(DB(X) || DB(Y)) // Left stick is out of deadband
 		{		
 			if(DB(rX) && Y > 0 && !isPivot) 
