@@ -90,11 +90,13 @@ public class OI {
 		liftUp.whileHeld(new LiftUp());;
 		liftDown.whileHeld(new LiftDown());
 		
+		// Toggle the cube suckker in
+		inny2.toggleWhenPressed(new ArmPullIn());
 		
 		inny2.whileHeld(new ArmPullIn());		
 		outty2.whileHeld(new ArmPushOut());
 		fastoutty2.whileHeld(new FastArmPushOut());
-		liftUp2.whileHeld(new LiftUp());;
+		liftUp2.whileHeld(new LiftUp());
 		liftDown2.whileHeld(new LiftDown());
 		
 		winchUp1.whileHeld(new WinchUp());
