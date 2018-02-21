@@ -18,8 +18,7 @@ public class Arm extends Subsystem {
 
 	public TalonSRX _suckerInnerOuter = new TalonSRX(Constants.kArmRightId);
 	public TalonSRX _suckerInnerOuterSlave = new TalonSRX(Constants.kArmLeftId);
-	
-	private TalonSRX _armPulley = new TalonSRX(Constants.kArmOpenyCloseyId);
+
 	DigitalInput _cubeSensor = new DigitalInput(1);
 	
 	public enum ArmState {
@@ -127,14 +126,7 @@ public class Arm extends Subsystem {
 	 {
 		 return !_cubeSensor.get();
 	 }
-	 
-	 public void openArm(double speed){
-		 _armPulley.set(ControlMode.PercentOutput, 1);
-	 }
-	 
-	 public void closeArm(){
-		 _armPulley.set(ControlMode.PercentOutput, 0);
-	 }	 
+	  
 	 
 	 public void updateDashboard() {
 		 SmartDashboard.putString("ArmState", myArmState.toString());

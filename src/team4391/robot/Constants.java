@@ -66,7 +66,6 @@ public class Constants {
 	public static final int kArmLeftId = 8;
 	public static final int kCubevatorId = 10;
 	public static final int kCubevatorSlaveId = 12;
-	public static final int kArmOpenyCloseyId = 53;
 	
 	public static final int kClimberId = 13;
 	
@@ -77,7 +76,7 @@ public class Constants {
 	//
 	// ARM Constants
 	//
-	public static final double kArmInputPctSpeed = .5;
+	public static final double kArmInputPctSpeed = .6;
 	public static final double kArmOutputPctSpeed = -1.0;
 	public static final double kArmFastOutputPctSpeed = 1;
 	

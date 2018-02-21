@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import team4391.robot.commands.ArmOpen;
 import team4391.robot.commands.ArmPullIn;
 import team4391.robot.commands.ArmPushOut;
 import team4391.robot.commands.CubevatorClimbHeight;
@@ -63,15 +62,13 @@ public class OI {
 	
 	public static Joystick _xBoxCntrl = new Joystick(0);
     public static Joystick _xBoxCntrl2 = new Joystick(1);
-    
-	Button armButton = new JoystickButton(_xBoxCntrl, 1);	
+    	
 	Button inny = new JoystickButton(_xBoxCntrl, 4);
 	Button outty = new JoystickButton(_xBoxCntrl, 2);
     Button liftUp = new JoystickButton(_xBoxCntrl, 7);
     Button liftDown= new JoystickButton(_xBoxCntrl,8);
     Button fastoutty = new JoystickButton(_xBoxCntrl,3);
     
-    Button armButton2 = new JoystickButton(_xBoxCntrl2, 1);	
 	Button inny2 = new JoystickButton(_xBoxCntrl2, 4);
 	Button outty2 = new JoystickButton(_xBoxCntrl2, 2);
     Button liftUp2 = new JoystickButton(_xBoxCntrl2, 5);
@@ -82,36 +79,28 @@ public class OI {
     Button winchUp1 = new XboxControllerPOVButton(xb, 0);
     Button winchDown1 = new XboxControllerPOVButton(xb, 180);
     
-    Button mcTwist = new XboxControllerPOVButton(xb, 90);
-    
-    //Button winchUp = new JoystickButton(_xBoxCntrl2, 5);
-    //Button winchDown = new JoystickButton(_xBoxCntrl2, 6);
-    
+    //Button mcTwist = new XboxControllerPOVButton(xb, 90);
     
 	public void init() {
 		
-		climbheight.whileHeld(new CubevatorClimbHeight());
-		armButton.whileHeld(new ArmOpen());		
+		climbheight.whileHeld(new CubevatorClimbHeight());	
 		inny.whileHeld(new ArmPullIn());		
 		outty.whileHeld(new ArmPushOut());
 		fastoutty.whileHeld(new FastArmPushOut());
 		liftUp.whileHeld(new LiftUp());;
 		liftDown.whileHeld(new LiftDown());
 		
-		armButton2.whileHeld(new ArmOpen());		
+		
 		inny2.whileHeld(new ArmPullIn());		
 		outty2.whileHeld(new ArmPushOut());
 		fastoutty2.whileHeld(new FastArmPushOut());
 		liftUp2.whileHeld(new LiftUp());;
 		liftDown2.whileHeld(new LiftDown());
 		
-		//winchUp.whileHeld(new WinchUp());
-		//winchDown.whileHeld(new WinchDown());
-		
 		winchUp1.whileHeld(new WinchUp());
 		winchDown1.whileHeld(new WinchDown());
 		
-		mcTwist.whenPressed(new McTwist180());
+		//mcTwist.whenPressed(new McTwist180());
 		
 		SmartDashboard.putData("DriveForDistance", new DriveForDistance(290.0, 0.5, 0.0));		
 		SmartDashboard.putData("CubevatorDefault", new CubevatorDefaultHeight());
