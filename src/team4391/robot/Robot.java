@@ -10,9 +10,11 @@ package team4391.robot;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -50,6 +52,7 @@ public class Robot extends TimedRobot {
 
 	Command m_autonomousCommand;
 	SendableChooser<Command> m_chooser = new SendableChooser<>();
+	SendableChooser<String> _chooser = new SendableChooser<>();
 
     // Enabled looper is called at 100Hz whenever the robot is enabled
     Looper mEnabledLooper = new Looper();
@@ -99,12 +102,19 @@ public class Robot extends TimedRobot {
         SmartDashboard.putData(Scheduler.getInstance());		
 	}
 
-	private void setupAutonomousChooser() {
-		m_chooser.addDefault("Default Auto", new ExampleCommand());
-		
+	private void setupAutonomousChooser() 
+	{	
+		m_chooser.addDefault("Default Auto", new ExampleCommand());		
 		m_chooser.addObject("My Auto", new Auto());		
 		
-		SmartDashboard.putData("Auto mode", m_chooser);
+		//SmartDashboard.putData("Auto mode", m_chooser);
+		
+		_chooser.addDefault("Default Auto", "default");
+		_chooser.addObject("Pos1", "1");
+		_chooser.addObject("Pos2", "2");
+		_chooser.addObject("Pos3", "3");
+		
+		SmartDashboard.putData("Auto mode", _chooser);
 	}
 
 	   public void outputAllToSmartDashboard() {	    	
@@ -112,8 +122,7 @@ public class Robot extends TimedRobot {
 	    	driveSubsystem.updateDashboard();
 	    	armSubsystem.updateDashboard();
 	    	cubevatorSubsystem.updateDashboard();
-	    	climbSubsystem.updateDashboard();
-	    	
+	    	climbSubsystem.updateDashboard();	    	
 
 //	    	SmartDashboard.putBoolean("cameraConnected", mVisionServer.isConnected());
 	    	
@@ -193,13 +202,33 @@ public class Robot extends TimedRobot {
 	public void autonomousInit() {
 		m_autonomousCommand = m_chooser.getSelected();
 
+		String chooserVal = _chooser.getSelected();
+		
 		/*
 		 * String autoSelected = SmartDashboard.getString("Auto Selector",
 		 * "Default"); switch(autoSelected) { case "My Auto": autonomousCommand
 		 * = new MyAutoCommand(); break; case "Default Auto": default:
 		 * autonomousCommand = new ExampleCommand(); break; }
 		 */
+		
+		if(chooserVal == "default")
+		{
+			CommandGroup cg = new Auto();
+			cg.start();
+		}
+		
 
+		String gameInfo = DriverStation.getInstance().getGameSpecificMessage();		
+		
+		if(gameInfo.charAt(0) == 'R')
+		{
+			
+		}
+		else
+		{
+			
+		}
+		
 		// schedule the autonomous command (example)
 		if (m_autonomousCommand != null) {
 			m_autonomousCommand.start();

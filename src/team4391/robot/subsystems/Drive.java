@@ -59,7 +59,7 @@ public class Drive extends Subsystem implements PIDOutput {
     private InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> _distanceSpeedProfile = new InterpolatingTreeMap<>();
     	
 	public enum DriveState {
-        OpenLoop, DirectionSetpoint, CameraHeadingControl, DriveForDistance, McTwist
+        OpenLoop, DirectionSetpoint, CameraHeadingControl, DriveForDistance, McTwist, Rotate
     }
 	
 	private DriveState _myDriveState;
@@ -94,9 +94,15 @@ public class Drive extends Subsystem implements PIDOutput {
 					
 					case DriveForDistance:
 						updateDriveForDistance();
+						break;
 						
 					case McTwist:
 						updateMcTwist();
+						break;
+						
+					case Rotate:
+						updateRotateDegrees();
+						break;
 						
 					case DirectionSetpoint:					
 						//updateDegTurnHeadingControl();
@@ -325,7 +331,37 @@ public class Drive extends Subsystem implements PIDOutput {
     	// (calculate arc length = 2*PI*R*theta)/360    	
     	double arcLenInches = (2*Math.PI*Constants.kRobotRadius*degrees)/360;
     	
-    	
+    	if(_myDriveState != DriveState.Rotate)
+    	{
+    		_swerveDrive.SetNeutralModeForDrive(NeutralMode.Brake);
+    		_myTargetSpeed = 1.0;
+    		_myTargetDistanceIn = arcLenInches;
+    		
+    		_swerveDrive.resetDistance();
+    		
+    		_swerveDrive.setDrive(SwerveMode.rotate, 0, 0);
+    		
+    		_myDriveState = DriveState.Rotate;
+    	}    	
+    }
+    
+    public void updateRotateDegrees()
+    {
+    	if(_myDriveState == DriveState.Rotate)
+    	{
+    		double distance = _swerveDrive.getDistanceInches();
+    		
+    		if(distance >= _myTargetDistanceIn)
+    		{
+    			setOpenLoop(false);
+    			return;
+    		}
+    		
+    		// Get drive info from the lookup
+    		double speed = _distanceSpeedProfile.getInterpolated(new InterpolatingDouble(distance)).value;  		
+    		
+    		_swerveDrive.setDrive(SwerveMode.rotate, speed, 0);
+    	}
     }
     
     public void driveForDistance(double distanceInches, double speedFps, double heading)
