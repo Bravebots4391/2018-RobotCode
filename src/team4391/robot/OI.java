@@ -21,6 +21,7 @@ import team4391.robot.commands.FastArmPushOut;
 import team4391.robot.commands.LiftDown;
 import team4391.robot.commands.LiftUp;
 import team4391.robot.commands.McTwist180;
+import team4391.robot.commands.RotateDegrees;
 import team4391.robot.commands.WinchDown;
 import team4391.robot.commands.WinchUp;
 import team4391.util.XboxControllerPOVButton;
@@ -106,5 +107,6 @@ public class OI {
 		
 		SmartDashboard.putData("DriveForDistance", new DriveForDistance(200.0, 0.8, 0.0));		
 		SmartDashboard.putData("CubevatorDefault", new CubevatorDefaultHeight());
+		SmartDashboard.putData("Rotate90", new RotateDegrees(90.0));	
 	}
 }

@@ -172,6 +172,8 @@ public class Drive extends Subsystem implements PIDOutput {
 	
 	public void teleopDrive(Joystick cntrl)
 	{
+		_swerveDrive.setUseSpeedCntrl(false);
+		
 		double angle = ConvertJoystickXYtoAngle(cntrl.getX(), -cntrl.getY());
 		double pctSpeed = Math.pow(Math.sqrt(cntrl.getX() * cntrl.getX() + cntrl.getY() * cntrl.getY()), 3);		
 	
@@ -334,14 +336,21 @@ public class Drive extends Subsystem implements PIDOutput {
     	if(_myDriveState != DriveState.Rotate)
     	{
     		_swerveDrive.SetNeutralModeForDrive(NeutralMode.Brake);
-    		_myTargetSpeed = 1.0;
+    		_myTargetSpeed = 0.5;
     		_myTargetDistanceIn = arcLenInches;
+    		
+    		// Setup lookup table
+        	setupDistanceProfile(_myTargetDistanceIn, _myTargetSpeed);
     		
     		_swerveDrive.resetDistance();
     		
     		_swerveDrive.setDrive(SwerveMode.rotate, 0, 0);
     		
     		_myDriveState = DriveState.Rotate;
+    		
+    		
+    		
+    		
     	}    	
     }
     
@@ -351,14 +360,14 @@ public class Drive extends Subsystem implements PIDOutput {
     	{
     		double distance = _swerveDrive.getDistanceInches();
     		
-    		if(distance >= _myTargetDistanceIn)
+    		if(Math.abs(distance - Math.abs(_myTargetDistanceIn)) < 1.0)
     		{
     			setOpenLoop(false);
     			return;
     		}
-    		
+    		    		    	
     		// Get drive info from the lookup
-    		double speed = _distanceSpeedProfile.getInterpolated(new InterpolatingDouble(distance)).value;  		
+    		double speed = _distanceSpeedProfile.getInterpolated(new InterpolatingDouble(Math.abs(distance))).value;  		
     		
     		_swerveDrive.setDrive(SwerveMode.rotate, speed, 0);
     	}

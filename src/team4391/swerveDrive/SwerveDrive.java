@@ -48,6 +48,11 @@ public class SwerveDrive {
 		init();
 	}
 	
+	public void setUseSpeedCntrl(boolean isSpeedCntrl)
+	{
+		_useSpeedControl = isSpeedCntrl;
+	}
+	
 	public void setDrive(SwerveMode mode, double pctSpeed, double angle)
 	{
 		_swerveMode = mode;						
@@ -190,6 +195,14 @@ public class SwerveDrive {
 		_motorRR.set(ControlMode.Velocity, speedToTargetVelocity(data.get_right()));
 		_motorFL.set(ControlMode.Velocity, speedToTargetVelocity(data.get_left()));
 		_motorRL.set(ControlMode.Velocity, speedToTargetVelocity(data.get_left()));
+	}
+	
+	private void setAllMotorsDistance(int encoderPosition)
+	{
+		_motorFR.set(ControlMode.Position, encoderPosition);
+		_motorRR.set(ControlMode.Position, encoderPosition);
+		_motorFL.set(ControlMode.Position, encoderPosition);
+		_motorRL.set(ControlMode.Position, encoderPosition);
 	}
 
 	private double speedToTargetVelocity(double pctSpeed) {

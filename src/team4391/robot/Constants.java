@@ -36,7 +36,7 @@ public class Constants {
 	// Robot wheel dimensions
 	public static final double Width = 26;
 	public static final double Length = 26;
-	public static final int kRobotRadius = 13;
+	public static final int kRobotRadius = 17;
 		
 	public static double kLooperDt = 0.01;
 	public static double kRotateMaxPctSpeed = 0.5;		
