@@ -9,7 +9,7 @@ public class Auto extends CommandGroup {
 
     public Auto() {
 
-    	addSequential(new DriveForDistance(24, 1, 0));
+    	addSequential(new DriveForDistance(200, .8, 0));
     	
     	// add additional commands as needed.
     	

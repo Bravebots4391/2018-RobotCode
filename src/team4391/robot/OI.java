@@ -104,7 +104,7 @@ public class OI {
 		
 		//mcTwist.whenPressed(new McTwist180());
 		
-		SmartDashboard.putData("DriveForDistance", new DriveForDistance(290.0, 0.5, 0.0));		
+		SmartDashboard.putData("DriveForDistance", new DriveForDistance(200.0, 0.8, 0.0));		
 		SmartDashboard.putData("CubevatorDefault", new CubevatorDefaultHeight());
 	}
 }

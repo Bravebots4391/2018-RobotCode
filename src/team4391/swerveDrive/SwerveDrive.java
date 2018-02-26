@@ -29,7 +29,7 @@ public class SwerveDrive {
 	double _targetPositionDegrees;
 	private static boolean _isTurning = false;
 	private SwerveMode _swerveMode;
-	private boolean _useSpeedControl = false;
+	private boolean _useSpeedControl = true;
 	
 	public SwerveDrive(SwerveDriveMotorGroup motors, Gyro gyro)
 	{
@@ -143,7 +143,7 @@ public class SwerveDrive {
 		SmartDashboard.putNumber("JoystickAngle", heading);
 		setAllWheelPositions(heading);
 		
-		boolean isForward = (heading > 0 && heading <= 90 || heading >= 270 && heading <=360);
+		boolean isForward = (heading >= 0 && heading <= 90 || heading >= 270 && heading <=360);
 		
 		setAllSpeeds(pctSpeed, isForward);
 	}
@@ -184,7 +184,7 @@ public class SwerveDrive {
 	{	
 		GyroOutput data = _gyro.getDriveCorrection(pctSpeed, isForward);
 		
-		//double speed = speedToTargetVelocity(pctSpeed);
+		//double speed = speedToTargetVelocity(pctSpeed);			
 		
 		_motorFR.set(ControlMode.Velocity, speedToTargetVelocity(data.get_right()));
 		_motorRR.set(ControlMode.Velocity, speedToTargetVelocity(data.get_right()));
@@ -408,6 +408,8 @@ public class SwerveDrive {
 		SmartDashboard.putNumber("positionRawBR", _turnBR.getSelectedSensorPosition(0));
 		SmartDashboard.putNumber("positionDegreesBR", convertEncoderPositionToAngle(_turnBR.getSelectedSensorPosition(0)));
 		
+		SmartDashboard.putNumber("FL Output", _motorFL.getMotorOutputPercent());
+		
 		SmartDashboard.putNumber("motorCurrent", _motorFR.getOutputCurrent());		
 		SmartDashboard.putNumber("targetPosition", _targetPositionDegrees);		
 		SmartDashboard.putNumber("closedLoopError", _turnFl.getClosedLoopError(0));		
@@ -507,7 +509,7 @@ public class SwerveDrive {
 		/* set closed loop gains in slot0 */
 		talon.config_kF(Constants.kPIDLoopIdx, 0.0, Constants.kTimeoutMs);
 		talon.config_kP(Constants.kPIDLoopIdx, 5.0, Constants.kTimeoutMs);
-		talon.config_kI(Constants.kPIDLoopIdx, 0.0000, Constants.kTimeoutMs);
+		talon.config_kI(Constants.kPIDLoopIdx, 0.0001, Constants.kTimeoutMs);
 		talon.config_kD(Constants.kPIDLoopIdx, 0, Constants.kTimeoutMs);
 	}
 	

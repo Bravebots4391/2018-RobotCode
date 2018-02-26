@@ -229,14 +229,15 @@ public class Robot extends TimedRobot {
 			
 		}
 		
-		// schedule the autonomous command (example)
-		if (m_autonomousCommand != null) {
-			m_autonomousCommand.start();
-			
-			// Reset all sensors
-            zeroAllSensors();        
-	        enableLoops();
-		}
+		enableLoops();
+//		// schedule the autonomous command (example)
+//		if (m_autonomousCommand != null) {
+//			m_autonomousCommand.start();
+//			
+//			// Reset all sensors
+//            zeroAllSensors();        
+//	        enableLoops();
+//		}
 	}
 
 	/**

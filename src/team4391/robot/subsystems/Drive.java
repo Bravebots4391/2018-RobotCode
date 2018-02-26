@@ -391,10 +391,10 @@ public class Drive extends Subsystem implements PIDOutput {
         // Rotation PID Rate Limit Constants.  Limits for normal turning commands.
         _distanceSpeedProfile = new InterpolatingTreeMap<>();
 
-        _distanceSpeedProfile.put(new InterpolatingDouble(0.0), new InterpolatingDouble(.3));
+        _distanceSpeedProfile.put(new InterpolatingDouble(0.0), new InterpolatingDouble(.2));
         _distanceSpeedProfile.put(new InterpolatingDouble(12.0), new InterpolatingDouble(speedFps));
-        _distanceSpeedProfile.put(new InterpolatingDouble(distanceInches - 12), new InterpolatingDouble(speedFps));
-        _distanceSpeedProfile.put(new InterpolatingDouble(distanceInches), new InterpolatingDouble(.3));
+        _distanceSpeedProfile.put(new InterpolatingDouble(distanceInches - 36), new InterpolatingDouble(speedFps));
+        _distanceSpeedProfile.put(new InterpolatingDouble(distanceInches), new InterpolatingDouble(.2));
         
     }
     
@@ -404,6 +404,8 @@ public class Drive extends Subsystem implements PIDOutput {
     	{
     		double distance = _swerveDrive.getDistanceInches();
     		
+    		SmartDashboard.putNumber("xsetDistance", distance);
+    		
     		if(distance >= _myTargetDistanceIn)
     		{
     			setOpenLoop(false);
@@ -412,6 +414,9 @@ public class Drive extends Subsystem implements PIDOutput {
     		
     		// Get drive info from the lookup
     		double speed = _distanceSpeedProfile.getInterpolated(new InterpolatingDouble(distance)).value;  		
+    		
+    		
+    		SmartDashboard.putNumber("xsetFPS", speed);
     		
     		_swerveDrive.setDrive(SwerveMode.crab, speed, _myTargetHeading);
     	}
