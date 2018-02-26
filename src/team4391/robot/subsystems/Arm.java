@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import team4391.loops.Loop;
 import team4391.robot.Constants;
+import team4391.robot.Robot;
 import team4391.robot.commands.ArmHold;
 
 /**
@@ -17,7 +18,7 @@ import team4391.robot.commands.ArmHold;
 public class Arm extends Subsystem {
 
 	public TalonSRX _suckerInnerOuter = new TalonSRX(Constants.kArmRightId);
-	public TalonSRX _suckerInnerOuterSlave = new TalonSRX(Constants.kArmLeftId);
+	public TalonSRX _suckerInnerOuterSlave;
 
 	DigitalInput _cubeSensor = new DigitalInput(1);
 	
@@ -31,7 +32,15 @@ public class Arm extends Subsystem {
 
 	public Arm()
 	{
-		_suckerInnerOuterSlave.follow(_suckerInnerOuter);
+		if(Constants.useSlaveMotors)
+		{
+			_suckerInnerOuterSlave = new TalonSRX(Constants.kArmLeftId);
+			_suckerInnerOuterSlave.follow(_suckerInnerOuter);
+		}
+		else
+		{
+			Robot._gyroTalon = _suckerInnerOuter;
+		}
 	}
 	
     public void initDefaultCommand() {

@@ -21,7 +21,7 @@ public class Lift extends Subsystem {
     // here. Call these from Commands.
 	
 	TalonSRX _cubevatorTalon = new TalonSRX(Constants.kCubevatorId);
-	TalonSRX _cubevatorSlave = new TalonSRX(Constants.kCubevatorSlaveId);
+	TalonSRX _cubevatorSlave;
 	
 	DigitalInput _limitSwitch = new DigitalInput(0);
 	private double _targetHeight;
@@ -43,12 +43,16 @@ public class Lift extends Subsystem {
 		int softLimitPosition = getEncoderPositionFromInches(Constants.kCubevatorTopLimitInches);
 		_cubevatorTalon.configForwardSoftLimitThreshold(softLimitPosition, Constants.kTimeoutMs);			
 		
-		_cubevatorSlave.setInverted(true);
-		_cubevatorSlave.follow(_cubevatorTalon);
-		Robot._gyroTalon = _cubevatorSlave;
+		if(Constants.useSlaveMotors)
+		{
+			_cubevatorSlave = new TalonSRX(Constants.kCubevatorSlaveId);
+			_cubevatorSlave.setInverted(true);
+			_cubevatorSlave.follow(_cubevatorTalon);
+			Robot._gyroTalon = _cubevatorSlave;
+			_cubevatorSlave.setNeutralMode(NeutralMode.Brake);
+		}
 		
-		// Enable brake mode on both talons.
-		_cubevatorSlave.setNeutralMode(NeutralMode.Brake);
+		// Enable brake mode on both talons.		
 		_cubevatorTalon.setNeutralMode(NeutralMode.Brake);
 		
         /* set the peak and nominal outputs, 12V means full */

@@ -7,6 +7,8 @@ import team4391.util.InterpolatingTreeMap;
 
 public class Constants {
 	
+	public static final boolean useSlaveMotors = false;
+	
 	public static final double toDegrees = 180 / Math.PI;
 	
 	/**
@@ -41,10 +43,10 @@ public class Constants {
 	
 	
 	// Wheel position calibration
-	public static final int kFrontLeftCal = 415;
-	public static final int kFrontRightCal = 846;
-	public static final int kRearLeftCal = 375;
-	public static final int kRearRightCal = 846;
+	public static final int kFrontLeftCal = /*415;*/ 412;
+	public static final int kFrontRightCal = /*846;*/ 841;
+	public static final int kRearLeftCal = /*375;*/ 379;
+	public static final int kRearRightCal = /*846;*/ 844;
 	
 	// Cimcoder constants
 	public static final int kCimcoderPulsesPerRev = 80;

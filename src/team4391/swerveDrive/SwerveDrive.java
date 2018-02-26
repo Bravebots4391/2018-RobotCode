@@ -506,8 +506,8 @@ public class SwerveDrive {
 
 		/* set closed loop gains in slot0 */
 		talon.config_kF(Constants.kPIDLoopIdx, 0.0, Constants.kTimeoutMs);
-		talon.config_kP(Constants.kPIDLoopIdx, 7.0, Constants.kTimeoutMs);
-		talon.config_kI(Constants.kPIDLoopIdx, 0.0001, Constants.kTimeoutMs);
+		talon.config_kP(Constants.kPIDLoopIdx, 5.0, Constants.kTimeoutMs);
+		talon.config_kI(Constants.kPIDLoopIdx, 0.0000, Constants.kTimeoutMs);
 		talon.config_kD(Constants.kPIDLoopIdx, 0, Constants.kTimeoutMs);
 	}
 	
