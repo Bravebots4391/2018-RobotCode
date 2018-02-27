@@ -17,7 +17,7 @@ public class IntakeCube extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	Robot.armSubsystem.IntakeCube();
+    	Robot.armSubsystem.intakeCube();
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -27,7 +27,7 @@ public class IntakeCube extends Command {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return Robot.armSubsystem.getArmState() != ArmState.IntakeCube;
+        return Robot.armSubsystem.getArmState() != ArmState.PullIn;
     }
 
     // Called once after isFinished returns true

@@ -23,7 +23,7 @@ public class Arm extends Subsystem {
 	DigitalInput _cubeSensor = new DigitalInput(1);
 	
 	public enum ArmState {
-        Holding, PullIn, PushOut, CubePresent, IntakeCube
+        Holding, PullIn, PushOut, CubePresent
     }
 	
 	private ArmState myArmState;
@@ -127,13 +127,12 @@ public class Arm extends Subsystem {
 		 _suckerInnerOuter.set(ControlMode.PercentOutput, Constants.kArmFastOutputPctSpeed);
 	 }
 	 
-	 private void checkForCubePresent() {
-		 // TODO Add a sensor to determine if the cube is present
-		 
-		 if(isCubeSensed()){
+	 private void checkForCubePresent() 
+	 {		 
+		 if(isCubeSensed())
+		 {
 		  	setHolding();
-		 }
-		 
+		 }		 
 	 }
 	
 	 public boolean isCubeSensed()
@@ -146,12 +145,12 @@ public class Arm extends Subsystem {
 		 SmartDashboard.putBoolean("CubePresent", isCubeSensed());
 	 }
 
-	public void IntakeCube() {
-		 if(myArmState != ArmState.IntakeCube)
-			 myArmState = ArmState.IntakeCube;
-		 	 setPullIn();
-			 if (isCubeSensed()) {
-				 setHolding();
-			 }
+	public void intakeCube() 
+	{
+		 setPullIn();
+		 if (isCubeSensed()) 
+		 {
+			 setHolding();
 		 }
-	}
+	}	
+}
