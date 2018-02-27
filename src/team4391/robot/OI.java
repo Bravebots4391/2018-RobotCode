@@ -67,8 +67,9 @@ public class OI {
 	Button inny = new JoystickButton(_xBoxCntrl, 4);
 	Button outty = new JoystickButton(_xBoxCntrl, 2);
     Button liftUp = new JoystickButton(_xBoxCntrl, 7);
-    Button liftDown= new JoystickButton(_xBoxCntrl,8);
-    Button fastoutty = new JoystickButton(_xBoxCntrl,3);
+    Button liftDown= new JoystickButton(_xBoxCntrl, 8);
+    Button fastoutty = new JoystickButton(_xBoxCntrl, 3);
+    Button IntakeCube = new JoystickButton(_xBoxCntrl, 1);
     
 	Button inny2 = new JoystickButton(_xBoxCntrl2, 4);
 	Button outty2 = new JoystickButton(_xBoxCntrl2, 2);
@@ -84,14 +85,15 @@ public class OI {
     
 	public void init() {
 		
+		IntakeCube.whenPressed(new team4391.robot.commands.IntakeCube());
 		climbheight.whileHeld(new CubevatorClimbHeight());	
-		inny.whileHeld(new ArmPullIn());		
+		inny.whileHeld(new ArmPullIn());
 		outty.whileHeld(new ArmPushOut());
 		fastoutty.whileHeld(new FastArmPushOut());
 		liftUp.whileHeld(new LiftUp());;
 		liftDown.whileHeld(new LiftDown());
 		
-		// Toggle the cube suckker in
+		// Toggle the cube sucker in
 		inny2.toggleWhenPressed(new ArmPullIn());
 		
 		inny2.whileHeld(new ArmPullIn());		

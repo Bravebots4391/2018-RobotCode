@@ -23,7 +23,7 @@ public class Arm extends Subsystem {
 	DigitalInput _cubeSensor = new DigitalInput(1);
 	
 	public enum ArmState {
-        Holding, PullIn, PushOut, CubePresent
+        Holding, PullIn, PushOut, CubePresent, IntakeCube
     }
 	
 	private ArmState myArmState;
@@ -49,6 +49,11 @@ public class Arm extends Subsystem {
         
         myArmState = ArmState.Holding;
         
+    }
+    
+    public ArmState getArmState()
+    {
+    	return myArmState;
     }
     
 	private final Loop mLoop = new Loop() {
@@ -130,16 +135,23 @@ public class Arm extends Subsystem {
 		 }
 		 
 	 }
-	 
+	
 	 public boolean isCubeSensed()
 	 {
 		 return !_cubeSensor.get();
 	 }
-	  
 	 
 	 public void updateDashboard() {
 		 SmartDashboard.putString("ArmState", myArmState.toString());
 		 SmartDashboard.putBoolean("CubePresent", isCubeSensed());
 	 }
-}
-	
+
+	public void IntakeCube() {
+		 if(myArmState != ArmState.IntakeCube)
+			 myArmState = ArmState.IntakeCube;
+		 	 setPullIn();
+			 if (isCubeSensed()) {
+				 setHolding();
+			 }
+		 }
+	}
