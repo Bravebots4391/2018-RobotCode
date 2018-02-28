@@ -64,9 +64,9 @@ public class Lift extends Subsystem {
 		_cubevatorTalon.configAllowableClosedloopError(3, Constants.kPIDLoopIdx, Constants.kTimeoutMs); /* always servo */
         /* set closed loop gains in slot0 */
 		_cubevatorTalon.config_kF(Constants.kPIDLoopIdx, 0.0, Constants.kTimeoutMs);
-		_cubevatorTalon.config_kP(Constants.kPIDLoopIdx, 5.0, Constants.kTimeoutMs);
-		_cubevatorTalon.config_kI(Constants.kPIDLoopIdx, 0.000, Constants.kTimeoutMs);
-		_cubevatorTalon.config_kD(Constants.kPIDLoopIdx, 0.0, Constants.kTimeoutMs);
+		_cubevatorTalon.config_kP(Constants.kPIDLoopIdx, 7.0, Constants.kTimeoutMs);
+		_cubevatorTalon.config_kI(Constants.kPIDLoopIdx, 0.0001, Constants.kTimeoutMs);
+		_cubevatorTalon.config_kD(Constants.kPIDLoopIdx, 0.0, Constants.kTimeoutMs);			
 	}	
 	
     public void initDefaultCommand() {
@@ -135,6 +135,8 @@ public class Lift extends Subsystem {
 	{
 		_targetHeight = heightInches;
 		
+		
+		
 		// assume the talon will do  this for us
 		_cubevatorTalon.set(ControlMode.Position, getEncoderPositionFromInches(heightInches));
 	}
@@ -142,7 +144,11 @@ public class Lift extends Subsystem {
 	public boolean isAtPosition()
 	{
 		boolean weAreThereMan = Math.abs(_targetHeight - getHeightInches()) < 2.0;		
-		_cubevatorTalon.set(ControlMode.PercentOutput, 0);
+		
+		if(weAreThereMan)
+		{
+			_cubevatorTalon.set(ControlMode.PercentOutput, 0);
+		}
 		
 		return weAreThereMan;
 	}
@@ -151,6 +157,12 @@ public class Lift extends Subsystem {
 		 SmartDashboard.putNumber("CubevatorHeightInches", getHeightInches());
 		 SmartDashboard.putBoolean("IsAtBottom", IsAtBottomLimit());
 		 SmartDashboard.putBoolean("IsAtTop", IsAtTopLimit());
+		 
+		 SmartDashboard.putNumber("CubevatorTarget", _targetHeight);
+		 
+		 SmartDashboard.putNumber("CubevatorError", _cubevatorTalon.getClosedLoopError(0));
+		 
+		 SmartDashboard.putString("CubeTalonMode",_cubevatorTalon.getControlMode().toString()); 
 	}
 }
 
