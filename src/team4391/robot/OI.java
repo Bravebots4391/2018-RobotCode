@@ -70,8 +70,8 @@ public class OI {
     Button liftDown= new JoystickButton(_xBoxCntrl, 6);
     Button fastoutty = new JoystickButton(_xBoxCntrl, 3);
     Button IntakeCube = new JoystickButton(_xBoxCntrl, 1);
-    Button climbheight = new JoystickButton(_xBoxCntrl, 7);
-    Button defaultheight = new JoystickButton(_xBoxCntrl, 8);
+    Button climbheight = new JoystickButton(_xBoxCntrl, 8);
+    Button defaultheight = new JoystickButton(_xBoxCntrl, 7);
     
 	Button inny2 = new JoystickButton(_xBoxCntrl2, 4);
 	Button outty2 = new JoystickButton(_xBoxCntrl2, 2);
@@ -80,8 +80,8 @@ public class OI {
     Button fastoutty2 = new JoystickButton(_xBoxCntrl2,3);
     Button climbheight2 = new JoystickButton(_xBoxCntrl2, 7);
     
-    Button winchUp1 = new XboxControllerPOVButton(xb, 0);
-    Button winchDown1 = new XboxControllerPOVButton(xb, 180);
+    Button winchUp1 = new XboxControllerPOVButton(xb, 180);
+    Button winchDown1 = new XboxControllerPOVButton(xb, 0);
     
     //Button mcTwist = new XboxControllerPOVButton(xb, 90);
     
