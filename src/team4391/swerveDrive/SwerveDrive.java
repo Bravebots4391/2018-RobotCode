@@ -74,7 +74,7 @@ public class SwerveDrive {
 				_gyro.reset();
 			}
 			
-			crabDrive(pctSpeed, angle);
+			swerveAndTurn(pctSpeed, angle, 0.0);
 			break;
 			
 		case frontPivot:
@@ -108,7 +108,7 @@ public class SwerveDrive {
 			break;
 			
 		case stop:
-			crabDrive(0, 0);
+			swerveAndTurn(0, 0, 0);
 			_gyro.reset();
 			break;
 			
@@ -126,7 +126,14 @@ public class SwerveDrive {
 		
 	private void swerveAndTurn(double pctSpeed, double angle, double rotate) 
 	{
-		WheelPositionInfo wi = _swerveAndRotate.swerveAndTurn(angle, rotate);
+		double myRotate = rotate;
+		
+		if(pctSpeed > 0 && rotate == 0.0)
+		{
+			myRotate = _gyro.getDriveCorrection(pctSpeed, angle);
+		}
+		
+		WheelPositionInfo wi = _swerveAndRotate.swerveAndTurn(angle, myRotate);
 		
 		SmartDashboard.putNumber("srFL", wi.getFlAngle());
 		
@@ -177,36 +184,36 @@ public class SwerveDrive {
 		_swerveAndRotate = new SwerveAndRotate(Constants.Width, Constants.Length, Constants.kMaxRotateRadius);
 	}
 	
-	private void crabDrive(double pctSpeed, double heading)
-	{
-		SmartDashboard.putNumber("JoystickAngle", heading);
-		setAllWheelPositions(heading);
-		
-		boolean isForward = (heading >= 0 && heading <= 90 || heading >= 270 && heading <=360);
-		
-		setSpeedsForGyro(pctSpeed, heading);
-	}
+//	private void crabDrive(double pctSpeed, double heading)
+//	{
+//		SmartDashboard.putNumber("JoystickAngle", heading);
+//		setAllWheelPositions(heading);
+//		
+//		boolean isForward = (heading >= 0 && heading <= 90 || heading >= 270 && heading <=360);
+//		
+//		setSpeedsForGyro(pctSpeed, heading);
+//	}
 	
 	private void coast()
 	{
-		setSpeedsForGyro(0, 0);
+		swerveAndTurn(0, 0, 0);
 	}
 			
-	private void setSpeedsForGyro(double pctSpeed, double heading)
-	{			
-		ControlMode mode = ControlMode.PercentOutput;
-		if(_useSpeedControl)
-		{
-			mode = ControlMode.Velocity;
-		}
-		
-		GyroSwerveOutput data = _gyro.getDriveCorrection(pctSpeed, heading);
-		
-		_motorFR.set(mode, speedToTargetVelocity(data.getFr()));
-		_motorFL.set(mode, speedToTargetVelocity(data.getFl()));
-		_motorRR.set(mode, speedToTargetVelocity(data.getRr()));
-		_motorRL.set(mode, speedToTargetVelocity(data.getRl()));					
-	}	
+//	private void setSpeedsForGyro(double pctSpeed, double heading)
+//	{			
+//		ControlMode mode = ControlMode.PercentOutput;
+//		if(_useSpeedControl)
+//		{
+//			mode = ControlMode.Velocity;
+//		}
+//		
+//		double data = _gyro.getDriveCorrection(pctSpeed, heading);
+//		
+//		_motorFR.set(mode, speedToTargetVelocity(data.getFr()));
+//		_motorFL.set(mode, speedToTargetVelocity(data.getFl()));
+//		_motorRR.set(mode, speedToTargetVelocity(data.getRr()));
+//		_motorRL.set(mode, speedToTargetVelocity(data.getRl()));					
+//	}	
 	
 	private void setAllMotorsDistance(int encoderPosition)
 	{
