@@ -34,10 +34,10 @@ public class Constants {
 	public static double kMaxDriveFPS = 11;
 	
 	// Robot wheel dimensions
-	public static final double Width = 26;
-	public static final double Length = 26;
+	public static final double Width = 24.5;
+	public static final double Length = 23.0;
 	public static final int kRobotRadius = 17;
-	public static final double kMaxRotateRadius = 72.0;  // Inches for swerveAndRotate
+	public static final double kMaxRotateRadius = 200.0;  // Inches for swerveAndRotate
  		
 	public static double kLooperDt = 0.01;
 	public static double kRotateMaxPctSpeed = 0.5;		

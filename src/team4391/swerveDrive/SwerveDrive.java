@@ -47,6 +47,8 @@ public class SwerveDrive {
 		_turnBR = motors.get_turnBR();
 		
 		init();
+		
+		SmartDashboard.putData("pigeon", _gyro);
 	}
 	
 	public void setUseSpeedCntrl(boolean isSpeedCntrl)
@@ -125,6 +127,8 @@ public class SwerveDrive {
 	private void swerveAndTurn(double pctSpeed, double angle, double rotate) 
 	{
 		WheelPositionInfo wi = _swerveAndRotate.swerveAndTurn(angle, rotate);
+		
+		SmartDashboard.putNumber("srFL", wi.getFlAngle());
 		
 		//set all the wheels angles
 		setWheelAngle(wi.getFlAngle(), _turnFl);
@@ -425,13 +429,13 @@ public class SwerveDrive {
 	public void UpdateDashboard()
 	{	
 		SmartDashboard.putNumber("positionRawFL", _turnFl.getSelectedSensorPosition(0));
-		SmartDashboard.putNumber("positionDegreesFL", convertEncoderPositionToAngle(_turnFl.getSelectedSensorPosition(0)));
+		//SmartDashboard.putNumber("positionDegreesFL", convertEncoderPositionToAngle(_turnFl.getSelectedSensorPosition(0)));
 		SmartDashboard.putNumber("positionRawFR", _turnFR.getSelectedSensorPosition(0));
-		SmartDashboard.putNumber("positionDegreesFR", convertEncoderPositionToAngle(_turnFR.getSelectedSensorPosition(0)));
+		//SmartDashboard.putNumber("positionDegreesFR", convertEncoderPositionToAngle(_turnFR.getSelectedSensorPosition(0)));
 		SmartDashboard.putNumber("positionRawBL", _turnBl.getSelectedSensorPosition(0));
-		SmartDashboard.putNumber("positionDegreesBL", convertEncoderPositionToAngle(_turnBl.getSelectedSensorPosition(0)));
+		//SmartDashboard.putNumber("positionDegreesBL", convertEncoderPositionToAngle(_turnBl.getSelectedSensorPosition(0)));
 		SmartDashboard.putNumber("positionRawBR", _turnBR.getSelectedSensorPosition(0));
-		SmartDashboard.putNumber("positionDegreesBR", convertEncoderPositionToAngle(_turnBR.getSelectedSensorPosition(0)));
+		//SmartDashboard.putNumber("positionDegreesBR", convertEncoderPositionToAngle(_turnBR.getSelectedSensorPosition(0)));
 		
 		SmartDashboard.putNumber("FL Output", _motorFL.getMotorOutputPercent());
 		
@@ -443,9 +447,7 @@ public class SwerveDrive {
 		SmartDashboard.putNumber("SpeedFR",getVelocity(_motorFR));
 		SmartDashboard.putNumber("SpeedFL",getVelocity(_motorFL));
 		SmartDashboard.putNumber("SpeedRR",getVelocity(_motorRR));
-		SmartDashboard.putNumber("SpeedRL",getVelocity(_motorRL));
-				
-		SmartDashboard.putData("pigeon", _gyro);	
+		SmartDashboard.putNumber("SpeedRL",getVelocity(_motorRL));					
 		
 		SmartDashboard.putString("SwerveMode", _swerveMode.toString());
 	}	

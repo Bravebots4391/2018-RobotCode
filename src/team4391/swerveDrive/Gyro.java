@@ -120,11 +120,11 @@ public class Gyro extends GyroBase
 		}		
 		else if(heading >= 135 && heading <= 225)
 		{
-			return new GyroSwerveOutput(right, left, right, left);
+			return new GyroSwerveOutput(left, right, left, right);
 		}
 		else if(heading > 225 && heading < 315)
 		{
-			return new GyroSwerveOutput(right, right, left, left);
+			return new GyroSwerveOutput(left, left, right, right);
 		}
 		else
 		{
