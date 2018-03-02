@@ -63,11 +63,11 @@ public class Gyro extends GyroBase
 		}
 	}
 	
-	public GyroOutput getDriveCorrection(double throttle, boolean isForward) 
+	public GyroSwerveOutput getDriveCorrection(double throttle, double heading) 
 	{
 		if(!_isInitOk)
 		{
-			return new GyroOutput(throttle, throttle);
+			return new GyroSwerveOutput(throttle, throttle, throttle, throttle);
 		}
 		
 		/* some temps for Pigeon API */
@@ -105,18 +105,32 @@ public class Gyro extends GyroBase
 
 		/* positive turnThrottle means turn to the left, this can be replaced with ArcadeDrive object, or teams drivetrain object */
 		double left = forwardThrottle - turnThrottle;
-		double right = forwardThrottle + turnThrottle;
-		
-		if(isForward)
-		{
-			left = forwardThrottle + turnThrottle;
-			right = forwardThrottle - turnThrottle;
-		}
-		
+		double right = forwardThrottle + turnThrottle;		
+
 		left = Cap(left, 1.0);
 		right = Cap(right, 1.0);
-	
-		return new GyroOutput(left, right);					  
+		
+		if(heading >= 315 && heading <= 45)
+		{
+			return new GyroSwerveOutput(left, right, left, right);
+		}
+		else if(heading> 45 && heading < 135)
+		{
+			return new GyroSwerveOutput(left, left, right, right);
+		}		
+		else if(heading >= 135 && heading <= 225)
+		{
+			return new GyroSwerveOutput(right, left, right, left);
+		}
+		else if(heading > 225 && heading < 315)
+		{
+			return new GyroSwerveOutput(right, right, left, left);
+		}
+		else
+		{
+			// should never get here, but just incase
+			return new GyroSwerveOutput(throttle, throttle, throttle, throttle);
+		}
 	}
 
 	

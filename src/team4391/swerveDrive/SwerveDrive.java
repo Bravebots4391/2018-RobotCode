@@ -180,52 +180,29 @@ public class SwerveDrive {
 		
 		boolean isForward = (heading >= 0 && heading <= 90 || heading >= 270 && heading <=360);
 		
-		setAllSpeeds(pctSpeed, isForward);
+		setSpeedsForGyro(pctSpeed, heading);
 	}
 	
 	private void coast()
 	{
-		setAllSpeeds(0, true);
+		setSpeedsForGyro(0, 0);
 	}
 			
-	private void setAllSpeeds(double pctSpeed, boolean isForward)
-	{
+	private void setSpeedsForGyro(double pctSpeed, double heading)
+	{			
+		ControlMode mode = ControlMode.PercentOutput;
 		if(_useSpeedControl)
-		{		
-			if(Math.abs(pctSpeed) == 0)
-			{
-				_motorFR.set(ControlMode.Disabled, 0);
-				_motorRR.set(ControlMode.Disabled, 0);
-				_motorFL.set(ControlMode.Disabled, 0);
-				_motorRL.set(ControlMode.Disabled, 0);
-			}
-			else
-			{
-				setAllSpeedsFps(pctSpeed, isForward);			
-			}
-			
-			return;
+		{
+			mode = ControlMode.Velocity;
 		}
 		
-		GyroOutput data = _gyro.getDriveCorrection(pctSpeed, isForward);
+		GyroSwerveOutput data = _gyro.getDriveCorrection(pctSpeed, heading);
 		
-		_motorFR.set(ControlMode.PercentOutput, data.get_right());
-		_motorRR.set(ControlMode.PercentOutput, data.get_right());
-		_motorFL.set(ControlMode.PercentOutput, data.get_left());
-		_motorRL.set(ControlMode.PercentOutput, data.get_left());
-	}
-		
-	private void setAllSpeedsFps(double pctSpeed, boolean isForward)
-	{	
-		GyroOutput data = _gyro.getDriveCorrection(pctSpeed, isForward);
-		
-		//double speed = speedToTargetVelocity(pctSpeed);			
-		
-		_motorFR.set(ControlMode.Velocity, speedToTargetVelocity(data.get_right()));
-		_motorRR.set(ControlMode.Velocity, speedToTargetVelocity(data.get_right()));
-		_motorFL.set(ControlMode.Velocity, speedToTargetVelocity(data.get_left()));
-		_motorRL.set(ControlMode.Velocity, speedToTargetVelocity(data.get_left()));
-	}
+		_motorFR.set(mode, speedToTargetVelocity(data.getFr()));
+		_motorFL.set(mode, speedToTargetVelocity(data.getFl()));
+		_motorRR.set(mode, speedToTargetVelocity(data.getRr()));
+		_motorRL.set(mode, speedToTargetVelocity(data.getRl()));					
+	}	
 	
 	private void setAllMotorsDistance(int encoderPosition)
 	{
@@ -237,6 +214,11 @@ public class SwerveDrive {
 
 	private double speedToTargetVelocity(double pctSpeed) {
 		// Convert Fps to RPM
+		
+		if(!_useSpeedControl)
+		{
+			return pctSpeed;
+		}
 		
 		double speedFps = pctSpeed * Constants.kMaxDriveFPS;		
 		double rpm = speedFps * ((720)/(Math.PI * Constants.kWheelDiameterInches))*Constants.kSwerveDriveRatio;
