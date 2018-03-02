@@ -79,9 +79,9 @@ public class Constants {
 	//
 	// ARM Constants
 	//
-	public static final double kArmInputPctSpeed = .6;
-	public static final double kArmOutputPctSpeed = -1.0;
-	public static final double kArmFastOutputPctSpeed = 1;
+	public static final double kArmInputPctSpeed = 1.0;
+	public static final double kArmOutputPctSpeed = -0.6;
+	public static final double kArmFastOutputPctSpeed = -1.0;
 	
 	//
 	// Cubevator Constants
@@ -89,9 +89,10 @@ public class Constants {
 	public static final int kCubevatorEncoderCountsPerRev = 4096; // 1:1 with the output shaft
 	public static final double kCubevatorDrumDiameterInches = 3.5;
 	public static final double kCubevatorTopLimitInches = 90;
+	public static final double kCubevatorScaleHeight = 78; // height to throw into scale roughly
 	
 	public static final double kCubevatorClimbHeight = 80.5;  // height to get above to the rung
-	public static final double kCubevatorDefaultHeight = 20.5;
+	public static final double kCubevatorDefaultHeight = 30.5;
 	
 	
     // PID gains for rotating in place

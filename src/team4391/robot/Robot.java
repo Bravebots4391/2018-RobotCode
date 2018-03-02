@@ -71,8 +71,11 @@ public class Robot extends TimedRobot {
 		
 		// Initialize subsystems
 		armSubsystem = new Arm();
-		cubevatorSubsystem = new Lift();		
+		cubevatorSubsystem = new Lift();	
+		
 		_pdpModule = new PowerDistributionPanel(Constants.kPDP);
+		SmartDashboard.putData("PDP", _pdpModule);
+		
 		climbSubsystem = new Climb();
 		climbSubsystem.init();
 		
@@ -80,6 +83,7 @@ public class Robot extends TimedRobot {
 		
 		m_oi.init();
 		setupAutonomousChooser();
+		
 		
 		
 		try{ 
@@ -128,9 +132,7 @@ public class Robot extends TimedRobot {
 	    	
 	    	SmartDashboard.putNumber("Counter", _counter++);     	    	
 	        
-//	        SmartDashboard.putBoolean("CompressorEnabled", RobotMap.compressor.enabled());
-	            
-	    	SmartDashboard.putData("PDP", _pdpModule);
+//	        SmartDashboard.putBoolean("CompressorEnabled", RobotMap.compressor.enabled());	            	    	
 	    }
 
 	    public void stopAll() {
