@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class SwerveDrive {
 
 	public enum SwerveMode{
-		crab, frontPivot, rearPivot, rotate, carTurn, carTurnReverse, stop, coast, mcTwist
+		crab, frontPivot, rearPivot, rotate, carTurn, carTurnReverse, stop, coast, mcTwist, swerveAndTurn
 	}
 	
 	private static WPI_TalonSRX _motorFR;
@@ -30,6 +30,7 @@ public class SwerveDrive {
 	private static boolean _isTurning = false;
 	private SwerveMode _swerveMode;
 	private boolean _useSpeedControl = true;
+	private SwerveAndRotate _swerveAndRotate;
 	
 	public SwerveDrive(SwerveDriveMotorGroup motors, Gyro gyro)
 	{
@@ -54,6 +55,11 @@ public class SwerveDrive {
 	}
 	
 	public void setDrive(SwerveMode mode, double pctSpeed, double angle)
+	{
+		setDrive(mode, pctSpeed, angle, 0.0);
+	}
+	
+	public void setDrive(SwerveMode mode, double pctSpeed, double angle, double rotate)
 	{
 		_swerveMode = mode;						
 		
@@ -94,6 +100,11 @@ public class SwerveDrive {
 			carTurnReverse(pctSpeed, angle);
 			break;
 		
+		case swerveAndTurn:
+			_isTurning = true;
+			swerveAndTurn(pctSpeed, angle, rotate);
+			break;
+			
 		case stop:
 			crabDrive(0, 0);
 			_gyro.reset();
@@ -111,6 +122,23 @@ public class SwerveDrive {
 		}
 	}
 		
+	private void swerveAndTurn(double pctSpeed, double angle, double rotate) 
+	{
+		WheelPositionInfo wi = _swerveAndRotate.swerveAndTurn(angle, rotate);
+		
+		//set all the wheels angles
+		setWheelAngle(wi.getFlAngle(), _turnFl);
+		setWheelAngle(wi.getFrAngle(), _turnFR);
+		setWheelAngle(wi.getrLAngle(), _turnBl);
+		setWheelAngle(wi.getrRAngle(), _turnBR);
+		
+		// set each wheelSpeed
+		_motorFL.set(ControlMode.PercentOutput, pctSpeed * wi.getFlSpeed());
+		_motorFR.set(ControlMode.PercentOutput, pctSpeed * wi.getfRSpeed());
+		_motorRL.set(ControlMode.PercentOutput, pctSpeed * wi.getrLSpeed());
+		_motorRR.set(ControlMode.PercentOutput, pctSpeed * wi.getrRSpeed());				
+	}
+
 	public void rotateInPlace (double rotatePct) {
 		rotateBot(rotatePct);
 	}
@@ -141,6 +169,8 @@ public class SwerveDrive {
 		
 		_motorFR.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 10);
 		_motorFR.setSensorPhase(true);
+		
+		_swerveAndRotate = new SwerveAndRotate(Constants.Width, Constants.Length, Constants.kMaxRotateRadius);
 	}
 	
 	private void crabDrive(double pctSpeed, double heading)

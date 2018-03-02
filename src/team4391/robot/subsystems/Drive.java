@@ -193,15 +193,19 @@ public class Drive extends Subsystem implements PIDOutput {
 		SmartDashboard.putNumber("rX", rX);
 		
 		if(DB(X) || DB(Y)) // Left stick is out of deadband
-		{		
-			if(DB(rX) && Y > 0 && !isPivot) 
+		{
+			if(DB(rX) && !isPivot) 
 			{
-				_swerveDrive.setDrive(SwerveMode.carTurn, pctSpeed, rX);
+				_swerveDrive.setDrive(SwerveMode.swerveAndTurn, pctSpeed, angle, rX);
 			}
-			else if(DB(rX) && Y < 0 && !isPivot)
-			{
-				//_swerveDrive.setDrive(SwerveMode.carTurnReverse, pctSpeed, rX);
-			}
+//			if(DB(rX) && Y > 0 && !isPivot) 
+//			{
+//				_swerveDrive.setDrive(SwerveMode.carTurn, pctSpeed, rX);
+//			}
+//			else if(DB(rX) && Y < 0 && !isPivot)
+//			{
+//				//_swerveDrive.setDrive(SwerveMode.carTurnReverse, pctSpeed, rX);
+//			}
 			else if(Y > 0 && DB(rX) && isPivot)
 			{
 				_swerveDrive.setDrive(SwerveMode.frontPivot, rX, 0);
