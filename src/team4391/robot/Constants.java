@@ -80,7 +80,7 @@ public class Constants {
 	// ARM Constants
 	//
 	public static final double kArmInputPctSpeed = 1.0;
-	public static final double kArmOutputPctSpeed = -0.6;
+	public static final double kArmOutputPctSpeed = -0.2;
 	public static final double kArmFastOutputPctSpeed = -1.0;
 	
 	//
