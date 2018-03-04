@@ -45,7 +45,7 @@ public class Constants {
 	
 	// Wheel position calibration
 	public static final int kFrontLeftCal = /*415;*/ 412;
-	public static final int kFrontRightCal = /*846;*/ 841;
+	public static final int kFrontRightCal = /*846;*/ 253;
 	public static final int kRearLeftCal = /*375;*/ 379;
 	public static final int kRearRightCal = /*846;*/ 844;
 	
@@ -93,7 +93,7 @@ public class Constants {
 	
 	public static final double kCubevatorClimbHeight = 80.5;  // height to get above to the rung
 	public static final double kCubevatorDefaultHeight = 30.5;
-	
+	public static final double kCubevatorFeederHeight = 26.5;
 	
     // PID gains for rotating in place
     public static double kDriveTurnKp = 0.05;
@@ -103,6 +103,14 @@ public class Constants {
     public static double kDriveTurnAbsTollerance = 0.8;
     
     
+	// Gyro Tuning
+    public static final double GyroKp = 0.05;
+	public static final double GyroKd = 0.0004;
+    
+    // Autonomous Constants
+	public static final double DriveDistance = 24;
+	public static final double Speed = 0.8;
+	public static final double Heading = 0.0;
 	
     // Rotation PID Rate Limit Constants. In Auto Mode  Limits rotation rate based on angle from the target.
     public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> kRateLimitMapAuto = new InterpolatingTreeMap<>();
@@ -145,5 +153,13 @@ public class Constants {
     	prefs.putDouble("targetKi", Constants.kDriveTurnKi);
     	prefs.putDouble("targetKd", Constants.kDriveTurnKd);
     	prefs.putDouble("targetKf", Constants.kDriveTurnKf);
+    	
+    	prefs.putDouble("GyroKp", Constants.GyroKp);
+    	prefs.putDouble("GyroKd", Constants.GyroKd);
+    	prefs.putDouble("height", Constants.kCubevatorDefaultHeight);
+    	prefs.putDouble("DriveForDistance", DriveDistance);
+    	prefs.putDouble("Speed", Speed);
+    	prefs.putDouble("Heading", Heading);
+    	prefs.putDouble("FeederHeight", kCubevatorFeederHeight);
     }
 }

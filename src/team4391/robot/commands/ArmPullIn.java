@@ -29,7 +29,8 @@ public class ArmPullIn extends Command {
         
     	boolean isCubeSensed = Robot.armSubsystem.isCubeSensed();
 
-    	if(isCubeSensed)
+    	
+    	if(isCubeSensed && Robot.cubevatorSubsystem.getHeightInches() <= 1)
     	{
     		CubevatorDefaultHeight cmd = new CubevatorDefaultHeight();
     		cmd.start();

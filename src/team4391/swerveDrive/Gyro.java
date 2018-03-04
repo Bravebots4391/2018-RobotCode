@@ -4,10 +4,12 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 
 import edu.wpi.first.wpilibj.GyroBase;
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.SendableBase;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import team4391.loops.Loop;
+import team4391.robot.Constants;
 import team4391.robot.Robot;
 import team4391.robot.subsystems.Drive;
 
@@ -15,10 +17,9 @@ import team4391.robot.subsystems.Drive;
 public class Gyro extends GyroBase
 {
 	PigeonIMU _pidgey;
+	Preferences prefs;
 	
-	double kPgain = 0.05; /* percent throttle per degree of error */
-	double kDgain = 0.0004; /* percent throttle per angular velocity dps */
-	double kMaxCorrectionRatio = 0.30; /* cap corrective turning throttle to 30 percent of forward throttle */
+	double kMaxCorrectionRatio = 0.05; /* cap corrective turning throttle to 30 percent of forward throttle */
 	
 	/** holds the current angle to servo to */
 	double _targetAngle = 0;
@@ -29,6 +30,7 @@ public class Gyro extends GyroBase
 	
 	public Gyro(TalonSRX talon)
 	{
+		prefs = Preferences.getInstance();
 		_pidgey = new PigeonIMU(talon);
 		_isInitOk = true;
 	}
@@ -65,6 +67,9 @@ public class Gyro extends GyroBase
 	
 	public double getDriveCorrection(double throttle, double heading) 
 	{
+		double kPgain = prefs.getDouble("GyroKp", Constants.GyroKp) ; /* percent throttle per degree of error */
+		double kDgain = prefs.getDouble("GyroKd", Constants.GyroKd); /* percent throttle per angular velocity dps */
+		
 		if(!_isInitOk)
 		{
 			return 0.0;

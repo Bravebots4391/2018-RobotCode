@@ -137,17 +137,22 @@ public class SwerveDrive {
 		
 		SmartDashboard.putNumber("srFL", wi.getFlAngle());
 		
+		// set each wheelSpeed
+		_motorFL.set(ControlMode.PercentOutput, pctSpeed * wi.getFlSpeed());
+		_motorFR.set(ControlMode.PercentOutput, pctSpeed * wi.getfRSpeed());
+		_motorRL.set(ControlMode.PercentOutput, pctSpeed * wi.getrLSpeed());
+		_motorRR.set(ControlMode.PercentOutput, pctSpeed * wi.getrRSpeed());
+		
+		if(pctSpeed <= 0)
+		{
+			return;
+		}		
+		
 		//set all the wheels angles
 		setWheelAngle(wi.getFlAngle(), _turnFl);
 		setWheelAngle(wi.getFrAngle(), _turnFR);
 		setWheelAngle(wi.getrLAngle(), _turnBl);
 		setWheelAngle(wi.getrRAngle(), _turnBR);
-		
-		// set each wheelSpeed
-		_motorFL.set(ControlMode.PercentOutput, pctSpeed * wi.getFlSpeed());
-		_motorFR.set(ControlMode.PercentOutput, pctSpeed * wi.getfRSpeed());
-		_motorRL.set(ControlMode.PercentOutput, pctSpeed * wi.getrLSpeed());
-		_motorRR.set(ControlMode.PercentOutput, pctSpeed * wi.getrRSpeed());				
 	}
 
 	public void rotateInPlace (double rotatePct) {

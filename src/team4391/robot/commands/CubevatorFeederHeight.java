@@ -4,34 +4,22 @@ import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.command.Command;
 import team4391.robot.Constants;
 import team4391.robot.Robot;
-import team4391.robot.subsystems.Drive.DriveState;
 
 /**
  *
  */
-public class DriveForDistance extends Command {
+public class CubevatorFeederHeight extends Command {
 
-	private double _distance;
-	private double _speed;
-	private double _heading;
-	
-    public DriveForDistance(double distanceInches, double speedFps, double heading) {
+    public CubevatorFeederHeight() {
         // Use requires() here to declare subsystem dependencies
-        requires(Robot.driveSubsystem);
-        
-        _distance = distanceInches;
-        _speed = speedFps;
-        _heading = heading;
-        
+    	 requires(Robot.cubevatorSubsystem);
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
     	Preferences pref = Preferences.getInstance();
-    	double distance = pref.getDouble("DistancetoDrive", Constants.DriveDistance);
-    	double speed = pref.getDouble("speed", Constants.Speed);
-    	double heading = pref.getDouble("heading", Constants.Heading);
-    	Robot.driveSubsystem.driveForDistance(distance, speed, heading);
+    	double height = pref.getDouble("Default Height", Constants.kCubevatorFeederHeight);
+    	Robot.cubevatorSubsystem.goToPosition(height);
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -40,7 +28,7 @@ public class DriveForDistance extends Command {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return Robot.driveSubsystem.getDriveState() != DriveState.DriveForDistance;
+        return Robot.cubevatorSubsystem.isAtPosition();
     }
 
     // Called once after isFinished returns true

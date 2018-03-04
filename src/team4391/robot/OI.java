@@ -70,7 +70,6 @@ public class OI {
     Button liftDown= new JoystickButton(_xBoxCntrl, 6);
     Button fastoutty = new JoystickButton(_xBoxCntrl, 3);
     Button IntakeCube = new JoystickButton(_xBoxCntrl, 1);
-    Button climbheight = new JoystickButton(_xBoxCntrl, 8);
     Button defaultheight = new JoystickButton(_xBoxCntrl, 7);
     
 	Button inny2 = new JoystickButton(_xBoxCntrl2, 4);
@@ -78,8 +77,7 @@ public class OI {
     Button liftUp2 = new JoystickButton(_xBoxCntrl2, 5);
     Button liftDown2= new JoystickButton(_xBoxCntrl2,6);
     Button fastoutty2 = new JoystickButton(_xBoxCntrl2,3);
-    Button climbheight2 = new JoystickButton(_xBoxCntrl2, 7);
-    
+   
     Button winchUp1 = new XboxControllerPOVButton(xb, 180);
     Button winchDown1 = new XboxControllerPOVButton(xb, 0);
     
@@ -90,7 +88,6 @@ public class OI {
 		//IntakeCube.whenPressed(new team4391.robot.commands.IntakeCube());
 		defaultheight.whenPressed(new CubevatorDefaultHeight());
 		IntakeCube.whenPressed(new ArmPullIn());
-		climbheight.whenPressed(new CubevatorClimbHeight());	
 		inny.whileHeld(new ArmPullIn());
 		outty.whileHeld(new ArmPushOut());
 		fastoutty.whileHeld(new FastArmPushOut());
@@ -99,7 +96,6 @@ public class OI {
 		
 		// Toggle the cube sucker in
 		inny2.toggleWhenPressed(new ArmPullIn());
-		climbheight2.whenPressed(new CubevatorClimbHeight());
 		inny2.whileHeld(new ArmPullIn());		
 		outty2.whileHeld(new ArmPushOut());
 		fastoutty2.whileHeld(new FastArmPushOut());

@@ -1,5 +1,6 @@
 package team4391.robot.commands;
 
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.command.Command;
 import team4391.robot.Constants;
 import team4391.robot.Robot;
@@ -16,7 +17,9 @@ public class CubevatorDefaultHeight extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	Robot.cubevatorSubsystem.goToPosition(Constants.kCubevatorDefaultHeight);
+    	Preferences pref = Preferences.getInstance();
+    	double height = pref.getDouble("Default Height", Constants.kCubevatorDefaultHeight);
+    	Robot.cubevatorSubsystem.goToPosition(height);
     }
 
     // Called repeatedly when this Command is scheduled to run
