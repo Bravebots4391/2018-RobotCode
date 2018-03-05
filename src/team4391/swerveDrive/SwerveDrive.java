@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class SwerveDrive {
 
 	public enum SwerveMode{
-		crab, frontPivot, rearPivot, rotate, carTurn, carTurnReverse, stop, coast, mcTwist, swerveAndTurn
+		crab, frontPivot, rearPivot, rotate, stop, coast, mcTwist, swerveAndTurn
 	}
 	
 	private static WPI_TalonSRX _motorFR;
@@ -71,7 +71,9 @@ public class SwerveDrive {
 			if(_isTurning)
 			{
 				_isTurning = false;
+				_gyro.stopDriveCorrection();
 				_gyro.reset();
+				_gyro.setupDriveCorrection(0.0);
 			}
 			
 			swerveAndTurn(pctSpeed, angle, 0.0);
@@ -92,15 +94,15 @@ public class SwerveDrive {
 			rotateInPlace(pctSpeed);
 			break;
 			
-		case carTurn:
-			_isTurning = true;
-			carTurn(pctSpeed, angle);
-			break;
-			
-		case carTurnReverse:
-			_isTurning = true;
-			carTurnReverse(pctSpeed, angle);
-			break;
+//		case carTurn:
+//			_isTurning = true;
+//			carTurn(pctSpeed, angle);
+//			break;
+//			
+//		case carTurnReverse:
+//			_isTurning = true;
+//			carTurnReverse(pctSpeed, angle);
+//			break;
 		
 		case swerveAndTurn:
 			_isTurning = true;
@@ -128,9 +130,9 @@ public class SwerveDrive {
 	{
 		double myRotate = rotate;
 		
-		if(pctSpeed > 0 && rotate == 0.0)
+		if(_swerveMode == SwerveMode.crab)// pctSpeed > 0 && rotate == 0.0)
 		{
-			myRotate = _gyro.getDriveCorrection(pctSpeed, angle);
+			myRotate = _gyro.getDriveCorrection();
 		}
 		
 		WheelPositionInfo wi = _swerveAndRotate.swerveAndTurn(angle, myRotate);
@@ -202,23 +204,7 @@ public class SwerveDrive {
 	private void coast()
 	{
 		swerveAndTurn(0, 0, 0);
-	}
-			
-//	private void setSpeedsForGyro(double pctSpeed, double heading)
-//	{			
-//		ControlMode mode = ControlMode.PercentOutput;
-//		if(_useSpeedControl)
-//		{
-//			mode = ControlMode.Velocity;
-//		}
-//		
-//		double data = _gyro.getDriveCorrection(pctSpeed, heading);
-//		
-//		_motorFR.set(mode, speedToTargetVelocity(data.getFr()));
-//		_motorFL.set(mode, speedToTargetVelocity(data.getFl()));
-//		_motorRR.set(mode, speedToTargetVelocity(data.getRr()));
-//		_motorRL.set(mode, speedToTargetVelocity(data.getRl()));					
-//	}	
+	}			
 	
 	private void setAllMotorsDistance(int encoderPosition)
 	{
@@ -334,80 +320,24 @@ public class SwerveDrive {
 			_motorRL.set(ControlMode.PercentOutput, rotateShortWheel);
 			_motorRR.set(ControlMode.PercentOutput, 0);
 		}					
-	}
-	
-	public void carTurnReverse(double ReverseSpeed, double rotate)
-	{
-		double BackWheelAngle = rotate * 135;
-		_isTurning = true; // let the rest of the module know we are in a turn mode
-		
-		setWheelAngle(180.0, _turnFl);
-		setWheelAngle(180.0, _turnFR);
-		setWheelAngle(BackWheelAngle, _turnBl);
-		setWheelAngle(BackWheelAngle, _turnBR);
-		
-		_motorFR.set(ControlMode.PercentOutput, ReverseSpeed);
-		_motorRR.set(ControlMode.PercentOutput, ReverseSpeed);
-		_motorFL.set(ControlMode.PercentOutput, ReverseSpeed);
-		_motorRL.set(ControlMode.PercentOutput, ReverseSpeed);
-	}
-	
-	public void carTurn(double forwardSpeed, double rotate)
-	{
-		double frontWheelAngle = rotate * 60.0;
-		_isTurning = true; // let the rest of the module know we are in a turn mode
-		
-		setWheelAngle(frontWheelAngle, _turnFl);
-		setWheelAngle(frontWheelAngle, _turnFR);
-		setWheelAngle(0.0, _turnBl);
-		setWheelAngle(0.0, _turnBR);
-		
-		_motorFR.set(ControlMode.PercentOutput, forwardSpeed);
-		_motorRR.set(ControlMode.PercentOutput, forwardSpeed);
-		_motorFL.set(ControlMode.PercentOutput, forwardSpeed);
-		_motorRL.set(ControlMode.PercentOutput, forwardSpeed);
-	}
+	}	
 
 	public void mcTwist(double forwardSpeedFps, double rotateRateFps) 
 	{			
 		// set all wheel positions to the negative of Heading		
-		double heading = _gyro.getAngle();
-		double wheelPos = -_gyro.getAngle();
+		double gyroHeading = _gyro.getAngle();
+		double wheelPos = 0.0 - gyroHeading;
 		
-		setAllWheelPositions(wheelPos);
-		
-		// get Theta for each wheel
-		double FLt = heading + 315;
-		double FRt = heading + 45;
-		double RLt = heading + 225;
-		double RRt = heading + 135;
-		
-		// Calculate each wheel speed offset
-		double FLs = forwardSpeedFps + (-rotateRateFps)*Math.sin(FLt)*0.5;
-		double FRs = forwardSpeedFps + (-rotateRateFps)*Math.sin(FRt)*0.5;
-		double RLs = forwardSpeedFps + (-rotateRateFps)*Math.sin(RLt)*0.5;
-		double RRs = forwardSpeedFps + (-rotateRateFps)*Math.sin(RRt)*0.5;
-		
-		SmartDashboard.putNumber("mcTwistSpeed", FLs);
-		SmartDashboard.putNumber("mcTwistSpeed1", FRs);
-		SmartDashboard.putNumber("mcTwistSpeed2", RLs);
-		SmartDashboard.putNumber("mcTwistSpeed3", RRs);
-		
-		//11*speedToTargetVelocity(speedFps)
-		
-		_motorFL.set(ControlMode.Velocity, 11*speedToTargetVelocity(FLs));
-		_motorFR.set(ControlMode.Velocity, 11*speedToTargetVelocity(FRs));
-		_motorRL.set(ControlMode.Velocity, 11*speedToTargetVelocity(RLs));
-		_motorRR.set(ControlMode.Velocity, 11*speedToTargetVelocity(RRs));			
+		swerveAndTurn(forwardSpeedFps, wheelPos, rotateRateFps);				
 	}	
 	
-	private void setAllWheelPositions(double targetAngle)
-	{
-		setWheelAngle(targetAngle, _turnFl);
-		setWheelAngle(targetAngle, _turnFR);
-		setWheelAngle(targetAngle, _turnBl);
-		setWheelAngle(targetAngle, _turnBR);
-	}
+//	private void setAllWheelPositions(double targetAngle)
+//	{
+//		setWheelAngle(targetAngle, _turnFl);
+//		setWheelAngle(targetAngle, _turnFR);
+//		setWheelAngle(targetAngle, _turnBl);
+//		setWheelAngle(targetAngle, _turnBR);
+//	}
 	
 	private void setWheelAngle(double targetAngle, TalonSRX srx) {
 		

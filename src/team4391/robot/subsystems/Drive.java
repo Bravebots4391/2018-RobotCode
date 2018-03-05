@@ -148,6 +148,7 @@ public class Drive extends Subsystem implements PIDOutput {
     
     public void updateDashboard() {
     	_swerveDrive.UpdateDashboard();
+    	_gyro.updateDashboard();
     	
     	SmartDashboard.putString("DriveMode", _myDriveState.toString());
     	SmartDashboard.putNumber("RotateSetpoint", _myTargetHeading);

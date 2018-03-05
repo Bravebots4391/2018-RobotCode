@@ -86,7 +86,8 @@ public class Robot extends TimedRobot {
 		
 		
 		
-		try{ 
+		try
+		{ 
         	CrashTracker.logRobotInit();           
         	 
             // Reset all sensors
@@ -98,12 +99,34 @@ public class Robot extends TimedRobot {
 //        	mEnabledLooper.register(shooter.getLoop());
 //        	mEnabledLooper.register(led.getLoop());        
         	
-        }catch (Throwable t) {
+        }
+		catch (Throwable t) 
+		{
             CrashTracker.logThrowableCrash(t);
             throw t;
         }        
         
-        SmartDashboard.putData(Scheduler.getInstance());		
+        SmartDashboard.putData(Scheduler.getInstance());
+        
+//      new Thread(() -> {
+//      UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
+//      camera.setResolution(640, 480);
+//      camera.setExposureAuto();
+//      //camera.setExposureManual(0);
+//
+//      
+//      CvSink cvSink = CameraServer.getInstance().getVideo();
+//      CvSource outputStream = CameraServer.getInstance().putVideo("Blur", 640, 480);
+//      
+//      Mat source = new Mat();
+//      Mat output = new Mat();
+//      
+//      while(true) {            	
+//          cvSink.grabFrameNoTimeout(source);
+//          Imgproc.cvtColor(source, output, Imgproc.COLOR_BGR2GRAY);
+//          outputStream.putFrame(output);
+//      }
+//  }, "camera").start();
 	}
 
 	private void setupAutonomousChooser() 
