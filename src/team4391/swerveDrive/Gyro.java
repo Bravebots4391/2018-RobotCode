@@ -80,6 +80,7 @@ public class Gyro extends GyroBase implements PIDOutput
 		_myHeadingPid.setD(kDgain);
 		_myHeadingPid.setI(0.0);
 		_myHeadingPid.setF(0.0);
+		_myHeadingPid.setAbsoluteTolerance(0.01);
 		_myHeadingPid.setOutputRange(-0.1, 0.1);
 		
 		_myHeadingPid.enable();
