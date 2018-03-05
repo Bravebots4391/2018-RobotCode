@@ -8,6 +8,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class SwerveDrive {
@@ -71,9 +72,9 @@ public class SwerveDrive {
 			if(_isTurning)
 			{
 				_isTurning = false;
-				_gyro.stopDriveCorrection();
-				_gyro.reset();
-				_gyro.setupDriveCorrection(0.0);
+				//_gyro.stopDriveCorrection();
+				//_gyro.reset();
+				//_gyro.setupDriveCorrection(0.0);
 			}
 			
 			swerveAndTurn(pctSpeed, angle, 0.0);
@@ -130,9 +131,9 @@ public class SwerveDrive {
 	{
 		double myRotate = rotate;
 		
-		if(_swerveMode == SwerveMode.crab)// pctSpeed > 0 && rotate == 0.0)
+		if(_swerveMode == SwerveMode.crab && DriverStation.getInstance().isAutonomous())// pctSpeed > 0 && rotate == 0.0)
 		{
-			myRotate = _gyro.getDriveCorrection();
+//			myRotate = _gyro.getDriveCorrection();
 		}
 		
 		WheelPositionInfo wi = _swerveAndRotate.swerveAndTurn(angle, myRotate);
@@ -147,7 +148,7 @@ public class SwerveDrive {
 		
 		if(pctSpeed <= 0)
 		{
-			return;
+			//return;
 		}		
 		
 		//set all the wheels angles

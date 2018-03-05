@@ -66,8 +66,8 @@ public class OI {
     	
 	Button inny = new JoystickButton(_xBoxCntrl, 2);
 	Button outty = new JoystickButton(_xBoxCntrl, 4);
-    Button liftUp = new JoystickButton(_xBoxCntrl, 5);
-    Button liftDown= new JoystickButton(_xBoxCntrl, 6);
+    Button liftUp = new JoystickButton(_xBoxCntrl, 6);
+    Button liftDown= new JoystickButton(_xBoxCntrl, 5);
     Button fastoutty = new JoystickButton(_xBoxCntrl, 3);
     Button IntakeCube = new JoystickButton(_xBoxCntrl, 1);
     Button defaultheight = new JoystickButton(_xBoxCntrl, 7);
