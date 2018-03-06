@@ -6,17 +6,19 @@ import team4391.robot.Robot;
 /**
  *
  */
-public class McTwist180 extends Command {
+public class ArmPushOutTimed extends Command {
 
-	
-    public McTwist180() {
+    public ArmPushOutTimed(double timeoutSeconds) {
         // Use requires() here to declare subsystem dependencies
-        requires(Robot.driveSubsystem);
+        
+    	super(timeoutSeconds);
+    	requires(Robot.armSubsystem);
     }
 
     // Called just before this Command runs the first time
-    protected void initialize() {
-    	Robot.driveSubsystem.setupMcTwist(0.4, 1.0);
+    protected void initialize() 
+    {    	
+    	Robot.armSubsystem.setPushOut();
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -26,12 +28,11 @@ public class McTwist180 extends Command {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return false;
+        return isTimedOut();
     }
 
     // Called once after isFinished returns true
     protected void end() {
-    	Robot.driveSubsystem.stopMotors();
     }
 
     // Called when another command which requires one or more of the same

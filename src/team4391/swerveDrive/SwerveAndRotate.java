@@ -49,12 +49,20 @@ public class SwerveAndRotate
 		double d2 = Dist(x2, y2);
 		double d3 = Dist(x3, y3);
 		double d4 = Dist(x4, y4);
-
+		
 		double w1 = (WheelAngle(x1, y1, scaledXt));
 		double w2 = (WheelAngle(x2, y2, scaledXt));
 		double w3 = (WheelAngle(x3, y3, scaledXt));
 		double w4 = (WheelAngle(x4, y4, scaledXt));
 		
+		if(pctTurn == 0.0)
+		{
+			w1 = heading;
+			w2 = heading;
+			w3 = heading;
+			w4 = heading;
+		}
+
 		// Find maximum speed
 		ArrayList<Double> list = new ArrayList<Double>();
 		list.add(d1);

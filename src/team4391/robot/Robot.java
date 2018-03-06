@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import team4391.util.CrashTracker;
 import team4391.loops.Looper;
 import team4391.robot.commands.Auto;
+import team4391.robot.commands.AutoCenterToLeftSwitch;
 import team4391.robot.commands.ExampleCommand;
 import team4391.robot.subsystems.Arm;
 import team4391.robot.subsystems.Climb;
@@ -238,7 +239,7 @@ public class Robot extends TimedRobot {
 		
 		if(chooserVal == "default")
 		{
-			CommandGroup cg = new Auto();
+			CommandGroup cg = new AutoCenterToLeftSwitch();
 			cg.start();
 		}
 		

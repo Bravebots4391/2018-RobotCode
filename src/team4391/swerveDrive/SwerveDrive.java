@@ -385,7 +385,7 @@ public class SwerveDrive {
 		SmartDashboard.putNumber("motorCurrent", _motorFR.getOutputCurrent());		
 		SmartDashboard.putNumber("targetPosition", _targetPositionDegrees);		
 		SmartDashboard.putNumber("closedLoopError", _turnFl.getClosedLoopError(0));		
-		SmartDashboard.putNumber("Distance(inches)", getDistanceInches(_motorFR));		
+		SmartDashboard.putNumber("Distance(inches)", getDistanceInches());		
 				
 		SmartDashboard.putNumber("SpeedFR",getVelocity(_motorFR));
 		SmartDashboard.putNumber("SpeedFL",getVelocity(_motorFL));
@@ -432,10 +432,10 @@ public class SwerveDrive {
 	
 	public double getDistanceInches()
 	{
-		double d1 = getDistanceInches(_motorFR);
-		double d2 = getDistanceInches(_motorRR);
-		double d3 = getDistanceInches(_motorFL);
-		double d4 = getDistanceInches(_motorRL);
+		double d1 = Math.abs(getDistanceInches(_motorFR));
+		double d2 = Math.abs(getDistanceInches(_motorRR));
+		double d3 = Math.abs(getDistanceInches(_motorFL));
+		double d4 = Math.abs(getDistanceInches(_motorRL));
 		
 		double distanceAvg = (d1 + d2 + d3 + d4)/4.0;
 		

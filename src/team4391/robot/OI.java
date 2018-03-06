@@ -66,18 +66,19 @@ public class OI {
     	
 	Button inny = new JoystickButton(_xBoxCntrl, 2);
 	Button outty = new JoystickButton(_xBoxCntrl, 4);
-    Button liftUp = new JoystickButton(_xBoxCntrl, 6);
-    Button liftDown= new JoystickButton(_xBoxCntrl, 5);
+    Button liftUp = new JoystickButton(_xBoxCntrl, 5);
+    Button liftDown= new JoystickButton(_xBoxCntrl, 6);
     Button fastoutty = new JoystickButton(_xBoxCntrl, 3);
     Button IntakeCube = new JoystickButton(_xBoxCntrl, 1);
     Button defaultheight = new JoystickButton(_xBoxCntrl, 7);
     
-	Button inny2 = new JoystickButton(_xBoxCntrl2, 4);
-	Button outty2 = new JoystickButton(_xBoxCntrl2, 2);
+	Button inny2 = new JoystickButton(_xBoxCntrl2, 2);
+	Button outty2 = new JoystickButton(_xBoxCntrl2, 4);
     Button liftUp2 = new JoystickButton(_xBoxCntrl2, 5);
     Button liftDown2= new JoystickButton(_xBoxCntrl2,6);
     Button fastoutty2 = new JoystickButton(_xBoxCntrl2,3);
-   
+    Button IntakeCube2 = new JoystickButton(_xBoxCntrl2, 1);
+    
     Button winchUp1 = new XboxControllerPOVButton(xb, 180);
     Button winchDown1 = new XboxControllerPOVButton(xb, 0);
     
@@ -95,6 +96,7 @@ public class OI {
 		liftDown.whileHeld(new LiftDown());
 		
 		// Toggle the cube sucker in
+		IntakeCube2.whenPressed(new ArmPullIn());
 		inny2.toggleWhenPressed(new ArmPullIn());
 		inny2.whileHeld(new ArmPullIn());		
 		outty2.whileHeld(new ArmPushOut());
@@ -110,5 +112,6 @@ public class OI {
 		SmartDashboard.putData("DriveForDistance", new DriveForDistance(200.0, 0.8, 0.0));		
 		SmartDashboard.putData("CubevatorDefault", new CubevatorDefaultHeight());
 		SmartDashboard.putData("Rotate90", new RotateDegrees(90.0));	
+		SmartDashboard.putData("mcTwist", new McTwist180());
 	}
 }

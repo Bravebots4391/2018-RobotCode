@@ -37,7 +37,7 @@ public class Constants {
 	public static final double Width = 24.5;
 	public static final double Length = 23.0;
 	public static final int kRobotRadius = 17;
-	public static final double kMaxRotateRadius = 200.0;  // Inches for swerveAndRotate
+	public static final double kMaxRotateRadius = 100.0;  // Inches for swerveAndRotate
  		
 	public static double kLooperDt = 0.01;
 	public static double kRotateMaxPctSpeed = 0.5;		
@@ -129,8 +129,8 @@ public class Constants {
 
 	public static double kCubevatorFirstStageHeightInches = 40;
 
-	public static double kDriveWhileHighLimit = 0.45;
-	public static double kDriveWhileHighLimit2 = 0.25;
+	public static double kDriveWhileHighRotateLimit = 0.55;
+	public static double kDriveWhileHighLimit2 = 0.55;
 
 	
 

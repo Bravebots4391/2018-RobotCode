@@ -186,7 +186,7 @@ public class Drive extends Subsystem implements PIDOutput {
 		if(Robot.cubevatorSubsystem.getHeightInches() > Constants.kCubevatorFirstStageHeightInches)
 		{
 			pctSpeed = pctSpeed * Constants.kDriveWhileHighLimit2;
-			rX = rX*Constants.kDriveWhileHighLimit;
+			rX = rX*Constants.kDriveWhileHighRotateLimit;
 		}
 		
 		SmartDashboard.putNumber("X", X);
