@@ -386,8 +386,8 @@ public class Drive extends Subsystem implements PIDOutput {
         	setupDistanceProfile(distanceInches, speedFps);
         	
         	// Setup the Drive
-        	_swerveDrive.setDrive(SwerveMode.crab, 0, _myTargetHeading);
-        	
+        	_gyro.setupDriveCorrection(0.0);
+        	_swerveDrive.setDrive(SwerveMode.crab, 0, _myTargetHeading);        	                	
     		_myDriveState = DriveState.DriveForDistance;
     	}
     }   

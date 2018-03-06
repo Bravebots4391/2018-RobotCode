@@ -131,9 +131,9 @@ public class SwerveDrive {
 	{
 		double myRotate = rotate;
 		
-		if(_swerveMode == SwerveMode.crab && DriverStation.getInstance().isAutonomous())// pctSpeed > 0 && rotate == 0.0)
+		if(DriverStation.getInstance().isAutonomous())// pctSpeed > 0 && rotate == 0.0)
 		{
-//			myRotate = _gyro.getDriveCorrection();
+			myRotate = _gyro.getDriveCorrection();
 		}
 		
 		WheelPositionInfo wi = _swerveAndRotate.swerveAndTurn(angle, myRotate);
@@ -144,12 +144,7 @@ public class SwerveDrive {
 		_motorFL.set(ControlMode.PercentOutput, pctSpeed * wi.getFlSpeed());
 		_motorFR.set(ControlMode.PercentOutput, pctSpeed * wi.getfRSpeed());
 		_motorRL.set(ControlMode.PercentOutput, pctSpeed * wi.getrLSpeed());
-		_motorRR.set(ControlMode.PercentOutput, pctSpeed * wi.getrRSpeed());
-		
-		if(pctSpeed <= 0)
-		{
-			//return;
-		}		
+		_motorRR.set(ControlMode.PercentOutput, pctSpeed * wi.getrRSpeed());			
 		
 		//set all the wheels angles
 		setWheelAngle(wi.getFlAngle(), _turnFl);
