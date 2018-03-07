@@ -44,6 +44,14 @@ public class Constants {
 	
 	
 	// Wheel position calibration
+	
+	//Set to true
+	//Shut off bot
+	//Line up wheels
+	//turn on bot
+	//set true
+	//push code/restart
+	
 	public static final boolean kCalibrateSwerves = false;
 	public static final int kFrontLeftCal = /*415;*/ 412;
 	public static final int kFrontRightCal = /*846;*/ 253;
