@@ -22,6 +22,7 @@ import team4391.util.CrashTracker;
 import team4391.loops.Looper;
 import team4391.robot.commands.Auto;
 import team4391.robot.commands.AutoCenterToLeftSwitch;
+import team4391.robot.commands.DriveForDistance;
 import team4391.robot.commands.ExampleCommand;
 import team4391.robot.subsystems.Arm;
 import team4391.robot.subsystems.Climb;
@@ -242,7 +243,10 @@ public class Robot extends TimedRobot {
 			CommandGroup cg = new AutoCenterToLeftSwitch();
 			cg.start();
 		}
-		
+		else if(chooserVal == "1")
+		{
+			Command cg = new DriveForDistance(0.0,0.0,0.0);
+		}
 
 		String gameInfo = DriverStation.getInstance().getGameSpecificMessage();		
 		

@@ -44,6 +44,7 @@ public class Constants {
 	
 	
 	// Wheel position calibration
+	public static final boolean kCalibrateSwerves = false;
 	public static final int kFrontLeftCal = /*415;*/ 412;
 	public static final int kFrontRightCal = /*846;*/ 253;
 	public static final int kRearLeftCal = /*375;*/ 379;
@@ -111,6 +112,8 @@ public class Constants {
 	public static final double DriveDistance = 24;
 	public static final double Speed = 0.8;
 	public static final double Heading = 0.0;
+
+	
 	
     // Rotation PID Rate Limit Constants. In Auto Mode  Limits rotation rate based on angle from the target.
     public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> kRateLimitMapAuto = new InterpolatingTreeMap<>();
