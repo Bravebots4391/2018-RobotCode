@@ -53,10 +53,10 @@ public class Constants {
 	//push code/restart
 	
 	public static final boolean kCalibrateSwerves = false;
-	public static final int kFrontLeftCal = /*415;*/ 412;
-	public static final int kFrontRightCal = /*846;*/ 253;
-	public static final int kRearLeftCal = /*375;*/ 379;
-	public static final int kRearRightCal = /*846;*/ 844;
+	public static final int kFrontLeftCal = /*415;*/ 851;
+	public static final int kFrontRightCal = /*846;*/ 40;
+	public static final int kRearLeftCal = /*375;*/ 502;
+	public static final int kRearRightCal = /*846;*/ 719;
 	
 	// Cimcoder constants
 	public static final int kCimcoderPulsesPerRev = 80;
@@ -168,9 +168,9 @@ public class Constants {
     	prefs.putDouble("GyroKp", Constants.GyroKp);
     	prefs.putDouble("GyroKd", Constants.GyroKd);
     	prefs.putDouble("height", Constants.kCubevatorDefaultHeight);
-    	prefs.putDouble("DriveForDistance", DriveDistance);
-    	prefs.putDouble("Speed", Speed);
-    	prefs.putDouble("Heading", Heading);
+    	prefs.putDouble("DFDDistance", Constants.DriveDistance);
+    	prefs.putDouble("DFDSpeed", Constants.Speed);
+    	prefs.putDouble("DFDHeading", Constants.Heading);
     	prefs.putDouble("FeederHeight", kCubevatorFeederHeight);
     }
 }

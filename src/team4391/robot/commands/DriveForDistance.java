@@ -28,9 +28,9 @@ public class DriveForDistance extends Command {
     // Called just before this Command runs the first time
     protected void initialize() {
     	Preferences pref = Preferences.getInstance();
-    	_distance = pref.getDouble("DriveForDistance", Constants.DriveDistance);
-    	_speed = pref.getDouble("Speed", Constants.Speed);
-    	_heading = pref.getDouble("Heading", Constants.Heading);
+    	_distance = pref.getDouble("DFDDistance", Constants.DriveDistance);
+    	_speed = pref.getDouble("DFDSpeed", Constants.Speed);
+    	_heading = pref.getDouble("DFDHeading", Constants.Heading);
     	
     	Robot.driveSubsystem.driveForDistance(_distance, _speed, _heading);
     }
