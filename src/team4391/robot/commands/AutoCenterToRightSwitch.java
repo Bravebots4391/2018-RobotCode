@@ -5,9 +5,9 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 /**
  *
  */
-public class AutoCenterToLeftSwitch extends CommandGroup {
+public class AutoCenterToRightSwitch extends CommandGroup {
 
-    public AutoCenterToLeftSwitch() {
+    public AutoCenterToRightSwitch() {
         // Add Commands here:
         // e.g. addSequential(new Command1());
         //      addSequential(new Command2());
@@ -25,10 +25,10 @@ public class AutoCenterToLeftSwitch extends CommandGroup {
         // a CommandGroup containing them would require both the chassis and the
         // arm.
     	
-    	addSequential(new AutoDriveCenterToLeftSwitch(120.0, 0.6, -30.0));
+    	addSequential(new AutoDriveCenterToLeftSwitch(120.0, 0.6, 30.0));
     	addSequential(new ArmPushOutTimed(1.5));
     	addSequential(new DriveForDistance(24, -0.3, 0.0));
-    	addSequential(new RotateDegrees(65.0));
+    	addSequential(new RotateDegrees(-65.0));
     	addSequential(new CubevatorToBottom());
     	addParallel(new ArmPullIn());
     	addSequential(new DriveForDistance(40, 0.2, 0.0));

@@ -333,13 +333,16 @@ public class Drive extends Subsystem implements PIDOutput {
     	if(_myDriveState != DriveState.Rotate)
     	{
     		_swerveDrive.SetNeutralModeForDrive(NeutralMode.Brake);
-    		_myTargetSpeed = 0.5;
+    		_myTargetSpeed = 0.5 * Math.signum(degrees);
     		_myTargetDistanceIn = arcLenInches;
     		
     		// Setup lookup table
         	setupDistanceProfile(_myTargetDistanceIn, _myTargetSpeed);
     		
     		_swerveDrive.resetDistance();
+    		_swerveDrive.resetDistance();
+        	_swerveDrive.resetDistance();
+        	_swerveDrive.resetDistance();
     		
     		_swerveDrive.setDrive(SwerveMode.rotate, 0, 0);
     		
@@ -363,7 +366,7 @@ public class Drive extends Subsystem implements PIDOutput {
     		// Get drive info from the lookup
     		double speed = _distanceSpeedProfile.getInterpolated(new InterpolatingDouble(Math.abs(distance))).value;  		
     		
-    		_swerveDrive.setDrive(SwerveMode.rotate, speed, 0);
+    		_swerveDrive.setDrive(SwerveMode.rotate, _myTargetSpeed, 0);
     	}
     }
     
@@ -377,6 +380,8 @@ public class Drive extends Subsystem implements PIDOutput {
         	_myTargetHeading = heading;
         	_myTargetDistanceIn = distanceInches;
         	
+        	_swerveDrive.resetDistance();
+        	_swerveDrive.resetDistance();
         	_swerveDrive.resetDistance();
         	
         	// Setup lookup table
@@ -394,10 +399,17 @@ public class Drive extends Subsystem implements PIDOutput {
         // Rotation PID Rate Limit Constants.  Limits for normal turning commands.
         _distanceSpeedProfile = new InterpolatingTreeMap<>();
 
-        _distanceSpeedProfile.put(new InterpolatingDouble(0.0), new InterpolatingDouble(.2));
+        if(distanceInches > 36.0)
+        {        
+        _distanceSpeedProfile.put(new InterpolatingDouble(0.0), new InterpolatingDouble(.3));
         _distanceSpeedProfile.put(new InterpolatingDouble(12.0), new InterpolatingDouble(speedFps));
         _distanceSpeedProfile.put(new InterpolatingDouble(distanceInches - 36), new InterpolatingDouble(speedFps));
         _distanceSpeedProfile.put(new InterpolatingDouble(distanceInches), new InterpolatingDouble(.2));
+        }
+        else
+        {
+        	_distanceSpeedProfile.put(new InterpolatingDouble(0.0), new InterpolatingDouble(speedFps));
+        }
         
     }
     
@@ -449,6 +461,11 @@ public class Drive extends Subsystem implements PIDOutput {
 		
 		// TODO Auto-generated method stub
 		_pidOutput = output;
+	}
+	
+	public double getDistanceInches()
+	{
+		return _swerveDrive.getDistanceInches();
 	}
 	
 }

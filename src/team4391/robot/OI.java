@@ -8,6 +8,7 @@
 package team4391.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
@@ -114,9 +115,14 @@ public class OI {
 		
 		//mcTwist.whenPressed(new McTwist180());
 		
-		SmartDashboard.putData("DriveForDistance", new DriveForDistance(200.0, 0.8, 0.0));		
+    	Preferences pref = Preferences.getInstance();
+    	double _distance = pref.getDouble("DFDDistance", Constants.DriveDistance);
+    	double _speed = pref.getDouble("DFDSpeed", Constants.Speed);
+    	double _heading = pref.getDouble("DFDHeading", Constants.Heading);
+		
+		SmartDashboard.putData("DriveForDistance", new DriveForDistance(_distance, _speed, _heading));		
 		SmartDashboard.putData("CubevatorDefault", new CubevatorDefaultHeight());
-		SmartDashboard.putData("Rotate90", new RotateDegrees(90.0));	
+		SmartDashboard.putData("Rotate90", new RotateDegrees(85.0));	
 		SmartDashboard.putData("mcTwist", new McTwist180());
 	}
 }

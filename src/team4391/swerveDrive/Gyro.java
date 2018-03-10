@@ -21,7 +21,7 @@ public class Gyro extends GyroBase implements PIDOutput
 {
 	PigeonIMU _pidgey;
 	Preferences prefs;
-	private final PIDController _myHeadingPid = new PIDController(0.010, 0, 0, this, this);
+	private final PIDController _myHeadingPid = new PIDController(0.010, 0, 0, this, this, .001);
 	
 	double kMaxCorrectionRatio = 0.05; /* cap corrective turning throttle to 30 percent of forward throttle */
 	
@@ -75,13 +75,14 @@ public class Gyro extends GyroBase implements PIDOutput
 	{
 		double kPgain = prefs.getDouble("GyroKp", Constants.GyroKp); 
 		double kDgain = prefs.getDouble("GyroKd", Constants.GyroKd); 
+		double kIgain = prefs.getDouble("GyroKi", Constants.GyroKi);
 		
 		_myHeadingPid.setP(kPgain);
 		_myHeadingPid.setD(kDgain);
 		_myHeadingPid.setI(0.0);
 		_myHeadingPid.setF(0.0);
 		_myHeadingPid.setAbsoluteTolerance(0.1);
-		_myHeadingPid.setOutputRange(-0.025, 0.025);
+		_myHeadingPid.setOutputRange(-0.001, 0.001);
 		
 		
 		_myHeadingPid.enable();

@@ -25,7 +25,7 @@ public class SwerveAndRotate
 	WheelPositionInfo swerveAndTurn(double heading, double pctTurn)
 	{
 		double Xt = pctTurn;
-		double scaledXt = Math.signum(Xt) * Math.abs(xTurnRadiusMax - (xTurnRadiusMax * Math.abs(Xt)) + xTurnRadiusMin+8);
+		double scaledXt = Math.signum(Xt) * Math.abs(xTurnRadiusMax - (xTurnRadiusMax * Math.abs(Xt)) + xTurnRadiusMin+2);
 		
 		SmartDashboard.putNumber("scaledXt", scaledXt);
 		

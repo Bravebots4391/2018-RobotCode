@@ -113,18 +113,11 @@ public class Arm extends Subsystem {
 		 _suckerInnerOuter.set(ControlMode.PercentOutput, Constants.kArmInputPctSpeed);
 	 }
 	 
-	 public void setPushOut() {
+	 public void setPushOut(double speed) {
 		 if(myArmState != ArmState.PushOut)
 			 myArmState = ArmState.PushOut;
 		 
-		 _suckerInnerOuter.set(ControlMode.PercentOutput, Constants.kArmOutputPctSpeed);
-	 }
-	 
-	 public void setFastPushOut() {
-		 if(myArmState != ArmState.PushOut)
-			 myArmState = ArmState.PushOut;
-		 
-		 _suckerInnerOuter.set(ControlMode.PercentOutput, Constants.kArmFastOutputPctSpeed);
+		 _suckerInnerOuter.set(ControlMode.PercentOutput, speed);
 	 }
 	 
 	 private void checkForCubePresent() 

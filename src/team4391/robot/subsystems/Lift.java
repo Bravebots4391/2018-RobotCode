@@ -164,6 +164,8 @@ public class Lift extends Subsystem {
 		 
 		 SmartDashboard.putString("CubeTalonMode",_cubevatorTalon.getControlMode().toString()); 
 	}
+
+
 }
 
 

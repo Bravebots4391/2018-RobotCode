@@ -1,6 +1,7 @@
 package team4391.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
+import team4391.robot.Constants;
 import team4391.robot.Robot;
 
 /**
@@ -18,7 +19,7 @@ public class ArmPushOutTimed extends Command {
     // Called just before this Command runs the first time
     protected void initialize() 
     {    	
-    	Robot.armSubsystem.setPushOut();
+    	Robot.armSubsystem.setPushOut(Constants.kArmOutputPctSpeed);
     }
 
     // Called repeatedly when this Command is scheduled to run

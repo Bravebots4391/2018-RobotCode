@@ -9,15 +9,16 @@ import team4391.robot.subsystems.Drive.DriveState;
 /**
  *
  */
-public class DriveForDistance extends Command {
+public class StrafeForDistanceDropCube extends Command {
 
 	private double _distance;
 	private double _speed;
 	private double _heading;
 	
-    public DriveForDistance(double distanceInches, double speedFps, double heading) {
+    public StrafeForDistanceDropCube(double distanceInches, double speedFps, double heading) {
         // Use requires() here to declare subsystem dependencies
         requires(Robot.driveSubsystem);
+        requires(Robot.armSubsystem);
         
         _distance = distanceInches;
         _speed = speedFps;
@@ -32,6 +33,11 @@ public class DriveForDistance extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
+    	if(Robot.driveSubsystem.getDistanceInches() > 110)
+    	{
+    		ArmPushOutMedTimed cmd = new ArmPushOutMedTimed(1.5);
+    		cmd.start();
+    	}
     }
 
     // Make this return true when this Command no longer needs to run execute()

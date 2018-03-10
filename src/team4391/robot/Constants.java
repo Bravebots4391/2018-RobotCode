@@ -91,6 +91,7 @@ public class Constants {
 	public static final double kArmInputPctSpeed = 1.0;
 	public static final double kArmOutputPctSpeed = -0.2;
 	public static final double kArmFastOutputPctSpeed = -1.0;
+	public static final double kArmModeratlyFastOutputSpeed = -.6;
 	
 	//
 	// Cubevator Constants
@@ -105,21 +106,21 @@ public class Constants {
 	public static final double kCubevatorFeederHeight = 26.5;
 	
     // PID gains for rotating in place
-    public static double kDriveTurnKp = 0.05;
+    public static double kDriveTurnKp = 0.005;
     public static double kDriveTurnKi = 0.0;
-    public static double kDriveTurnKd = 0.05;
+    public static double kDriveTurnKd = 0.0;
     public static double kDriveTurnKf = 0.0;
     public static double kDriveTurnAbsTollerance = 0.8;
     
     
 	// Gyro Tuning
-    public static final double GyroKp = 0.05;
-	public static final double GyroKd = 0.0004;
-	public static final double GyroKi = 0;
+    public static final double GyroKp = 0.0;
+	public static final double GyroKd = 0.00001;
+	public static final double GyroKi = 0.0001;
 	
     // Autonomous Constants
-	public static final double DriveDistance = 24;
-	public static final double Speed = 0.8;
+	public static final double DriveDistance = 60;
+	public static final double Speed = 0.6;
 	public static final double Heading = 0.0;
 
 	

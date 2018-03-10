@@ -19,6 +19,7 @@ import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.CommandGroup;
@@ -29,8 +30,10 @@ import team4391.util.CrashTracker;
 import team4391.loops.Looper;
 import team4391.robot.commands.Auto;
 import team4391.robot.commands.AutoCenterToLeftSwitch;
+import team4391.robot.commands.AutoCenterToRightSwitch;
 import team4391.robot.commands.DriveForDistance;
 import team4391.robot.commands.ExampleCommand;
+import team4391.robot.commands.StrafeForDistanceDropCube;
 import team4391.robot.subsystems.Arm;
 import team4391.robot.subsystems.Climb;
 import team4391.robot.subsystems.Drive;
@@ -246,26 +249,44 @@ public class Robot extends TimedRobot {
 		 * autonomousCommand = new ExampleCommand(); break; }
 		 */
 		
+		String gameInfo = DriverStation.getInstance().getGameSpecificMessage();			
+		
 		if(chooserVal == "default")
 		{
-			CommandGroup cg = new AutoCenterToLeftSwitch();
-			cg.start();
+			if(gameInfo.charAt(0) == 'R')
+			{
+				CommandGroup cg = new AutoCenterToRightSwitch();
+				cg.start();
+			}
+			else
+			{
+				CommandGroup cg = new AutoCenterToLeftSwitch();
+				cg.start();
+			}
+
 		}
 		else if(chooserVal == "1")
 		{
-			Command cg = new DriveForDistance(0.0,0.0,0.0);
+	    	Preferences pref = Preferences.getInstance();
+	    	double _distance = pref.getDouble("DFDDistance", Constants.DriveDistance);
+	    	double _speed = pref.getDouble("DFDSpeed", Constants.Speed);
+	    	double _heading = pref.getDouble("DFDHeading", Constants.Heading);
+			Command cg = new DriveForDistance(_distance,_speed,_heading);
+			cg.start();
+		}
+		else if(chooserVal == "2")
+		{
+	    	Preferences pref = Preferences.getInstance();
+	    	double _distance = pref.getDouble("DFDDistance", Constants.DriveDistance);
+	    	double _speed = pref.getDouble("DFDSpeed", Constants.Speed);
+	    	double _heading = pref.getDouble("DFDHeading", Constants.Heading);
+			Command cg = new StrafeForDistanceDropCube(_distance,_speed,_heading);
+			cg.start();
 		}
 
-		String gameInfo = DriverStation.getInstance().getGameSpecificMessage();		
+	
 		
-		if(gameInfo.charAt(0) == 'R')
-		{
-			
-		}
-		else
-		{
-			
-		}
+
 		
 		enableLoops();
 //		// schedule the autonomous command (example)
