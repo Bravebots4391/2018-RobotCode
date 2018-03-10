@@ -60,6 +60,7 @@ public class OI {
 	// button.whenReleased(new ExampleCommand());
 			
 	public static XboxController xb = new XboxController(0);
+	public static XboxController xb2 = new XboxController(1);
 	
 	public static Joystick _xBoxCntrl = new Joystick(0);
     public static Joystick _xBoxCntrl2 = new Joystick(1);
@@ -81,6 +82,8 @@ public class OI {
     
     Button winchUp1 = new XboxControllerPOVButton(xb, 180);
     Button winchDown1 = new XboxControllerPOVButton(xb, 0);
+    Button winchUp2 = new XboxControllerPOVButton(xb2, 180);
+    Button winchDown2 = new XboxControllerPOVButton(xb2, 0);
     
     //Button mcTwist = new XboxControllerPOVButton(xb, 90);
     
@@ -92,7 +95,7 @@ public class OI {
 		inny.whileHeld(new ArmPullIn());
 		outty.whileHeld(new ArmPushOut());
 		fastoutty.whileHeld(new FastArmPushOut());
-		liftUp.whileHeld(new LiftUp());;
+		liftUp.whileHeld(new LiftUp());
 		liftDown.whileHeld(new LiftDown());
 		
 		// Toggle the cube sucker in
@@ -106,6 +109,8 @@ public class OI {
 		
 		winchUp1.whileHeld(new WinchUp());
 		winchDown1.whileHeld(new WinchDown());
+		winchUp2.whileHeld(new WinchUp());
+		winchDown2.whileHeld(new WinchDown());
 		
 		//mcTwist.whenPressed(new McTwist180());
 		

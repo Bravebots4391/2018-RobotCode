@@ -8,8 +8,15 @@
 package team4391.robot;
 
 
+import org.opencv.core.Mat;
+import org.opencv.imgproc.Imgproc;
+
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+import edu.wpi.cscore.CvSink;
+import edu.wpi.cscore.CvSource;
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -22,6 +29,7 @@ import team4391.util.CrashTracker;
 import team4391.loops.Looper;
 import team4391.robot.commands.Auto;
 import team4391.robot.commands.AutoCenterToLeftSwitch;
+import team4391.robot.commands.DriveForDistance;
 import team4391.robot.commands.ExampleCommand;
 import team4391.robot.subsystems.Arm;
 import team4391.robot.subsystems.Climb;
@@ -109,25 +117,26 @@ public class Robot extends TimedRobot {
         
         SmartDashboard.putData(Scheduler.getInstance());
         
-//      new Thread(() -> {
-//      UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
-//      camera.setResolution(640, 480);
-//      camera.setExposureAuto();
-//      //camera.setExposureManual(0);
-//
-//      
-//      CvSink cvSink = CameraServer.getInstance().getVideo();
-//      CvSource outputStream = CameraServer.getInstance().putVideo("Blur", 640, 480);
-//      
-//      Mat source = new Mat();
-//      Mat output = new Mat();
-//      
-//      while(true) {            	
-//          cvSink.grabFrameNoTimeout(source);
-//          Imgproc.cvtColor(source, output, Imgproc.COLOR_BGR2GRAY);
-//          outputStream.putFrame(output);
-//      }
-//  }, "camera").start();
+	      new Thread(() -> {
+	      UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
+	      camera.setResolution(320, 240);
+	      camera.setExposureAuto();
+	      //camera.setExposureManual(0);
+	
+	      
+	      CvSink cvSink = CameraServer.getInstance().getVideo();
+	      CvSource outputStream = CameraServer.getInstance().putVideo("Blur", 320, 240);
+	      
+	      Mat source = new Mat();
+	      Mat output = new Mat();
+	      
+	      while(true) {            	
+	          cvSink.grabFrameNoTimeout(source);
+	          Imgproc.cvtColor(source, output, Imgproc.COLOR_BGR2GRAY);
+	          outputStream.putFrame(output);
+	      }
+	  }, "camera").start();
+      
 	}
 
 	private void setupAutonomousChooser() 
@@ -242,7 +251,10 @@ public class Robot extends TimedRobot {
 			CommandGroup cg = new AutoCenterToLeftSwitch();
 			cg.start();
 		}
-		
+		else if(chooserVal == "1")
+		{
+			Command cg = new DriveForDistance(0.0,0.0,0.0);
+		}
 
 		String gameInfo = DriverStation.getInstance().getGameSpecificMessage();		
 		

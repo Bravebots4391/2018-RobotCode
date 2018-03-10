@@ -487,7 +487,11 @@ public class SwerveDrive {
 		int raw = talon.getSensorCollection().getAnalogInRaw();
 		
 		int absolutePosition = talon.getSelectedSensorPosition(Constants.kTimeoutMs); 
-		talon.getSensorCollection().setAnalogPosition(raw - positionCal, Constants.kTimeoutMs);
+		
+		if(!Constants.kCalibrateSwerves)
+		{
+			talon.getSensorCollection().setAnalogPosition(raw - positionCal, Constants.kTimeoutMs);
+		}
 		
 		/* choose the sensor and sensor direction */
         talon.configSelectedFeedbackSensor(FeedbackDevice.Analog, Constants.kPIDLoopIdx, Constants.kTimeoutMs);
