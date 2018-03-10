@@ -344,10 +344,7 @@ public class Drive extends Subsystem implements PIDOutput {
     		_swerveDrive.setDrive(SwerveMode.rotate, 0, 0);
     		
     		_myDriveState = DriveState.Rotate;
-    		
-    		
-    		
-    		
+    		    		    	    		
     	}    	
     }
     

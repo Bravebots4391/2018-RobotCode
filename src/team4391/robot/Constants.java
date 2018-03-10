@@ -115,13 +115,13 @@ public class Constants {
 	// Gyro Tuning
     public static final double GyroKp = 0.05;
 	public static final double GyroKd = 0.0004;
-    
+	public static final double GyroKi = 0;
+	
     // Autonomous Constants
 	public static final double DriveDistance = 24;
 	public static final double Speed = 0.8;
 	public static final double Heading = 0.0;
 
-	
 	
     // Rotation PID Rate Limit Constants. In Auto Mode  Limits rotation rate based on angle from the target.
     public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> kRateLimitMapAuto = new InterpolatingTreeMap<>();
@@ -167,6 +167,7 @@ public class Constants {
     	
     	prefs.putDouble("GyroKp", Constants.GyroKp);
     	prefs.putDouble("GyroKd", Constants.GyroKd);
+    	prefs.putDouble("GyroKi", Constants.GyroKi);
     	prefs.putDouble("height", Constants.kCubevatorDefaultHeight);
     	prefs.putDouble("DFDDistance", Constants.DriveDistance);
     	prefs.putDouble("DFDSpeed", Constants.Speed);
