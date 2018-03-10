@@ -27,6 +27,8 @@ public class AutoCenterToLeftSwitch extends CommandGroup {
     	
     	addSequential(new AutoDriveCenterToLeftSwitch(130.0, 0.6, -42.0));
     	addSequential(new ArmPushOutTimed(1.5));
+    	addSequential(new DriveForDistance(12, 0.5, 0.0);
+    	addSequential(new RotateDegrees(90));
     	
     }
 }

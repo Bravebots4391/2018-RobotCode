@@ -199,7 +199,11 @@ public class SwerveDrive {
 	
 	private void coast()
 	{
-		swerveAndTurn(0, 0, 0);
+		// set each wheelSpeed
+		_motorFL.set(ControlMode.PercentOutput, 0);
+		_motorFR.set(ControlMode.PercentOutput, 0);
+		_motorRL.set(ControlMode.PercentOutput, 0);
+		_motorRR.set(ControlMode.PercentOutput, 0);
 	}			
 	
 	private void setAllMotorsDistance(int encoderPosition)
