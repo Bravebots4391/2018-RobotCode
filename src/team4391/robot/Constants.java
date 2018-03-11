@@ -90,7 +90,7 @@ public class Constants {
 	//
 	public static final double kArmInputPctSpeed = 1.0;
 	public static final double kArmOutputPctSpeed = -0.2;
-	public static final double kArmFastOutputPctSpeed = -1.0;
+	public static final double kArmFastOutputPctSpeed = -1;
 	public static final double kArmModeratlyFastOutputSpeed = -.6;
 	
 	//
@@ -98,7 +98,7 @@ public class Constants {
 	//
 	public static final int kCubevatorEncoderCountsPerRev = 4096; // 1:1 with the output shaft
 	public static final double kCubevatorDrumDiameterInches = 3.5;
-	public static final double kCubevatorTopLimitInches = 90;
+	public static final double kCubevatorTopLimitInches = 85;
 	public static final double kCubevatorScaleHeight = 78; // height to throw into scale roughly
 	
 	public static final double kCubevatorClimbHeight = 80.5;  // height to get above to the rung
@@ -139,10 +139,10 @@ public class Constants {
     // Rotation PID Rate Limit Constants.  Limits for normal turning commands.
     public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> kRateLimitMap = new InterpolatingTreeMap<>();
 
-	public static double kCubevatorFirstStageHeightInches = 40;
+	public static double kCubevatorFirstStageHeightInches = 60;
 
-	public static double kDriveWhileHighRotateLimit = 0.55;
-	public static double kDriveWhileHighLimit2 = 0.55;
+	public static double kDriveWhileHighRotateLimit = 1;
+	public static double kDriveWhileHighLimit2 = 1;
 
 	
 
