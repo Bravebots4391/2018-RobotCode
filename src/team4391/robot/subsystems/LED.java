@@ -1,6 +1,9 @@
 package team4391.robot.subsystems;
 
 import edu.wpi.first.wpilibj.DigitalOutput;
+import edu.wpi.first.wpilibj.PWM;
+import edu.wpi.first.wpilibj.Relay;
+import edu.wpi.first.wpilibj.Relay.Direction;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
@@ -15,6 +18,9 @@ public class LED extends Subsystem {
 	DigitalOutput do2 = new DigitalOutput(2);
 	DigitalOutput do3 = new DigitalOutput(3);
 	DigitalOutput do4 = new DigitalOutput(4);
+	
+	PWM pwm1 = new PWM(0);
+	Relay relay1 = new Relay(0);
 
     public void initDefaultCommand() {
         // Set the default command for a subsystem here.
@@ -32,6 +38,9 @@ public class LED extends Subsystem {
     	do2.set(true);
     	do3.set(true);
     	do4.set(true);
+    	
+    	pwm1.setRaw(255);
+    	relay1.setDirection(Direction.kForward);
     }
     
     public void disable()
