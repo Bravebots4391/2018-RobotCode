@@ -36,6 +36,8 @@ public class Arm extends Subsystem {
 		{
 			_suckerInnerOuterSlave = new TalonSRX(Constants.kArmLeftId);
 			_suckerInnerOuterSlave.follow(_suckerInnerOuter);
+			_suckerInnerOuter.setInverted(true);
+			_suckerInnerOuterSlave.setInverted(true);
 		}
 		else
 		{

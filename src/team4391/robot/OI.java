@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import team4391.robot.commands.ArmPullIn;
 import team4391.robot.commands.ArmPushOut;
+import team4391.robot.commands.CubevatorBumpDown;
 import team4391.robot.commands.CubevatorClimbHeight;
 import team4391.robot.commands.CubevatorDefaultHeight;
 import team4391.robot.commands.DriveForDistance;
@@ -124,5 +125,6 @@ public class OI {
 		SmartDashboard.putData("CubevatorDefault", new CubevatorDefaultHeight());
 		SmartDashboard.putData("Rotate90", new RotateDegrees(85.0));	
 		SmartDashboard.putData("mcTwist", new McTwist180());
+		SmartDashboard.putData("Bump", new CubevatorBumpDown(.02));
 	}
 }

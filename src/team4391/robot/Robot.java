@@ -38,6 +38,7 @@ import team4391.robot.subsystems.Arm;
 import team4391.robot.subsystems.Climb;
 import team4391.robot.subsystems.Drive;
 import team4391.robot.subsystems.ExampleSubsystem;
+import team4391.robot.subsystems.LED;
 import team4391.robot.subsystems.Lift;
 
 /**
@@ -52,6 +53,7 @@ public class Robot extends TimedRobot {
 			= new ExampleSubsystem();
 	public static OI m_oi;
 	
+	public static LED ledSubsystem;
 	public static Drive driveSubsystem;
 	public static Arm armSubsystem;
 	public static Lift cubevatorSubsystem;
@@ -82,6 +84,9 @@ public class Robot extends TimedRobot {
 		Constants.putValuesInNetworkTables();
 		
 		// Initialize subsystems
+		ledSubsystem = new LED();
+		ledSubsystem.init();
+		
 		armSubsystem = new Arm();
 		cubevatorSubsystem = new Lift();	
 		
@@ -188,6 +193,8 @@ public class Robot extends TimedRobot {
 	public void disabledInit() {
 		try{			
 			driveSubsystem.setOpenLoop();
+			
+			ledSubsystem.disable();
 			
 		    disableLoops();
 		    zeroAllSensors();		    
@@ -319,7 +326,7 @@ public class Robot extends TimedRobot {
 		}
 		
 		try {
-	        
+	        ledSubsystem.enable();
 			driveSubsystem.setOpenLoop();
         	
 	        // Configure loopers

@@ -325,7 +325,7 @@ public class Drive extends Subsystem implements PIDOutput {
 		_swerveDrive.setDrive(SwerveMode.rotate, _pidOutput, 0);			
     }
     
-    public void rotateDegrees(double degrees)
+    public synchronized void rotateDegrees(double degrees)
     {
     	// (calculate arc length = 2*PI*R*theta)/360    	
     	double arcLenInches = (2*Math.PI*Constants.kRobotRadius*degrees)/360;
@@ -351,7 +351,7 @@ public class Drive extends Subsystem implements PIDOutput {
     	}    	
     }
     
-    public void updateRotateDegrees()
+    public synchronized void updateRotateDegrees()
     {
     	if(_myDriveState == DriveState.Rotate)
     	{
@@ -370,7 +370,7 @@ public class Drive extends Subsystem implements PIDOutput {
     	}
     }
     
-    public void driveForDistance(double distanceInches, double speedFps, double heading)
+    public synchronized void driveForDistance(double distanceInches, double speedFps, double heading)
     {    
     	// This gets called only once
     	if(_myDriveState != DriveState.DriveForDistance)
@@ -380,6 +380,7 @@ public class Drive extends Subsystem implements PIDOutput {
         	_myTargetHeading = heading;
         	_myTargetDistanceIn = distanceInches;
         	
+        	_swerveDrive.resetDistance();
         	_swerveDrive.resetDistance();
         	_swerveDrive.resetDistance();
         	_swerveDrive.resetDistance();
@@ -394,17 +395,17 @@ public class Drive extends Subsystem implements PIDOutput {
     	}
     }   
     
-    private void setupDistanceProfile(double distanceInches, double speedFps)
+    private synchronized void setupDistanceProfile(double distanceInches, double speedFps)
     {
         // Rotation PID Rate Limit Constants.  Limits for normal turning commands.
         _distanceSpeedProfile = new InterpolatingTreeMap<>();
 
         if(distanceInches > 36.0)
         {        
-        _distanceSpeedProfile.put(new InterpolatingDouble(0.0), new InterpolatingDouble(.3));
+        _distanceSpeedProfile.put(new InterpolatingDouble(0.0), new InterpolatingDouble(.3 * Math.signum(speedFps)));
         _distanceSpeedProfile.put(new InterpolatingDouble(12.0), new InterpolatingDouble(speedFps));
         _distanceSpeedProfile.put(new InterpolatingDouble(distanceInches - 36), new InterpolatingDouble(speedFps));
-        _distanceSpeedProfile.put(new InterpolatingDouble(distanceInches), new InterpolatingDouble(.2));
+        _distanceSpeedProfile.put(new InterpolatingDouble(distanceInches), new InterpolatingDouble(.2 * Math.signum(speedFps)));
         }
         else
         {
