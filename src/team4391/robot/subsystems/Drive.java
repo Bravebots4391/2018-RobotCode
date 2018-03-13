@@ -242,7 +242,8 @@ public class Drive extends Subsystem implements PIDOutput {
 	}
 	
 	public synchronized void setOpenLoop(boolean updateNeutralDriveMode){
-		if (_myDriveState != DriveState.OpenLoop) {                            	
+		if (_myDriveState != DriveState.OpenLoop) {   
+			System.out.println("setOpenLoop");
     		
 			if(updateNeutralDriveMode)
 			{
@@ -332,6 +333,8 @@ public class Drive extends Subsystem implements PIDOutput {
     	
     	if(_myDriveState != DriveState.Rotate)
     	{
+    		System.out.println("setup rotateDegrees");
+    		
     		_swerveDrive.SetNeutralModeForDrive(NeutralMode.Brake);
     		_myTargetSpeed = 0.5 * Math.signum(degrees);
     		_myTargetDistanceIn = arcLenInches;
@@ -375,6 +378,8 @@ public class Drive extends Subsystem implements PIDOutput {
     	// This gets called only once
     	if(_myDriveState != DriveState.DriveForDistance)
     	{
+    		System.out.println("setup driveForDistance");
+    		
     		_swerveDrive.SetNeutralModeForDrive(NeutralMode.Brake);
     		_myTargetSpeed = speedFps;
         	_myTargetHeading = heading;
