@@ -21,6 +21,8 @@ public class RotateDegrees extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
+    	System.out.println("RotateDegrees Command Init");
+    	
     	Robot.driveSubsystem.rotateDegrees(_degrees);
     }
 
@@ -30,11 +32,13 @@ public class RotateDegrees extends Command {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
+    	System.out.println("RotateDegrees Command isFinished");
         return Robot.driveSubsystem.getDriveState() != DriveState.Rotate;
     }
 
     // Called once after isFinished returns true
     protected void end() {
+    	System.out.println("RotateDegrees Command end");
     	Robot.driveSubsystem.setOpenLoop();
     }
 

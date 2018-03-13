@@ -23,6 +23,7 @@ public class DriveForDistance extends Command {
         _speed = speedFps;
         _heading = heading;
         
+        System.out.println("DriveForDistance Command Init");
     }
 
     // Called just before this Command runs the first time
@@ -36,11 +37,13 @@ public class DriveForDistance extends Command {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
+    	System.out.println("DriveForDistance Command isFinished");
         return Robot.driveSubsystem.getDriveState() != DriveState.DriveForDistance;
     }
 
     // Called once after isFinished returns true
     protected void end() {
+    	System.out.println("DriveForDistance Command end");
     	Robot.driveSubsystem.setOpenLoop();
     }
 
