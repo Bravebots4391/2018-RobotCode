@@ -59,14 +59,12 @@ public class Robot extends TimedRobot {
 	public static Lift cubevatorSubsystem;
 	public static Climb climbSubsystem;
 	public static PowerDistributionPanel _pdpModule;
+	public static AutoLogic _autoLogic;
 	
 	public static TalonSRX _gyroTalon;
 	
 	public int _counter = 0;
 
-	Command m_autonomousCommand;
-	SendableChooser<Command> m_chooser = new SendableChooser<>();
-	SendableChooser<String> _chooser = new SendableChooser<>();
 
     // Enabled looper is called at 100Hz whenever the robot is enabled
     Looper mEnabledLooper = new Looper();
@@ -99,7 +97,9 @@ public class Robot extends TimedRobot {
 		driveSubsystem = new Drive();
 		
 		m_oi.init();
-		setupAutonomousChooser();
+		
+		_autoLogic = new AutoLogic();
+		_autoLogic.setupAutonomousChooser();
 		
 		
 		
@@ -145,21 +145,6 @@ public class Robot extends TimedRobot {
 	      }
 	  }, "camera").start();
       
-	}
-
-	private void setupAutonomousChooser() 
-	{	
-		m_chooser.addDefault("Default Auto", new ExampleCommand());		
-		m_chooser.addObject("My Auto", new Auto());		
-		
-		//SmartDashboard.putData("Auto mode", m_chooser);
-		
-		_chooser.addDefault("Default Auto", "default");
-		_chooser.addObject("Pos1", "1");
-		_chooser.addObject("Pos2", "2");
-		_chooser.addObject("Pos3", "3");
-		
-		SmartDashboard.putData("Auto mode", _chooser);
 	}
 
 	   public void outputAllToSmartDashboard() {	    	
@@ -244,58 +229,13 @@ public class Robot extends TimedRobot {
 	 * to the switch structure below with additional strings & commands.
 	 */
 	@Override
-	public void autonomousInit() {
-		m_autonomousCommand = m_chooser.getSelected();
-
-		String chooserVal = _chooser.getSelected();
+	public void autonomousInit() {		
 		
-		/*
-		 * String autoSelected = SmartDashboard.getString("Auto Selector",
-		 * "Default"); switch(autoSelected) { case "My Auto": autonomousCommand
-		 * = new MyAutoCommand(); break; case "Default Auto": default:
-		 * autonomousCommand = new ExampleCommand(); break; }
-		 */
+		_autoLogic.runAuto();	
 		
-		String gameInfo = DriverStation.getInstance().getGameSpecificMessage();			
-		
-		if(chooserVal == "default")
-		{
-			if(gameInfo.charAt(0) == 'R')
-			{
-				CommandGroup cg = new AutoCenterToRightSwitch();
-				cg.start();
-			}
-			else
-			{
-				CommandGroup cg = new AutoCenterToLeftSwitch();
-				cg.start();
-			}
-
-		}
-		else if(chooserVal == "1")
-		{
-	    	Preferences pref = Preferences.getInstance();
-	    	double _distance = pref.getDouble("DFDDistance", Constants.DriveDistance);
-	    	double _speed = pref.getDouble("DFDSpeed", Constants.Speed);
-	    	double _heading = pref.getDouble("DFDHeading", Constants.Heading);
-			Command cg = new DriveForDistance(_distance,_speed,_heading);
-			cg.start();
-		}
-		else if(chooserVal == "2")
-		{
-	    	Preferences pref = Preferences.getInstance();
-	    	double _distance = pref.getDouble("DFDDistance", Constants.DriveDistance);
-	    	double _speed = pref.getDouble("DFDSpeed", Constants.Speed);
-	    	double _heading = pref.getDouble("DFDHeading", Constants.Heading);
-			Command cg = new StrafeForDistanceDropCube(_distance,_speed,_heading);
-			cg.start();
-		}
-
-	
-		
-
-		
+		zeroAllSensors();		
 		enableLoops();
+		
 //		// schedule the autonomous command (example)
 //		if (m_autonomousCommand != null) {
 //			m_autonomousCommand.start();
