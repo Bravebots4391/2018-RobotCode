@@ -10,7 +10,7 @@ import team4391.robot.subsystems.Drive.DriveState;
  *
  */
 public class StrafeForDistanceDropCube extends Command {
-
+	
 	private double _distance;
 	private double _speed;
 	private double _heading;
@@ -33,7 +33,7 @@ public class StrafeForDistanceDropCube extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	if(Robot.driveSubsystem.getDistanceInches() > 110)
+    	if(Robot.driveSubsystem.getDistanceInches() > Constants.kDistanceToStartCubeDropWhenStrafing)
     	{
     		ArmPushOutMedTimed cmd = new ArmPushOutMedTimed(1.5);
     		cmd.start();

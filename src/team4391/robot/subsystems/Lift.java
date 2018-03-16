@@ -156,13 +156,16 @@ public class Lift extends Subsystem {
 	public void updateDashboard() {
 		 SmartDashboard.putNumber("CubevatorHeightInches", getHeightInches());
 		 SmartDashboard.putBoolean("IsAtBottom", IsAtBottomLimit());
-		 SmartDashboard.putBoolean("IsAtTop", IsAtTopLimit());
+		 SmartDashboard.putBoolean("IsAtTop", IsAtTopLimit());		 
 		 
-		 SmartDashboard.putNumber("CubevatorTarget", _targetHeight);
-		 
-		 SmartDashboard.putNumber("CubevatorError", _cubevatorTalon.getClosedLoopError(0));
-		 
+		 SmartDashboard.putNumber("CubevatorTarget", _targetHeight);		 
+		 SmartDashboard.putNumber("CubevatorError", _cubevatorTalon.getClosedLoopError(0));		 
 		 SmartDashboard.putString("CubeTalonMode",_cubevatorTalon.getControlMode().toString()); 
+	}
+
+	public void setPositionInches(double heightInches) {		
+				
+		_cubevatorTalon.setSelectedSensorPosition(getEncoderPositionFromInches(heightInches), 0, Constants.kTimeoutMs);
 	}
 
 

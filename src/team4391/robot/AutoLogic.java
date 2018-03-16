@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import team4391.robot.commands.Auto;
 import team4391.robot.commands.AutoCenterToLeftSwitch;
 import team4391.robot.commands.AutoCenterToRightSwitch;
+import team4391.robot.commands.CubevatorBumpDown;
 import team4391.robot.commands.DriveForDistance;
 import team4391.robot.commands.ExampleCommand;
 import team4391.robot.commands.StrafeForDistanceDropCube;
@@ -48,6 +49,12 @@ public class AutoLogic
 	    boolean scaleIsRight = gameInfo.charAt(1) == 'R';
 	    boolean scaleIsLeft = gameInfo.charAt(1) == 'L';
 	    
+	    // Set the approximate starting height of the cubevator
+	    Robot.cubevatorSubsystem.setPositionInches(Constants.kCubevatorStartHeightInches);
+	    
+	    // Send bump command to drop the arm
+	    Command cm = new CubevatorBumpDown(0.05);
+	    cm.start();
 	    
 		if(chooserValPosition == "center" && chooserVal == "switch")
 		{
@@ -73,10 +80,13 @@ public class AutoLogic
 			else if(scaleIsLeft)
 			{
 				Command cg = new DriveForDistance(180, 0.5, -90);
+				cg.start();
 			}
 			else
 			{
+				// Drive over the line
 				Command cg = new DriveForDistance(90, 0.5, -90);
+				cg.start();
 			}
 		}
 		else if(chooserValPosition == "right")
@@ -90,11 +100,13 @@ public class AutoLogic
 			{
 				// go to the scale
 				Command cg = new DriveForDistance(180, 0.5, 90);
+				cg.start();
 			}
 			else
 			{
 				// drive over the line?
 				Command cg = new DriveForDistance(90, 0.5, 90);
+				cg.start();
 			}
 		}
 		else if(chooserValPosition == "test")

@@ -27,11 +27,11 @@ public class AutoCenterToLeftSwitch extends CommandGroup {
     	addSequential(new CubevatorBumpDown(0.05));
     	addSequential(new AutoDriveCenterToLeftSwitch(120.0, 0.6, -28.0));
     	addSequential(new ArmPushOutTimed(1.5));
-    	addSequential(new DriveForDistance(24, -0.3, 0.0));
-    	addSequential(new RotateDegrees(65.0));
+    	addSequential(new DriveForDistance(25, -0.3, 0.0));
+    	addSequential(new RotateDegrees(60.0));
     	addSequential(new CubevatorToBottom());
     	addParallel(new ArmPullIn());
-    	addSequential(new DriveForDistance(40, 0.2, 0.0));
+    	addSequential(new DriveForDistance(50, 0.35, 0.0));
     	
     	
     }

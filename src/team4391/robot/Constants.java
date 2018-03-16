@@ -122,6 +122,9 @@ public class Constants {
 	public static final double DriveDistance = 60;
 	public static final double Speed = 0.6;
 	public static final double Heading = 0.0;
+	
+	public static final double kCubevatorStartHeightInches = 28;
+	public static final double kDistanceToStartCubeDropWhenStrafing = 110.0;
 
 	
     // Rotation PID Rate Limit Constants. In Auto Mode  Limits rotation rate based on angle from the target.
