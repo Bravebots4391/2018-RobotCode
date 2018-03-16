@@ -30,12 +30,12 @@ public class Climb extends Subsystem {
     
     public void Up()
     {
-    	_climbMotor.set(ControlMode.PercentOutput, 1.0);
+    	_climbMotor.set(ControlMode.PercentOutput, -1.0);
     }
     
     public void Down()
     {
-    	_climbMotor.set(ControlMode.PercentOutput, -1.0);
+    	_climbMotor.set(ControlMode.PercentOutput, 1.0);
     }
     
     public void Stop()

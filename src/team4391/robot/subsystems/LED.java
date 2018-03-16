@@ -14,13 +14,10 @@ public class LED extends Subsystem {
     // Put methods for controlling this subsystem
     // here. Call these from Commands.
 	
-	DigitalOutput do1 = new DigitalOutput(1);
-	DigitalOutput do2 = new DigitalOutput(2);
-	DigitalOutput do3 = new DigitalOutput(3);
-	DigitalOutput do4 = new DigitalOutput(4);
-	
-	PWM pwm1 = new PWM(0);
-	Relay relay1 = new Relay(0);
+	DigitalOutput do1 = new DigitalOutput(2);
+	DigitalOutput do2 = new DigitalOutput(3);
+	DigitalOutput do3 = new DigitalOutput(4);
+	DigitalOutput do4 = new DigitalOutput(5);
 
     public void initDefaultCommand() {
         // Set the default command for a subsystem here.
@@ -38,9 +35,7 @@ public class LED extends Subsystem {
     	do2.set(true);
     	do3.set(true);
     	do4.set(true);
-    	
-    	pwm1.setRaw(255);
-    	relay1.setDirection(Direction.kForward);
+
     }
     
     public void disable()

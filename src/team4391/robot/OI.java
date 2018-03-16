@@ -82,10 +82,10 @@ public class OI {
     Button fastoutty2 = new JoystickButton(_xBoxCntrl2,3);
     Button IntakeCube2 = new JoystickButton(_xBoxCntrl2, 1);
     
-    Button winchUp1 = new XboxControllerPOVButton(xb, 180);
-    Button winchDown1 = new XboxControllerPOVButton(xb, 0);
-    Button winchUp2 = new XboxControllerPOVButton(xb2, 180);
-    Button winchDown2 = new XboxControllerPOVButton(xb2, 0);
+    Button winchUp1 = new XboxControllerPOVButton(xb, 0);
+    Button winchDown1 = new XboxControllerPOVButton(xb, 180);
+//    Button winchUp2 = new XboxControllerPOVButton(xb2, 0);
+//    Button winchDown2 = new XboxControllerPOVButton(xb2, 180);
     
     //Button mcTwist = new XboxControllerPOVButton(xb, 90);
     
@@ -110,9 +110,9 @@ public class OI {
 		liftDown2.whileHeld(new LiftDown());
 		
 		winchUp1.whileHeld(new WinchUp());
-		winchDown1.whileHeld(new WinchDown());
-		winchUp2.whileHeld(new WinchUp());
-		winchDown2.whileHeld(new WinchDown());
+		//winchDown1.whileHeld(new WinchDown());
+		//winchUp2.whileHeld(new WinchUp());
+		//winchDown2.whileHeld(new WinchDown());
 		
 		//mcTwist.whenPressed(new McTwist180());
 		

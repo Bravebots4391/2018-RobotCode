@@ -72,11 +72,11 @@ public class AutoLogic
 			}
 			else if(scaleIsLeft)
 			{
-				// Go to the scale
+				Command cg = new DriveForDistance(180, 0.5, -90);
 			}
 			else
 			{
-				// drive over the line?
+				Command cg = new DriveForDistance(90, 0.5, -90);
 			}
 		}
 		else if(chooserValPosition == "right")
@@ -89,10 +89,12 @@ public class AutoLogic
 			else if(scaleIsRight)
 			{
 				// go to the scale
+				Command cg = new DriveForDistance(180, 0.5, 90);
 			}
 			else
 			{
 				// drive over the line?
+				Command cg = new DriveForDistance(90, 0.5, 90);
 			}
 		}
 		else if(chooserValPosition == "test")

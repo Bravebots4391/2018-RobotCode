@@ -11,7 +11,7 @@ public class AutoCenterToLeftSwitch extends CommandGroup {
         // Add Commands here:
         // e.g. addSequential(new Command1());
         //      addSequential(new Command2());
-        // these will run in order.
+        // these will run in order.		
 
         // To run multiple commands at the same time,
         // use addParallel()
@@ -24,8 +24,8 @@ public class AutoCenterToLeftSwitch extends CommandGroup {
         // e.g. if Command1 requires chassis, and Command2 requires arm,
         // a CommandGroup containing them would require both the chassis and the
         // arm.
-    	
-    	addSequential(new AutoDriveCenterToLeftSwitch(120.0, 0.6, -30.0));
+    	addSequential(new CubevatorBumpDown(0.05));
+    	addSequential(new AutoDriveCenterToLeftSwitch(120.0, 0.6, -28.0));
     	addSequential(new ArmPushOutTimed(1.5));
     	addSequential(new DriveForDistance(24, -0.3, 0.0));
     	addSequential(new RotateDegrees(65.0));
