@@ -88,8 +88,8 @@ public class Robot extends TimedRobot {
 		armSubsystem = new Arm();
 		cubevatorSubsystem = new Lift();	
 		
-		_pdpModule = new PowerDistributionPanel(Constants.kPDP);
-		SmartDashboard.putData("PDP", _pdpModule);
+		//_pdpModule = new PowerDistributionPanel(Constants.kPDP);
+		//SmartDashboard.putData("PDP", _pdpModule);
 		
 		climbSubsystem = new Climb();
 		climbSubsystem.init();

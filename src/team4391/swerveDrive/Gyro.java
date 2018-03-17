@@ -4,6 +4,7 @@ package team4391.swerveDrive;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GyroBase;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
@@ -52,7 +53,7 @@ public class Gyro extends GyroBase implements PIDOutput
 	}
 	
 	public void gyroReset(){
-		if(_isInitOk) {
+		if(_isInitOk && DriverStation.getInstance().isAutonomous()) {
 			_pidgey.setFusedHeading(0.0, 10);
 		}
 	}
@@ -219,7 +220,16 @@ public class Gyro extends GyroBase implements PIDOutput
 	}
 
 	public void updateFusedHeading() {
-		_fusedHeading = gyroGetFusedHeading();		
+		
+		if(DriverStation.getInstance().isAutonomous())
+		{
+			_fusedHeading = gyroGetFusedHeading();
+		}
+		else
+		{
+			_fusedHeading = 0.0;
+		}
+		
 	}
 
 	@Override
