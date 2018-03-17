@@ -230,7 +230,7 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void autonomousInit() {		
-		
+		ledSubsystem.enable();
 		_autoLogic.runAuto();	
 		
 		zeroAllSensors();		

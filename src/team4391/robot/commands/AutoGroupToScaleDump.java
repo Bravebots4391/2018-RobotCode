@@ -5,13 +5,13 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 /**
  *
  */
-public class AutoCenterToLeftSwitch extends CommandGroup {
+public class AutoGroupToScaleDump extends CommandGroup {
 
-    public AutoCenterToLeftSwitch() {
+    public AutoGroupToScaleDump() {
         // Add Commands here:
         // e.g. addSequential(new Command1());
         //      addSequential(new Command2());
-        // these will run in order.		
+        // these will run in order.
 
         // To run multiple commands at the same time,
         // use addParallel()
@@ -23,16 +23,13 @@ public class AutoCenterToLeftSwitch extends CommandGroup {
         // would require.
         // e.g. if Command1 requires chassis, and Command2 requires arm,
         // a CommandGroup containing them would require both the chassis and the
-        // arm.
-    	addSequential(new CubevatorBumpDown(0.05));
-    	addSequential(new AutoDriveCenterToLeftSwitch(120.0, 0.6, -31.0));
-    	addSequential(new ArmPushOutTimed(1.5));
-    	addSequential(new DriveForDistance(25, -0.3, 0.0));
-    	addSequential(new RotateDegrees(60.0));
-    	addSequential(new CubevatorToBottom());
-    	addParallel(new ArmPullIn());
-    	addSequential(new DriveForDistance(45, 0.35, 0.0));
+        
     	
+    	
+    	addSequential(new DriveForDistance(250, 0.6, 90));
+    	addSequential(new RotateDegrees(32));
+    	addSequential(new CubevatorClimbHeight());
+    	addSequential(new FastArmPushOut());
     	
     }
 }

@@ -32,6 +32,7 @@ public class SwerveDrive {
 	private SwerveMode _swerveMode;
 	private boolean _useSpeedControl = true;
 	private SwerveAndRotate _swerveAndRotate;
+	private boolean _isOkToRotate = false;
 	
 	public SwerveDrive(SwerveDriveMotorGroup motors, Gyro gyro)
 	{
@@ -63,8 +64,8 @@ public class SwerveDrive {
 	}
 	
 	public void setDrive(SwerveMode mode, double pctSpeed, double angle, double rotate)
-	{
-		_swerveMode = mode;						
+	{			
+		_swerveMode = mode;	
 		
 		switch(mode)
 		{
@@ -76,7 +77,7 @@ public class SwerveDrive {
 				//_gyro.reset();
 				//_gyro.setupDriveCorrection(0.0);
 			}
-			
+			_isOkToRotate = false;
 			swerveAndTurn(pctSpeed, angle, 0.0);
 			break;
 			
@@ -91,8 +92,16 @@ public class SwerveDrive {
 			break;
 			
 		case rotate:
-			_isTurning = true;
-			rotateInPlace(pctSpeed);
+			if(!_isOkToRotate && getVelocity(_motorFR) < 0.5)
+			{
+				_isTurning = true;
+				rotateInPlace(pctSpeed);
+				_isOkToRotate = true;
+			}
+			else if(_isOkToRotate)
+			{
+				rotateInPlace(pctSpeed);
+			}
 			break;
 			
 //		case carTurn:
@@ -107,6 +116,7 @@ public class SwerveDrive {
 		
 		case swerveAndTurn:
 			_isTurning = true;
+			_isOkToRotate = false;
 			swerveAndTurn(pctSpeed, angle, rotate);
 			break;
 			
@@ -125,6 +135,8 @@ public class SwerveDrive {
 			break;
 			
 		}
+		
+		
 	}
 		
 	private void swerveAndTurn(double pctSpeed, double angle, double rotate) 

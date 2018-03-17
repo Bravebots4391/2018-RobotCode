@@ -9,6 +9,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import team4391.robot.commands.Auto;
 import team4391.robot.commands.AutoCenterToLeftSwitch;
 import team4391.robot.commands.AutoCenterToRightSwitch;
+import team4391.robot.commands.AutoGroupToScaleDump;
+import team4391.robot.commands.AutoStrafeDropCubeGroup;
 import team4391.robot.commands.CubevatorBumpDown;
 import team4391.robot.commands.DriveForDistance;
 import team4391.robot.commands.ExampleCommand;
@@ -26,6 +28,7 @@ public class AutoLogic
 		_chooser.addObject("Drive Over Line", "driveOverLine");
 		_chooser.addObject("DFDTest", "DFDTest");
 		_chooser.addObject("SFDTest", "SFDTest");
+		_chooser.addObject("AutoGroupToScaleDump", "ScaleTest");
 		
 		SmartDashboard.putData("Auto mode", _chooser);
 		
@@ -74,12 +77,12 @@ public class AutoLogic
 		{
 			if(switchIsLeft)
 			{
-				Command cg = new StrafeForDistanceDropCube(180, 0.5, -90);
+				CommandGroup cg = new AutoStrafeDropCubeGroup(180, 0.5, -90);
 				cg.start();
 			}
 			else if(scaleIsLeft)
-			{
-				Command cg = new DriveForDistance(180, 0.5, -90);
+			{								
+				Command cg = new DriveForDistance(180, 0.5, -90);				
 				cg.start();
 			}
 			else
@@ -92,14 +95,15 @@ public class AutoLogic
 		else if(chooserValPosition == "right")
 		{
 			if(switchIsRight)
-			{
-				Command cg = new StrafeForDistanceDropCube(180, 0.5, 90);
+			{				
+				CommandGroup cg = new AutoStrafeDropCubeGroup(180, 0.5, 90);
 				cg.start();
 			}
 			else if(scaleIsRight)
 			{
 				// go to the scale
 				Command cg = new DriveForDistance(180, 0.5, 90);
+				//CommandGroup cg = new AutoStrafeDropCubeGroup(180, 0.5, 90);
 				cg.start();
 			}
 			else
@@ -127,6 +131,11 @@ public class AutoLogic
 		    	double _speed = pref.getDouble("DFDSpeed", Constants.Speed);
 		    	double _heading = pref.getDouble("DFDHeading", Constants.Heading);
 				Command cg = new StrafeForDistanceDropCube(_distance,_speed,_heading);
+				cg.start();
+			}
+			else if(chooserVal == "ScaleTest")
+			{
+				CommandGroup cg = new AutoGroupToScaleDump();
 				cg.start();
 			}
 		}

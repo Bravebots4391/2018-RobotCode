@@ -114,9 +114,9 @@ public class Constants {
     
     
 	// Gyro Tuning
-    public static final double GyroKp = 0.0;
-	public static final double GyroKd = 0.00001;
-	public static final double GyroKi = 0.0001;
+    public static final double GyroKp = 0.001;
+	public static final double GyroKd = 0.01;
+	public static final double GyroKi = 0.1;
 	
     // Autonomous Constants
 	public static final double DriveDistance = 60;

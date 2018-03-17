@@ -1,17 +1,22 @@
 package team4391.robot.commands;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
+import team4391.robot.Robot;
 
 /**
  *
  */
-public class AutoCenterToLeftSwitch extends CommandGroup {
-
-    public AutoCenterToLeftSwitch() {
+public class AutoStrafeDropCubeGroup extends CommandGroup {
+  
+	private double _distance;
+	private double _speed;
+	private double _heading;
+	
+    public AutoStrafeDropCubeGroup(double distanceInches, double speedFps, double heading) {
         // Add Commands here:
         // e.g. addSequential(new Command1());
         //      addSequential(new Command2());
-        // these will run in order.		
+        // these will run in order.
 
         // To run multiple commands at the same time,
         // use addParallel()
@@ -24,15 +29,11 @@ public class AutoCenterToLeftSwitch extends CommandGroup {
         // e.g. if Command1 requires chassis, and Command2 requires arm,
         // a CommandGroup containing them would require both the chassis and the
         // arm.
-    	addSequential(new CubevatorBumpDown(0.05));
-    	addSequential(new AutoDriveCenterToLeftSwitch(120.0, 0.6, -31.0));
-    	addSequential(new ArmPushOutTimed(1.5));
-    	addSequential(new DriveForDistance(25, -0.3, 0.0));
-    	addSequential(new RotateDegrees(60.0));
-    	addSequential(new CubevatorToBottom());
-    	addParallel(new ArmPullIn());
-    	addSequential(new DriveForDistance(45, 0.35, 0.0));
-    	
-    	
+        _distance = distanceInches;
+        _speed = speedFps;
+        _heading = heading;
+                
+        addSequential(new CubevatorBumpDown(0.05));
+        addSequential(new StrafeForDistanceDropCube(_distance, _speed, _heading));
     }
 }
