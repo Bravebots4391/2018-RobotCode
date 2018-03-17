@@ -11,6 +11,7 @@ import team4391.robot.commands.AutoCenterToLeftSwitch;
 import team4391.robot.commands.AutoCenterToRightSwitch;
 import team4391.robot.commands.AutoGroupToScaleDump;
 import team4391.robot.commands.AutoStrafeDropCubeGroup;
+import team4391.robot.commands.AutoStrafeDropCubeGroup2;
 import team4391.robot.commands.CubevatorBumpDown;
 import team4391.robot.commands.DriveForDistance;
 import team4391.robot.commands.ExampleCommand;
@@ -25,6 +26,7 @@ public class AutoLogic
 	{	
 		_chooser.addDefault("Default Auto", "switch");
 		_chooser.addObject("Switch", "switch");
+		_chooser.addObject("Scale", "scale");
 		_chooser.addObject("Drive Over Line", "driveOverLine");
 		_chooser.addObject("DFDTest", "DFDTest");
 		_chooser.addObject("SFDTest", "SFDTest");
@@ -59,7 +61,7 @@ public class AutoLogic
 	    Command cm = new CubevatorBumpDown(0.05);
 	    cm.start();
 	    
-		if(chooserValPosition == "center" && chooserVal == "switch")
+		if(chooserValPosition == "center")
 		{
 			if(switchIsRight)
 			{
@@ -75,41 +77,42 @@ public class AutoLogic
 		}
 		else if(chooserValPosition == "left")
 		{
-			if(switchIsLeft)
+			if(scaleIsLeft)
+			{							
+				CommandGroup cg = new AutoGroupToScaleDump(-90, -25);
+				cg.start();
+			}
+			else if(switchIsLeft)
 			{
-				CommandGroup cg = new AutoStrafeDropCubeGroup(180, 0.5, -90);
+				//CommandGroup cg = new AutoStrafeDropCubeGroup(180, 0.5, -90);
+				CommandGroup cg = new AutoStrafeDropCubeGroup2(135, 0.5, -90);
 				cg.start();
-			}
-			else if(scaleIsLeft)
-			{								
-				Command cg = new DriveForDistance(180, 0.5, -90);				
-				cg.start();
-			}
+			}		
 			else
 			{
 				// Drive over the line
-				Command cg = new DriveForDistance(90, 0.5, -90);
+				Command cg = new DriveForDistance(135, 0.5, -90);
 				cg.start();
 			}
 		}
 		else if(chooserValPosition == "right")
 		{
-			if(switchIsRight)
-			{				
-				CommandGroup cg = new AutoStrafeDropCubeGroup(180, 0.5, 90);
-				cg.start();
-			}
-			else if(scaleIsRight)
+			if(scaleIsRight)
 			{
 				// go to the scale
-				Command cg = new DriveForDistance(180, 0.5, 90);
+				CommandGroup cg = new AutoGroupToScaleDump(90, 25);
+				cg.start();
+			}
+			else if(switchIsRight)
+			{				
 				//CommandGroup cg = new AutoStrafeDropCubeGroup(180, 0.5, 90);
+				CommandGroup cg = new AutoStrafeDropCubeGroup2(135, 0.5, 90);
 				cg.start();
 			}
 			else
 			{
 				// drive over the line?
-				Command cg = new DriveForDistance(90, 0.5, 90);
+				Command cg = new DriveForDistance(135, 0.5, 90);
 				cg.start();
 			}
 		}
@@ -135,7 +138,11 @@ public class AutoLogic
 			}
 			else if(chooserVal == "ScaleTest")
 			{
-				CommandGroup cg = new AutoGroupToScaleDump();
+				Preferences pref = Preferences.getInstance();
+		    	double _distance = pref.getDouble("DFDDistance", Constants.DriveDistance);
+		    	double _speed = pref.getDouble("DFDSpeed", Constants.Speed);
+		    	double _heading = pref.getDouble("DFDHeading", Constants.Heading);
+				CommandGroup cg = new AutoGroupToScaleDump(_heading, _speed);
 				cg.start();
 			}
 		}

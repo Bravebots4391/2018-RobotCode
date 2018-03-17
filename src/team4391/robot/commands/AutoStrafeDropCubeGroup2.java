@@ -1,13 +1,18 @@
 package team4391.robot.commands;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
+import team4391.robot.Robot;
 
 /**
  *
  */
-public class AutoGroupToScaleDump extends CommandGroup {
-
-    public AutoGroupToScaleDump(double heading, double rotate) {
+public class AutoStrafeDropCubeGroup2 extends CommandGroup {
+  
+	private double _distance;
+	private double _speed;
+	private double _heading;
+	
+    public AutoStrafeDropCubeGroup2(double distanceInches, double speedFps, double heading) {
         // Add Commands here:
         // e.g. addSequential(new Command1());
         //      addSequential(new Command2());
@@ -23,14 +28,17 @@ public class AutoGroupToScaleDump extends CommandGroup {
         // would require.
         // e.g. if Command1 requires chassis, and Command2 requires arm,
         // a CommandGroup containing them would require both the chassis and the
+        // arm.
+        _distance = distanceInches;
+        _speed = speedFps;
+        _heading = heading;
+                
+        addSequential(new CubevatorBumpDown(0.05));
+        addSequential(new DriveForDistance(_distance, _speed, _heading));
+        addSequential(new DriveForDistance(20, .4, 0.0));
+    	addSequential(new ArmPushOutTimed(1.5));
+    	addSequential(new DriveForDistance(12, -0.3, 0.0));
         
-    	
-    	
-    	addSequential(new DriveForDistance(278, 0.6, heading));    	
-    	addSequential(new CubevatorClimbHeight());
-    	addSequential(new RotateDegrees(rotate));
-    	addSequential(new ArmPushOutFastTimed(1.5));
-    	addSequential(new DriveForDistance(14, 0.3, 180));
-    	
+        //addSequential(new StrafeForDistanceDropCube(_distance, _speed, _heading));
     }
 }
