@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import team4391.robot.commands.ArmPullIn;
+import team4391.robot.commands.ArmPullIn2;
 import team4391.robot.commands.ArmPushOut;
 import team4391.robot.commands.CubevatorBumpDown;
 import team4391.robot.commands.CubevatorClimbHeight;
@@ -94,7 +95,7 @@ public class OI {
 		//IntakeCube.whenPressed(new team4391.robot.commands.IntakeCube());
 		defaultheight.whenPressed(new CubevatorDefaultHeight());
 		IntakeCube.whenPressed(new ArmPullIn());
-		inny.whileHeld(new ArmPullIn());
+		inny.whileHeld(new ArmPullIn2());
 		outty.whileHeld(new ArmPushOut());
 		fastoutty.whileHeld(new FastArmPushOut());
 		liftUp.whileHeld(new LiftUp());
@@ -102,8 +103,8 @@ public class OI {
 		
 		// Toggle the cube sucker in
 		IntakeCube2.whenPressed(new ArmPullIn());
-		inny2.toggleWhenPressed(new ArmPullIn());
-		inny2.whileHeld(new ArmPullIn());		
+		//inny2.toggleWhenPressed(new ArmPullIn());
+		inny2.whileHeld(new ArmPullIn2());		
 		outty2.whileHeld(new ArmPushOut());
 		fastoutty2.whileHeld(new FastArmPushOut());
 		liftUp2.whileHeld(new LiftUp());
