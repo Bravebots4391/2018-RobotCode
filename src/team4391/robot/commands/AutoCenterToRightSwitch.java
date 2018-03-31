@@ -34,7 +34,13 @@ public class AutoCenterToRightSwitch extends CommandGroup {
     	addParallel(new ArmPullIn());
     	addSequential(new DriveForDistance(50, 0.35, 0.0));
     	
-//    	addSequential(new CubevatorDefaultHeight());  
+    	addSequential(new CubevatorDefaultHeight());
+    	addSequential(new DriveForDistance(50, -0.35, 0.0));
+    	addSequential(new RotateDegrees(60.0));
+    	addSequential(new DriveForDistance(28, 0.3, 0.0));
+    	addSequential(new ArmPushOutTimed(1.5));
+    	
+    	addSequential(new CubevatorDefaultHeight());  
 //    	addSequential(new RotateDegrees(-25.0));    	    	
 //    	addSequential(new DriveForDistance(75, -0.5, 0.0));    	    	
 //    	addSequential(new DriveForDistance(150, 0.5, 90.0));

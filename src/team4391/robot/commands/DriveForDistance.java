@@ -21,13 +21,17 @@ public class DriveForDistance extends Command {
         
         _distance = distanceInches;
         _speed = speedFps;
-        _heading = heading;
-        
-        System.out.println("DriveForDistance Command Init");
+        _heading = heading;              
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {    	
+    	String spdStr = String.format("%f", _speed);
+    	
+    	String init = "DriveForDistance Command Init ";
+    	String all = init + spdStr;
+    	
+    	System.out.println(all);
     	Robot.driveSubsystem.driveForDistance(_distance, _speed, _heading);
     }
 
@@ -36,13 +40,12 @@ public class DriveForDistance extends Command {
     }
 
     // Make this return true when this Command no longer needs to run execute()
-    protected boolean isFinished() {
-    	System.out.println("DriveForDistance Command isFinished");
+    protected boolean isFinished() {    	
         return Robot.driveSubsystem.getDriveState() != DriveState.DriveForDistance;
     }
 
     // Called once after isFinished returns true
-    protected void end() {
+    protected void end() {    	
     	System.out.println("DriveForDistance Command end");
     	Robot.driveSubsystem.setOpenLoop();
     }

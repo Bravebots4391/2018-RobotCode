@@ -54,7 +54,7 @@ public class Constants {
 	
 	public static final boolean kCalibrateSwerves = false;
 	public static final int kFrontLeftCal = 310;
-	public static final int kFrontRightCal = 41;;
+	public static final int kFrontRightCal = 996;
 	public static final int kRearLeftCal = 505;
 	public static final int kRearRightCal = 717;
 	
@@ -114,9 +114,9 @@ public class Constants {
     
     
 	// Gyro Tuning
-    public static final double GyroKp = 0.001;
-	public static final double GyroKd = 0.01;
-	public static final double GyroKi = 0.1;
+    public static final double GyroKp = 15.0;
+	public static final double GyroKd = 0.00;
+	public static final double GyroKi = 5.0;
 	
     // Autonomous Constants
 	public static final double DriveDistance = 60;
@@ -163,6 +163,8 @@ public class Constants {
     public static void putValuesInNetworkTables()
     {
     	Preferences prefs = Preferences.getInstance();
+    	
+    	prefs.putDouble("swerveTurnRadius", Constants.kMaxRotateRadius);
     	
     	prefs.putDouble("targetKp", Constants.kDriveTurnKp);
     	prefs.putDouble("targetKi", Constants.kDriveTurnKi);

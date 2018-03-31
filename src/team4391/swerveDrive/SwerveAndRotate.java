@@ -3,13 +3,14 @@ package team4391.swerveDrive;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class SwerveAndRotate 
 {
 	double Lx;
 	double Ly;
-	double xTurnRadiusMax;
+	double _xTurnRadiusMax;
 	double xTurnRadiusMin;
 			
 	
@@ -18,12 +19,16 @@ public class SwerveAndRotate
 		
 		Lx = lengthX;
 		Ly = lengthY;
-		this.xTurnRadiusMax = maximumTurnRadius;
+		this._xTurnRadiusMax = maximumTurnRadius;
 		xTurnRadiusMin = Math.sqrt(Math.pow(Lx / 2.0, 2) + Math.pow(Ly / 2.0, 2));
 	}
 
 	WheelPositionInfo swerveAndTurn(double heading, double pctTurn)
 	{
+		Preferences prefs = Preferences.getInstance();
+		
+		double xTurnRadiusMax = prefs.getDouble("swerveTurnRadius", this._xTurnRadiusMax);
+		
 		double Xt = pctTurn;
 		double scaledXt = Math.signum(Xt) * Math.abs(xTurnRadiusMax - (xTurnRadiusMax * Math.abs(Xt)) + xTurnRadiusMin+2);
 		

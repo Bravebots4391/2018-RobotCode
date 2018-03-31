@@ -11,6 +11,7 @@ import team4391.loops.Loop;
 import team4391.robot.Constants;
 import team4391.robot.Robot;
 import team4391.robot.commands.ArmHold;
+import team4391.robot.commands.ArmPushOutAnalog;
 
 /**
  *
@@ -47,7 +48,7 @@ public class Arm extends Subsystem {
 	
     public void initDefaultCommand() {
         // Set the default command for a subsystem here.
-        setDefaultCommand(new ArmHold());
+        setDefaultCommand(new ArmPushOutAnalog());
         
         myArmState = ArmState.Holding;
         
@@ -121,7 +122,7 @@ public class Arm extends Subsystem {
 		 
 		 _suckerInnerOuter.set(ControlMode.PercentOutput, speed);
 	 }
-	 
+	 	 
 	 private void checkForCubePresent() 
 	 {		 
 		 if(isCubeSensed())
