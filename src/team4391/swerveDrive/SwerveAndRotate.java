@@ -3,6 +3,7 @@ package team4391.swerveDrive;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -28,6 +29,12 @@ public class SwerveAndRotate
 		Preferences prefs = Preferences.getInstance();
 		
 		double xTurnRadiusMax = prefs.getDouble("swerveTurnRadius", this._xTurnRadiusMax);
+		
+		// We need a different turning radius if in Auto...this allows the PID to work better
+		if(DriverStation.getInstance().isAutonomous())
+		{
+			xTurnRadiusMax = prefs.getDouble("swerveTurnRadiusAuto", this._xTurnRadiusMax);
+		}
 		
 		double Xt = pctTurn;
 		double scaledXt = Math.signum(Xt) * Math.abs(xTurnRadiusMax - (xTurnRadiusMax * Math.abs(Xt)) + xTurnRadiusMin+2);

@@ -38,6 +38,7 @@ public class Constants {
 	public static final double Length = 23.0;
 	public static final int kRobotRadius = 17;
 	public static final double kMaxRotateRadius = 100.0;  // Inches for swerveAndRotate
+	public static final double kMaxRotateRadiusAuto = 350.0; // Inches for swerveAndRotate during Auto.
  		
 	public static double kLooperDt = 0.01;
 	public static double kRotateMaxPctSpeed = 0.5;		
@@ -165,6 +166,7 @@ public class Constants {
     	Preferences prefs = Preferences.getInstance();
     	
     	prefs.putDouble("swerveTurnRadius", Constants.kMaxRotateRadius);
+    	prefs.putDouble("swerveTurnRadiusAuto", Constants.kMaxRotateRadiusAuto);
     	
     	prefs.putDouble("targetKp", Constants.kDriveTurnKp);
     	prefs.putDouble("targetKi", Constants.kDriveTurnKi);
