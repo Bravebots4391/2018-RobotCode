@@ -1,6 +1,7 @@
 package team4391.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.Scheduler;
 import team4391.robot.Robot;
 
 /**
@@ -8,12 +9,25 @@ import team4391.robot.Robot;
  */
 public class ArmPullIn extends Command {
 
+	private boolean _goToDefaultHeight = true;
+	
+	public ArmPullIn(boolean goToDefaultHeightWhenDone)
+	{
+		_goToDefaultHeight = goToDefaultHeightWhenDone;
+		setup();
+	}
+	
     public ArmPullIn() {
-        // Use requires() here to declare subsystem dependencies
+    	setup();
+    }
+
+    private void setup()
+    {
+    	// Use requires() here to declare subsystem dependencies
         requires(Robot.armSubsystem);
         requires(Robot.cubevatorSubsystem);
     }
-
+    
     // Called just before this Command runs the first time
     protected void initialize() {
     	Robot.armSubsystem.setPullIn();
@@ -30,10 +44,11 @@ public class ArmPullIn extends Command {
     	boolean isCubeSensed = Robot.armSubsystem.isCubeSensed();
 
     	
-    	if(isCubeSensed && Robot.cubevatorSubsystem.getHeightInches() <= 1)
+    	if(isCubeSensed && Robot.cubevatorSubsystem.getHeightInches() <= 1 && _goToDefaultHeight)
     	{
-    		CubevatorDefaultHeight cmd = new CubevatorDefaultHeight();
-    		cmd.start();
+    		CubevatorDefaultHeight cmd = new CubevatorDefaultHeight();    		
+    		Scheduler.getInstance().add(cmd); //schedule this command to run. if we call start instead, it may interrupt a command group
+    		//cmd.start();
     	}
         
     	return isCubeSensed;
