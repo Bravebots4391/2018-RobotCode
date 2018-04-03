@@ -15,6 +15,17 @@ public class DriveForDistance extends Command {
 	private double _speed;
 	private double _heading;
 	
+	public DriveForDistance(double distanceInches, double speedFps, double heading, double timeoutSeconds)
+	{
+		super(timeoutSeconds);
+		
+        requires(Robot.driveSubsystem);
+        
+        _distance = distanceInches;
+        _speed = speedFps;
+        _heading = heading;                     
+	}
+	
     public DriveForDistance(double distanceInches, double speedFps, double heading) {
         // Use requires() here to declare subsystem dependencies
         requires(Robot.driveSubsystem);
@@ -25,7 +36,8 @@ public class DriveForDistance extends Command {
     }
 
     // Called just before this Command runs the first time
-    protected void initialize() {    	
+    protected void initialize() {     	  
+    	
     	String spdStr = String.format("%f", _speed);
     	
     	String init = "DriveForDistance Command Init ";
@@ -41,7 +53,7 @@ public class DriveForDistance extends Command {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {    	
-        return Robot.driveSubsystem.getDriveState() != DriveState.DriveForDistance;
+        return Robot.driveSubsystem.getDriveState() != DriveState.DriveForDistance || isTimedOut();
     }
 
     // Called once after isFinished returns true

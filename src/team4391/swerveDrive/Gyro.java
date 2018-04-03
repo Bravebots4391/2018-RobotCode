@@ -221,14 +221,14 @@ public class Gyro extends GyroBase implements PIDOutput
 
 	public void updateFusedHeading() {
 		
-		if(DriverStation.getInstance().isAutonomous())
+		//if(DriverStation.getInstance().isAutonomous())
 		{
 			_fusedHeading = gyroGetFusedHeading();
 		}
-		else
-		{
-			_fusedHeading = 0.0;
-		}
+//		else
+//		{
+//			_fusedHeading = 0.0;
+//		}
 		
 	}
 

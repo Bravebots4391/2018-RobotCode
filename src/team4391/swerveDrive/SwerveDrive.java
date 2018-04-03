@@ -122,12 +122,12 @@ public class SwerveDrive {
 			
 		case stop:
 			swerveAndTurn(0, 0, 0);
-			_gyro.reset();
+			//_gyro.reset();
 			break;
 			
 		case coast:
 			coast();
-			_gyro.reset();
+			//_gyro.reset();
 			break;
 			
 		case mcTwist:

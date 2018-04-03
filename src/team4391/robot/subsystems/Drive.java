@@ -335,6 +335,8 @@ public class Drive extends Subsystem implements PIDOutput {
     	{
     		System.out.println("setup rotateDegrees");
     		
+    		_gyro.reset();
+    		
     		_swerveDrive.SetNeutralModeForDrive(NeutralMode.Brake);
     		_myTargetSpeed = 0.5 * Math.signum(degrees);
     		_myTargetDistanceIn = arcLenInches;
@@ -379,6 +381,8 @@ public class Drive extends Subsystem implements PIDOutput {
     	if(_myDriveState != DriveState.DriveForDistance)
     	{
     		System.out.println("setup driveForDistance");
+    		
+    		_gyro.reset();
     		
     		_swerveDrive.SetNeutralModeForDrive(NeutralMode.Brake);
     		_myTargetSpeed = speedFps;

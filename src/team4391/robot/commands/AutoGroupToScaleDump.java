@@ -26,7 +26,7 @@ public class AutoGroupToScaleDump extends CommandGroup {
         
     	
     	
-    	addSequential(new DriveForDistance(278, 0.6, heading));    	
+    	addSequential(new DriveForDistance(268, 0.6, heading));    	
     	addSequential(new CubevatorClimbHeight());
     	addSequential(new RotateDegrees(rotate));
     	addSequential(new ArmPushOutFastTimed(1.5));
