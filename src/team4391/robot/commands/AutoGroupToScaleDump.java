@@ -32,5 +32,13 @@ public class AutoGroupToScaleDump extends CommandGroup {
     	addSequential(new ArmPushOutFastTimed(1.5));
     	addSequential(new DriveForDistance(14, 0.3, 180));
     	
+    	addSequential(new RotateDegrees(-rotate));
+    	addSequential(new CubevatorToBottom());
+    	
+    	addSequential(new RotateDegrees(80*Math.signum(rotate)));
+    	
+    	addParallel(new ArmPullIn(false));
+    	addSequential(new DriveForDistance(80, 0.4, 0));
+    	
     }
 }
