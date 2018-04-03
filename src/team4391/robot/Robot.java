@@ -113,6 +113,7 @@ public class Robot extends TimedRobot {
         	// Enable Loops
         	mEnabledLooper.register(driveSubsystem.getLoop());
         	mEnabledLooper.register(armSubsystem.getLoop());
+        	mEnabledLooper.register(cubevatorSubsystem.getLoop());
 //        	mEnabledLooper.register(shooter.getLoop());
 //        	mEnabledLooper.register(led.getLoop());        
         	

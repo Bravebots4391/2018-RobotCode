@@ -6,8 +6,10 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import team4391.loops.Loop;
 import team4391.robot.Constants;
 import team4391.robot.Robot;
 import team4391.robot.commands.LiftStop;
@@ -22,9 +24,14 @@ public class Lift extends Subsystem {
 	
 	TalonSRX _cubevatorTalon = new TalonSRX(Constants.kCubevatorId);
 	TalonSRX _cubevatorSlave;
+	Timer _bottomTimer = new Timer();
 	
 	DigitalInput _limitSwitch = new DigitalInput(0);
 	private double _targetHeight;
+	private int _bottomCount;
+	private boolean _isAtBottomLimit;
+	
+	private final static int CountMax = 20;
 	
 	public Lift()
 	{
@@ -33,6 +40,8 @@ public class Lift extends Subsystem {
 
 	public void init()
 	{
+		_bottomCount = 0;
+		
 		_cubevatorTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, Constants.kTimeoutMs);
 		_cubevatorTalon.setInverted(true);			
 		
@@ -74,6 +83,59 @@ public class Lift extends Subsystem {
         setDefaultCommand(new LiftStop());
     }
 
+    private final Loop mLoop = new Loop() {
+		 
+		
+
+		@Override
+		public void onStart() {
+			setHolding();			
+		}
+	
+		@Override
+		public void onLoop() {		
+			synchronized (Lift.this) {							
+				
+				if(_limitSwitch.get())
+				{
+					_bottomCount++;
+				}				
+				else
+				{
+					_bottomCount--;
+				}
+				
+				if(_bottomCount >= CountMax)
+				{
+					_bottomCount = CountMax;
+					_isAtBottomLimit = true;
+				}				
+				else if(_bottomCount <= 0)
+				{
+					_bottomCount = 0;
+					_isAtBottomLimit = false;
+				}				
+			}													
+		}	
+	
+		@Override
+		public void onStop() {
+		// TODO Auto-generated method stub		
+			setHolding();
+		}
+		 
+	 };
+	 
+	 public Loop getLoop() {
+	        return mLoop;
+	    }    
+    
+	 public void setHolding()
+	 {
+		 _cubevatorTalon.set(ControlMode.PercentOutput, 0);
+	 }
+	 
+    
 	public void up() {
 		_cubevatorTalon.set(ControlMode.PercentOutput, 1);
 		
@@ -127,15 +189,13 @@ public class Lift extends Subsystem {
 	}
 	
 	public boolean IsAtBottomLimit()
-	{		
-		return _limitSwitch.get();
+	{				
+		return _isAtBottomLimit;
 	}
 	
 	public void goToPosition(double heightInches)
 	{
-		_targetHeight = heightInches;
-		
-		
+		_targetHeight = heightInches;			
 		
 		// assume the talon will do  this for us
 		_cubevatorTalon.set(ControlMode.Position, getEncoderPositionFromInches(heightInches));
@@ -147,7 +207,7 @@ public class Lift extends Subsystem {
 		
 		if(weAreThereMan)
 		{
-			_cubevatorTalon.set(ControlMode.PercentOutput, 0);
+			setHolding();
 		}
 		
 		return weAreThereMan;
