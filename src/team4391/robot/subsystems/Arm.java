@@ -39,6 +39,14 @@ public class Arm extends Subsystem {
 			_suckerInnerOuterSlave.follow(_suckerInnerOuter);
 			_suckerInnerOuter.setInverted(true);
 			_suckerInnerOuterSlave.setInverted(true);
+			
+			_suckerInnerOuter.configContinuousCurrentLimit(10, Constants.kTimeoutMs);
+			_suckerInnerOuter.configPeakCurrentLimit(10, Constants.kTimeoutMs);
+			_suckerInnerOuter.enableCurrentLimit(true);
+			
+			_suckerInnerOuterSlave.configContinuousCurrentLimit(10, Constants.kTimeoutMs);
+			_suckerInnerOuterSlave.configPeakCurrentLimit(10, Constants.kTimeoutMs);
+			_suckerInnerOuterSlave.enableCurrentLimit(true);
 		}
 		else
 		{
