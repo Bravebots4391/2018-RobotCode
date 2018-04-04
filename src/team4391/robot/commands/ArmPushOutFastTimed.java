@@ -34,6 +34,7 @@ public class ArmPushOutFastTimed extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
+    	Robot.armSubsystem.setHolding();
     }
 
     // Called when another command which requires one or more of the same

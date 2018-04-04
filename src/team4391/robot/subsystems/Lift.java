@@ -31,7 +31,7 @@ public class Lift extends Subsystem {
 	private int _bottomCount;
 	private boolean _isAtBottomLimit;
 	
-	private final static int CountMax = 20;
+	private final static int CountMax = 3;
 	
 	public Lift()
 	{

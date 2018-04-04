@@ -383,6 +383,7 @@ public class Drive extends Subsystem implements PIDOutput {
     		System.out.println("setup driveForDistance");
     		
     		_gyro.reset();
+    		_gyro.reset();
     		
     		_swerveDrive.SetNeutralModeForDrive(NeutralMode.Brake);
     		_myTargetSpeed = speedFps;
