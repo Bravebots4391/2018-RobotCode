@@ -58,7 +58,7 @@ public class Lift extends Subsystem {
 			_cubevatorSlave = new TalonSRX(Constants.kCubevatorSlaveId);
 			_cubevatorSlave.setInverted(true);
 			_cubevatorSlave.follow(_cubevatorTalon);
-			Robot._gyroTalon = _cubevatorSlave;
+			//Robot._gyroTalon = _cubevatorSlave;
 			_cubevatorSlave.setNeutralMode(NeutralMode.Brake);
 		}
 		

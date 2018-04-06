@@ -47,6 +47,8 @@ public class Arm extends Subsystem {
 			_suckerInnerOuterSlave.configContinuousCurrentLimit(10, Constants.kTimeoutMs);
 			_suckerInnerOuterSlave.configPeakCurrentLimit(10, Constants.kTimeoutMs);
 			_suckerInnerOuterSlave.enableCurrentLimit(true);
+			
+			Robot._gyroTalon = _suckerInnerOuter;
 		}
 		else
 		{
