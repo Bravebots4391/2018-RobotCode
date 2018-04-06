@@ -30,6 +30,7 @@ public class Lift extends Subsystem {
 	private double _targetHeight;
 	private int _bottomCount;
 	private boolean _isAtBottomLimit;
+	private double _holdHeight;
 	
 	private final static int CountMax = 3;
 	
@@ -73,8 +74,8 @@ public class Lift extends Subsystem {
 		_cubevatorTalon.configAllowableClosedloopError(3, Constants.kPIDLoopIdx, Constants.kTimeoutMs); /* always servo */
         /* set closed loop gains in slot0 */
 		_cubevatorTalon.config_kF(Constants.kPIDLoopIdx, 0.0, Constants.kTimeoutMs);
-		_cubevatorTalon.config_kP(Constants.kPIDLoopIdx, 7.0, Constants.kTimeoutMs);
-		_cubevatorTalon.config_kI(Constants.kPIDLoopIdx, 0.0001, Constants.kTimeoutMs);
+		_cubevatorTalon.config_kP(Constants.kPIDLoopIdx, 1.0, Constants.kTimeoutMs);
+		_cubevatorTalon.config_kI(Constants.kPIDLoopIdx, 0.01, Constants.kTimeoutMs);
 		_cubevatorTalon.config_kD(Constants.kPIDLoopIdx, 0.0, Constants.kTimeoutMs);			
 	}	
 	
@@ -132,7 +133,12 @@ public class Lift extends Subsystem {
     
 	 public void setHolding()
 	 {
-		 _cubevatorTalon.set(ControlMode.PercentOutput, 0);
+		 //_cubevatorTalon.set(ControlMode.PercentOutput, 0);
+		 
+		 double currentPosition = getHeightInches();
+		 
+		 int holdCounts = getEncoderPositionFromInches(currentPosition);
+		 _cubevatorTalon.set(ControlMode.Position, holdCounts);		 
 	 }
 	 
     
@@ -156,7 +162,8 @@ public class Lift extends Subsystem {
 	}
 
 	public void stop() {		
-		_cubevatorTalon.set(ControlMode.PercentOutput, 0.0);
+		//_cubevatorTalon.set(ControlMode.PercentOutput, 0.0);
+		setHolding();
 	}
 	
 	public void resetPosition()
@@ -207,6 +214,7 @@ public class Lift extends Subsystem {
 		
 		if(weAreThereMan)
 		{
+			double _holdHeight = getHeightInches();
 			setHolding();
 		}
 		
