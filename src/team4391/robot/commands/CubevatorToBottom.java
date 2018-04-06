@@ -13,6 +13,13 @@ public class CubevatorToBottom extends Command {
         // Use requires() here to declare subsystem dependencies
     	 requires(Robot.cubevatorSubsystem);
     }
+    
+    public CubevatorToBottom(double seconds)
+    {
+    	super(seconds);
+    	requires(Robot.cubevatorSubsystem);
+    	    	
+    }
 
     // Called just before this Command runs the first time
     protected void initialize() {
@@ -25,7 +32,7 @@ public class CubevatorToBottom extends Command {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return Robot.cubevatorSubsystem.IsAtBottomLimit();
+        return Robot.cubevatorSubsystem.IsAtBottomLimit() || isTimedOut();
     }
 
     // Called once after isFinished returns true
