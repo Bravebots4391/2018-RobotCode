@@ -16,7 +16,7 @@ public class ArmPushOutAnalog extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	
+    	System.out.println("ArmPushOutAnalogCmdInit");    	
     }
 
     // Called repeatedly when this Command is scheduled to run

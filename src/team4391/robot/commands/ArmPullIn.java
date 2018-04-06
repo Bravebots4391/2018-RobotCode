@@ -30,6 +30,7 @@ public class ArmPullIn extends Command {
     
     // Called just before this Command runs the first time
     protected void initialize() {
+    	System.out.println("ArmPullInCmd Init");
     	Robot.armSubsystem.setPullIn();
     }
 

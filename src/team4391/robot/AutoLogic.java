@@ -6,6 +6,8 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import team4391.robot.commands.ArmPullIn;
+import team4391.robot.commands.ArmPullInCmdGrpTest;
 import team4391.robot.commands.Auto;
 import team4391.robot.commands.AutoCenterToLeftSwitch;
 import team4391.robot.commands.AutoCenterToRightSwitch;
@@ -30,6 +32,7 @@ public class AutoLogic
 		_chooser.addObject("Drive Over Line", "driveOverLine");
 		_chooser.addObject("DFDTest", "DFDTest");
 		_chooser.addObject("SFDTest", "SFDTest");
+		_chooser.addObject("PullInTest", "PullInTest");
 		_chooser.addObject("AutoGroupToScaleDump", "ScaleTest");
 		
 		SmartDashboard.putData("Auto mode", _chooser);
@@ -144,6 +147,11 @@ public class AutoLogic
 		    	double _heading = pref.getDouble("DFDHeading", Constants.Heading);
 				CommandGroup cg = new AutoGroupToScaleDump(_heading, _speed);
 				cg.start();
+			}
+			else if(chooserVal == "PullInTest")
+			{
+				CommandGroup cmd = new ArmPullInCmdGrpTest();
+				cmd.start();
 			}
 		}
 	}

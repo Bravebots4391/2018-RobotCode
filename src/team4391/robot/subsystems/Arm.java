@@ -18,7 +18,7 @@ import team4391.robot.commands.ArmPushOutAnalog;
  */
 public class Arm extends Subsystem {
 
-	public TalonSRX _suckerInnerOuter = new TalonSRX(Constants.kArmRightId);
+	public TalonSRX _suckerInnerOuter = new TalonSRX(Constants.kArmRightId);	
 	public TalonSRX _suckerInnerOuterSlave;
 
 	DigitalInput _cubeSensor = new DigitalInput(1);
@@ -35,6 +35,8 @@ public class Arm extends Subsystem {
 	{
 		if(Constants.useSlaveMotors)
 		{
+			Robot._gyroTalon = _suckerInnerOuter;
+			
 			_suckerInnerOuterSlave = new TalonSRX(Constants.kArmLeftId);
 			_suckerInnerOuterSlave.follow(_suckerInnerOuter);
 			_suckerInnerOuter.setInverted(true);
@@ -47,8 +49,8 @@ public class Arm extends Subsystem {
 			_suckerInnerOuterSlave.configContinuousCurrentLimit(10, Constants.kTimeoutMs);
 			_suckerInnerOuterSlave.configPeakCurrentLimit(10, Constants.kTimeoutMs);
 			_suckerInnerOuterSlave.enableCurrentLimit(true);
-			
-			Robot._gyroTalon = _suckerInnerOuter;
+								
+			System.out.println("Arm Constructor has been run.");
 		}
 		else
 		{
@@ -121,7 +123,9 @@ public class Arm extends Subsystem {
 	 
 	 public void setPullIn() {
 		 if(myArmState != ArmState.PullIn)
-			 myArmState = ArmState.PullIn;
+			 myArmState = ArmState.PullIn;		 		 		
+		 
+		 	System.out.println("Arm pull in " + String.format("%f", Constants.kArmInputPctSpeed));
 		 
 		 _suckerInnerOuter.set(ControlMode.PercentOutput, Constants.kArmInputPctSpeed);
 	 }
@@ -129,6 +133,8 @@ public class Arm extends Subsystem {
 	 public void setPushOut(double speed) {
 		 if(myArmState != ArmState.PushOut)
 			 myArmState = ArmState.PushOut;
+		 
+		 //System.out.println("Arm push out " + String.format("%f", speed));
 		 
 		 _suckerInnerOuter.set(ControlMode.PercentOutput, speed);
 	 }
@@ -150,13 +156,5 @@ public class Arm extends Subsystem {
 		 SmartDashboard.putString("ArmState", myArmState.toString());
 		 SmartDashboard.putBoolean("CubePresent", isCubeSensed());
 	 }
-
-	public void intakeCube() 
-	{
-		 setPullIn();
-		 if (isCubeSensed()) 
-		 {
-			 setHolding();
-		 }
-	}	
+	
 }
