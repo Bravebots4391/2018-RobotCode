@@ -126,6 +126,9 @@ public class Constants {
 	
 	public static final double kCubevatorStartHeightInches = 27;
 	public static final double kDistanceToStartCubeDropWhenStrafing = 110.0;
+	
+	// Used for center auton.
+	public static final double kCenterAutoSecondTurn = 50.0;
 
 	
     // Rotation PID Rate Limit Constants. In Auto Mode  Limits rotation rate based on angle from the target.
