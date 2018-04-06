@@ -99,7 +99,7 @@ public class Constants {
 	//
 	public static final int kCubevatorEncoderCountsPerRev = 4096; // 1:1 with the output shaft
 	public static final double kCubevatorDrumDiameterInches = 3.5;
-	public static final double kCubevatorTopLimitInches = 87;
+	public static final double kCubevatorTopLimitInches = 85.5;
 	public static final double kCubevatorScaleHeight = 78; // height to throw into scale roughly
 	
 	public static final double kCubevatorClimbHeight = 80.5;  // height to get above to the rung
@@ -124,7 +124,7 @@ public class Constants {
 	public static final double Speed = 0.6;
 	public static final double Heading = 0.0;
 	
-	public static final double kCubevatorStartHeightInches = 28;
+	public static final double kCubevatorStartHeightInches = 27;
 	public static final double kDistanceToStartCubeDropWhenStrafing = 110.0;
 
 	
