@@ -212,7 +212,12 @@ public class Drive extends Subsystem implements PIDOutput {
 				_swerveDrive.setDrive(SwerveMode.crab, pctSpeed, angle);
 			}
 		}		
-		else if(!DB(X) && !DB(Y) && DB(rX) && cntrl.getRawAxis(2)>0.75) // only the right stick is out of deadband
+		else if(!DB(X) && !DB(Y) && !DB(rX) && cntrl.getRawAxis(2)>0.75 && cntrl.getRawAxis(3) > 0.75)
+		{
+			// put on the brakes if both triggers are pulled
+			_swerveDrive.setDrive(SwerveMode.airBrakes, 0, 0);
+		}
+		else if(!DB(X) && !DB(Y) && DB(rX) && cntrl.getRawAxis(2)>0.75 && !DB(cntrl.getRawAxis(3))) // only the right stick is out of deadband
 		{
 			_swerveDrive.setDrive(SwerveMode.rotate, rX, 0);
 		}

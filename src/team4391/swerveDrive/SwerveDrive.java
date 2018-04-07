@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class SwerveDrive {
 
 	public enum SwerveMode{
-		crab, frontPivot, rearPivot, rotate, stop, coast, mcTwist, swerveAndTurn
+		crab, frontPivot, rearPivot, rotate, stop, coast, mcTwist, swerveAndTurn, airBrakes
 	}
 	
 	private static WPI_TalonSRX _motorFR;
@@ -104,6 +104,21 @@ public class SwerveDrive {
 			}
 			break;
 			
+		case airBrakes:
+		{
+			if(!_isOkToRotate && getVelocity(_motorFR) < 0.5)
+			{
+				_isTurning = true;
+				brakes();
+				_isOkToRotate = true;
+			}
+			else if(_isOkToRotate)
+			{
+				brakes();
+			}
+			break;			
+		}
+			
 //		case carTurn:
 //			_isTurning = true;
 //			carTurn(pctSpeed, angle);
@@ -168,6 +183,7 @@ public class SwerveDrive {
 	public void rotateInPlace (double rotatePct) {
 		rotateBot(rotatePct);
 	}
+	
 	
 	private void init() {
 		// Set all turning wheels to brake mode
@@ -263,6 +279,22 @@ public class SwerveDrive {
 		_motorFL.set(ControlMode.PercentOutput, rotateSpeed);
 		_motorRL.set(ControlMode.PercentOutput, rotateSpeed);
 	}	
+	
+	private void brakes()
+	{
+		_isTurning = true; // let the rest of the module know we are in a turn mode
+		
+		//set all the wheels on the tangent
+		setWheelAngle(-45.0, _turnFl);
+		setWheelAngle(45.0, _turnFR);
+		setWheelAngle(45.0, _turnBl);
+		setWheelAngle(-45.0, _turnBR);
+		
+		_motorFR.set(ControlMode.PercentOutput, 0);
+		_motorRR.set(ControlMode.PercentOutput, 0);
+		_motorFL.set(ControlMode.PercentOutput, 0);
+		_motorRL.set(ControlMode.PercentOutput, 0);
+	}
 	
 	public void pivotTurn(double speed)
 	{
