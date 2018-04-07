@@ -39,7 +39,7 @@ public class AutoCenterToLeftSwitch extends CommandGroup {
     	addSequential(new DriveForDistance(44, -0.4, 0.0));
     	addSequential(new CubevatorDefaultHeight());
     	addSequential(new RotateDegrees(-Constants.kCenterAutoSecondTurn));
-    	addSequential(new DriveForDistance(28, 0.4, 0.0));
+    	addSequential(new DriveForDistance(29.5, 0.45, 0.0));
     	addSequential(new ArmPushOutTimed(1.0));
     	
     	addSequential(new CubevatorDefaultHeight());  
