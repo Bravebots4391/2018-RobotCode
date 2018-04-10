@@ -126,6 +126,8 @@ public class Robot extends TimedRobot {
         
         SmartDashboard.putData(Scheduler.getInstance());
         
+        CameraServer.getInstance().startAutomaticCapture();
+        
 //	      new Thread(() -> {
 //	      UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
 //	      camera.setResolution(320, 240);
