@@ -64,7 +64,7 @@ public class Lift extends Subsystem {
 		_cubevatorTalon.setNeutralMode(NeutralMode.Brake);
 		
 		// Setup some limits
-		_cubevatorTalon.configClosedloopRamp(0.5, Constants.kTimeoutMs);
+		_cubevatorTalon.configClosedloopRamp(0.0, Constants.kTimeoutMs);
 		_cubevatorTalon.configPeakCurrentLimit(20, 10); /* 20A */
 		_cubevatorTalon.configPeakCurrentDuration(200, 10); /* 200ms */
 		_cubevatorTalon.configContinuousCurrentLimit(10, 10); /* 10A */
