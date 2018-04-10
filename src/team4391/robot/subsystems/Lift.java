@@ -44,8 +44,7 @@ public class Lift extends Subsystem {
 		_bottomCount = 0;
 		
 		_cubevatorTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, Constants.kTimeoutMs);
-		_cubevatorTalon.setInverted(true);			
-		
+		_cubevatorTalon.setInverted(true);					
 		_cubevatorTalon.setSensorPhase(true); // Change this to false if not counting positive numbers when going up
 			
 		// May want to enable a "soft" limit on distance
@@ -57,13 +56,19 @@ public class Lift extends Subsystem {
 		{
 			_cubevatorSlave = new TalonSRX(Constants.kCubevatorSlaveId);
 			_cubevatorSlave.setInverted(true);
-			_cubevatorSlave.follow(_cubevatorTalon);
-			//Robot._gyroTalon = _cubevatorSlave;
+			_cubevatorSlave.follow(_cubevatorTalon);			
 			_cubevatorSlave.setNeutralMode(NeutralMode.Brake);
 		}
 		
 		// Enable brake mode on both talons.		
 		_cubevatorTalon.setNeutralMode(NeutralMode.Brake);
+		
+		// Setup some limits
+		_cubevatorTalon.configClosedloopRamp(0.5, Constants.kTimeoutMs);
+		_cubevatorTalon.configPeakCurrentLimit(20, 10); /* 20A */
+		_cubevatorTalon.configPeakCurrentDuration(200, 10); /* 200ms */
+		_cubevatorTalon.configContinuousCurrentLimit(10, 10); /* 10A */
+		_cubevatorTalon.enableCurrentLimit(true); /* turn it on */
 		
         /* set the peak and nominal outputs, 12V means full */
 		_cubevatorTalon.configNominalOutputForward(0, Constants.kTimeoutMs);
@@ -74,8 +79,8 @@ public class Lift extends Subsystem {
 		_cubevatorTalon.configAllowableClosedloopError(3, Constants.kPIDLoopIdx, Constants.kTimeoutMs); /* always servo */
         /* set closed loop gains in slot0 */
 		_cubevatorTalon.config_kF(Constants.kPIDLoopIdx, 0.0, Constants.kTimeoutMs);
-		_cubevatorTalon.config_kP(Constants.kPIDLoopIdx, 1.0, Constants.kTimeoutMs);
-		_cubevatorTalon.config_kI(Constants.kPIDLoopIdx, 0.01, Constants.kTimeoutMs);
+		_cubevatorTalon.config_kP(Constants.kPIDLoopIdx, 7.0, Constants.kTimeoutMs);
+		_cubevatorTalon.config_kI(Constants.kPIDLoopIdx, 0.0001, Constants.kTimeoutMs);
 		_cubevatorTalon.config_kD(Constants.kPIDLoopIdx, 0.0, Constants.kTimeoutMs);			
 	}	
 	
@@ -133,12 +138,12 @@ public class Lift extends Subsystem {
     
 	 public void setHolding()
 	 {
-		 //_cubevatorTalon.set(ControlMode.PercentOutput, 0);
+		 _cubevatorTalon.set(ControlMode.PercentOutput, 0);
 		 
-		 double currentPosition = getHeightInches();
-		 
-		 int holdCounts = getEncoderPositionFromInches(currentPosition);
-		 _cubevatorTalon.set(ControlMode.Position, holdCounts);		 
+//		 double currentPosition = getHeightInches();
+//		 
+//		 int holdCounts = getEncoderPositionFromInches(currentPosition);
+//		 _cubevatorTalon.set(ControlMode.Position, holdCounts);		 
 	 }
 	 
     
@@ -157,12 +162,10 @@ public class Lift extends Subsystem {
 		{
 			resetPosition();	
 			stop();
-		}
-		
+		}		
 	}
 
-	public void stop() {		
-		//_cubevatorTalon.set(ControlMode.PercentOutput, 0.0);
+	public void stop() {				
 		setHolding();
 	}
 	
