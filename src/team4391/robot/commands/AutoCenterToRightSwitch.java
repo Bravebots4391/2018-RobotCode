@@ -33,7 +33,7 @@ public class AutoCenterToRightSwitch extends CommandGroup {
     	addSequential(new RotateDegrees(-Constants.kCenterAutoSecondTurn));
     	addSequential(new CubevatorToBottom(2.0));
     	addParallel(new ArmPullIn(false));
-    	addSequential(new DriveForDistance(44, 0.4, 0.0, 2.5));
+    	addSequential(new DriveForDistance(44, 0.4, 0.0, 2.25));
     	
     	// Backup and add the new cube to the switch
     	addSequential(new DriveForDistance(44, -0.4, 0.0));
