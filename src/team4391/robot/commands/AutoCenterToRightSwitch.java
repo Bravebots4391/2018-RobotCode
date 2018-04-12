@@ -27,7 +27,7 @@ public class AutoCenterToRightSwitch extends CommandGroup {
         // arm.
     	
     	addSequential(new CubevatorBumpDown(0.05));
-    	addSequential(new AutoDriveCenterToLeftSwitch(115.0, 0.7, 22.0));
+    	addSequential(new AutoDriveCenterToLeftSwitch(110.0, 0.7, 22.0));
     	addSequential(new ArmPushOutTimed(1.0));
     	addSequential(new DriveForDistance(28, -0.4, 0.0));
     	addSequential(new RotateDegrees(-Constants.kCenterAutoSecondTurn));
