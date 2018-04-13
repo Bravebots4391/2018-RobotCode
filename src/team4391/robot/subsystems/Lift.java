@@ -2,6 +2,8 @@ package team4391.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
+import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
@@ -32,7 +34,7 @@ public class Lift extends Subsystem {
 	private boolean _isAtBottomLimit;
 	private double _holdHeight;
 	
-	private final static int CountMax = 2;
+	private final static int CountMax = 1;
 	
 	public Lift()
 	{
@@ -63,6 +65,9 @@ public class Lift extends Subsystem {
 		// Enable brake mode on both talons.		
 		_cubevatorTalon.setNeutralMode(NeutralMode.Brake);
 		
+		//_cubevatorTalon.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, Constants.kTimeoutMs);
+		//_cubevatorTalon.overrideLimitSwitchesEnable(false);
+		
 		// Setup some limits
 //		_cubevatorTalon.configClosedloopRamp(0.0, Constants.kTimeoutMs);
 //		_cubevatorTalon.configPeakCurrentLimit(20, 10); /* 20A */
@@ -81,7 +86,9 @@ public class Lift extends Subsystem {
 		_cubevatorTalon.config_kF(Constants.kPIDLoopIdx, 0.0, Constants.kTimeoutMs);
 		_cubevatorTalon.config_kP(Constants.kPIDLoopIdx, 7.0, Constants.kTimeoutMs);
 		_cubevatorTalon.config_kI(Constants.kPIDLoopIdx, 0.0001, Constants.kTimeoutMs);
-		_cubevatorTalon.config_kD(Constants.kPIDLoopIdx, 0.0, Constants.kTimeoutMs);			
+		_cubevatorTalon.config_kD(Constants.kPIDLoopIdx, 0.0, Constants.kTimeoutMs);
+		
+		System.out.println("Done Configuring Lift Motors");
 	}	
 	
     public void initDefaultCommand() {
@@ -102,7 +109,7 @@ public class Lift extends Subsystem {
 		public void onLoop() {		
 			synchronized (Lift.this) {							
 				
-				if(_limitSwitch.get())
+				if(IsAtBottomLimit())
 				{
 					_bottomCount++;
 				}				
@@ -115,6 +122,7 @@ public class Lift extends Subsystem {
 				{
 					_bottomCount = CountMax;
 					_isAtBottomLimit = true;
+					resetPosition();
 				}				
 				else if(_bottomCount <= 0)
 				{
@@ -160,7 +168,7 @@ public class Lift extends Subsystem {
 		}
 		else
 		{
-			resetPosition();	
+			//resetPosition();	
 			stop();
 		}		
 	}
@@ -200,8 +208,9 @@ public class Lift extends Subsystem {
 	
 	public boolean IsAtBottomLimit()
 	{		
-		//return _limitSwitch.get();
-		return _isAtBottomLimit;
+		return !_limitSwitch.get();
+		//return _isAtBottomLimit;
+		//return !_cubevatorTalon.getSensorCollection().isRevLimitSwitchClosed();
 	}
 	
 	public void goToPosition(double heightInches)
