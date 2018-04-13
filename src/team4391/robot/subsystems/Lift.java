@@ -32,7 +32,7 @@ public class Lift extends Subsystem {
 	private boolean _isAtBottomLimit;
 	private double _holdHeight;
 	
-	private final static int CountMax = 3;
+	private final static int CountMax = 2;
 	
 	public Lift()
 	{
@@ -199,7 +199,8 @@ public class Lift extends Subsystem {
 	}
 	
 	public boolean IsAtBottomLimit()
-	{				
+	{		
+		//return _limitSwitch.get();
 		return _isAtBottomLimit;
 	}
 	
