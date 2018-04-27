@@ -53,11 +53,11 @@ public class Constants {
 	//set false
 	//push code/restart
 	
-	public static final boolean kCalibrateSwerves = true;
-	public static final int kFrontLeftCal = 108;
-	public static final int kFrontRightCal = 927;
-	public static final int kRearLeftCal = 979;
-	public static final int kRearRightCal =  402;
+	public static final boolean kCalibrateSwerves = false;
+	public static final int kFrontLeftCal = 317;
+	public static final int kFrontRightCal = 432;
+	public static final int kRearLeftCal = 505;
+	public static final int kRearRightCal =  632;
 	
 	// Cimcoder constants
 	public static final int kCimcoderPulsesPerRev = 80;
