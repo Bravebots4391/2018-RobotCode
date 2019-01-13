@@ -54,10 +54,10 @@ public class Constants {
 	//push code/restart
 	
 	public static final boolean kCalibrateSwerves = false;
-	public static final int kFrontLeftCal = 310;
-	public static final int kFrontRightCal = 996;
+	public static final int kFrontLeftCal = 317;
+	public static final int kFrontRightCal = 432;
 	public static final int kRearLeftCal = 505;
-	public static final int kRearRightCal = 717;
+	public static final int kRearRightCal =  632;
 	
 	// Cimcoder constants
 	public static final int kCimcoderPulsesPerRev = 80;
@@ -99,7 +99,7 @@ public class Constants {
 	//
 	public static final int kCubevatorEncoderCountsPerRev = 4096; // 1:1 with the output shaft
 	public static final double kCubevatorDrumDiameterInches = 3.5;
-	public static final double kCubevatorTopLimitInches = 85.5;
+	public static final double kCubevatorTopLimitInches = 87.5;
 	public static final double kCubevatorScaleHeight = 78; // height to throw into scale roughly
 	
 	public static final double kCubevatorClimbHeight = 80.5;  // height to get above to the rung

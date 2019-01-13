@@ -6,6 +6,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 import team4391.robot.Constants;
+import team4391.robot.Robot;
 
 /**
  *
@@ -26,6 +27,11 @@ public class Climb extends Subsystem {
     public void init()
     {
     	_climbMotor.setNeutralMode(NeutralMode.Brake);
+    	
+		if(!Constants.useSlaveMotors)
+		{
+			Robot._gyroTalon = _climbMotor;
+		}
     }
     
     public void Up()

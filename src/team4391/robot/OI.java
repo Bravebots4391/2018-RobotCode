@@ -70,8 +70,8 @@ public class OI {
     	
 	Button inny = new JoystickButton(_xBoxCntrl, 2);
 	Button outty = new JoystickButton(_xBoxCntrl, 4);
-    Button liftUp = new JoystickButton(_xBoxCntrl, 5);
-    Button liftDown= new JoystickButton(_xBoxCntrl, 6);
+    //Button liftUp = new JoystickButton(_xBoxCntrl, 5);
+    //Button liftDown= new JoystickButton(_xBoxCntrl, 6);
     Button fastoutty = new JoystickButton(_xBoxCntrl, 3);
     Button IntakeCube = new JoystickButton(_xBoxCntrl, 1);
     Button defaultheight = new JoystickButton(_xBoxCntrl, 7);
@@ -98,8 +98,8 @@ public class OI {
 		inny.whileHeld(new ArmPullIn2());
 		outty.whileHeld(new ArmPushOut());
 		fastoutty.whileHeld(new FastArmPushOut());
-		liftUp.whileHeld(new LiftUp());
-		liftDown.whileHeld(new LiftDown());
+		//liftUp.whileHeld(new LiftUp());
+		//liftDown.whileHeld(new LiftDown());
 		
 		// Toggle the cube sucker in
 		IntakeCube2.whenPressed(new ArmPullIn());

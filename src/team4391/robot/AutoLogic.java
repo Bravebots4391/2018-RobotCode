@@ -80,12 +80,7 @@ public class AutoLogic
 		}
 		else if(chooserValPosition == "left")
 		{
-			if(scaleIsLeft)
-			{							
-				CommandGroup cg = new AutoGroupToScaleDump(-90, -25);
-				cg.start();
-			}
-			else if(switchIsLeft)
+			if(switchIsLeft)
 			{
 				//CommandGroup cg = new AutoStrafeDropCubeGroup(180, 0.5, -90);
 				CommandGroup cg = new AutoStrafeDropCubeGroup2(135, 0.5, -90);
@@ -100,13 +95,7 @@ public class AutoLogic
 		}
 		else if(chooserValPosition == "right")
 		{
-			if(scaleIsRight)
-			{
-				// go to the scale
-				CommandGroup cg = new AutoGroupToScaleDump(90, 25);
-				cg.start();
-			}
-			else if(switchIsRight)
+			if(switchIsRight)
 			{				
 				//CommandGroup cg = new AutoStrafeDropCubeGroup(180, 0.5, 90);
 				CommandGroup cg = new AutoStrafeDropCubeGroup2(135, 0.5, 90);

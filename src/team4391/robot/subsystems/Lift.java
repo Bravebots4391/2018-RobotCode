@@ -2,6 +2,8 @@ package team4391.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
+import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
@@ -32,7 +34,7 @@ public class Lift extends Subsystem {
 	private boolean _isAtBottomLimit;
 	private double _holdHeight;
 	
-	private final static int CountMax = 3;
+	private final static int CountMax = 1;
 	
 	public Lift()
 	{
@@ -44,8 +46,7 @@ public class Lift extends Subsystem {
 		_bottomCount = 0;
 		
 		_cubevatorTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, Constants.kTimeoutMs);
-		_cubevatorTalon.setInverted(true);			
-		
+		_cubevatorTalon.setInverted(true);					
 		_cubevatorTalon.setSensorPhase(true); // Change this to false if not counting positive numbers when going up
 			
 		// May want to enable a "soft" limit on distance
@@ -57,13 +58,22 @@ public class Lift extends Subsystem {
 		{
 			_cubevatorSlave = new TalonSRX(Constants.kCubevatorSlaveId);
 			_cubevatorSlave.setInverted(true);
-			_cubevatorSlave.follow(_cubevatorTalon);
-			//Robot._gyroTalon = _cubevatorSlave;
+			_cubevatorSlave.follow(_cubevatorTalon);			
 			_cubevatorSlave.setNeutralMode(NeutralMode.Brake);
 		}
 		
 		// Enable brake mode on both talons.		
 		_cubevatorTalon.setNeutralMode(NeutralMode.Brake);
+		
+		//_cubevatorTalon.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, Constants.kTimeoutMs);
+		//_cubevatorTalon.overrideLimitSwitchesEnable(false);
+		
+		// Setup some limits
+//		_cubevatorTalon.configClosedloopRamp(0.0, Constants.kTimeoutMs);
+//		_cubevatorTalon.configPeakCurrentLimit(20, 10); /* 20A */
+//		_cubevatorTalon.configPeakCurrentDuration(200, 10); /* 200ms */
+//		_cubevatorTalon.configContinuousCurrentLimit(10, 10); /* 10A */
+//		_cubevatorTalon.enableCurrentLimit(true); /* turn it on */
 		
         /* set the peak and nominal outputs, 12V means full */
 		_cubevatorTalon.configNominalOutputForward(0, Constants.kTimeoutMs);
@@ -74,9 +84,11 @@ public class Lift extends Subsystem {
 		_cubevatorTalon.configAllowableClosedloopError(3, Constants.kPIDLoopIdx, Constants.kTimeoutMs); /* always servo */
         /* set closed loop gains in slot0 */
 		_cubevatorTalon.config_kF(Constants.kPIDLoopIdx, 0.0, Constants.kTimeoutMs);
-		_cubevatorTalon.config_kP(Constants.kPIDLoopIdx, 1.0, Constants.kTimeoutMs);
-		_cubevatorTalon.config_kI(Constants.kPIDLoopIdx, 0.01, Constants.kTimeoutMs);
-		_cubevatorTalon.config_kD(Constants.kPIDLoopIdx, 0.0, Constants.kTimeoutMs);			
+		_cubevatorTalon.config_kP(Constants.kPIDLoopIdx, 7.0, Constants.kTimeoutMs);
+		_cubevatorTalon.config_kI(Constants.kPIDLoopIdx, 0.0001, Constants.kTimeoutMs);
+		_cubevatorTalon.config_kD(Constants.kPIDLoopIdx, 0.0, Constants.kTimeoutMs);
+		
+		System.out.println("Done Configuring Lift Motors");
 	}	
 	
     public void initDefaultCommand() {
@@ -97,7 +109,7 @@ public class Lift extends Subsystem {
 		public void onLoop() {		
 			synchronized (Lift.this) {							
 				
-				if(_limitSwitch.get())
+				if(IsAtBottomLimit())
 				{
 					_bottomCount++;
 				}				
@@ -110,6 +122,7 @@ public class Lift extends Subsystem {
 				{
 					_bottomCount = CountMax;
 					_isAtBottomLimit = true;
+					resetPosition();
 				}				
 				else if(_bottomCount <= 0)
 				{
@@ -133,12 +146,12 @@ public class Lift extends Subsystem {
     
 	 public void setHolding()
 	 {
-		 //_cubevatorTalon.set(ControlMode.PercentOutput, 0);
+		 _cubevatorTalon.set(ControlMode.PercentOutput, 0);
 		 
-		 double currentPosition = getHeightInches();
-		 
-		 int holdCounts = getEncoderPositionFromInches(currentPosition);
-		 _cubevatorTalon.set(ControlMode.Position, holdCounts);		 
+//		 double currentPosition = getHeightInches();
+//		 
+//		 int holdCounts = getEncoderPositionFromInches(currentPosition);
+//		 _cubevatorTalon.set(ControlMode.Position, holdCounts);		 
 	 }
 	 
     
@@ -155,14 +168,12 @@ public class Lift extends Subsystem {
 		}
 		else
 		{
-			resetPosition();	
+			//resetPosition();	
 			stop();
-		}
-		
+		}		
 	}
 
-	public void stop() {		
-		//_cubevatorTalon.set(ControlMode.PercentOutput, 0.0);
+	public void stop() {				
 		setHolding();
 	}
 	
@@ -196,8 +207,10 @@ public class Lift extends Subsystem {
 	}
 	
 	public boolean IsAtBottomLimit()
-	{				
-		return _isAtBottomLimit;
+	{		
+		return !_limitSwitch.get();
+		//return _isAtBottomLimit;
+		//return !_cubevatorTalon.getSensorCollection().isRevLimitSwitchClosed();
 	}
 	
 	public void goToPosition(double heightInches)
