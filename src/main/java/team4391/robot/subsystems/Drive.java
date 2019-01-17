@@ -166,8 +166,8 @@ public class Drive extends Subsystem implements PIDOutput {
     }
     
 	public void resetSensors() {
-		_swerveDrive.resetDistance();		
-		
+		_swerveDrive.resetDistance();
+		_swerveDrive.getGyro().reset();
 	}
 	
 	public void teleopDrive(Joystick cntrl)

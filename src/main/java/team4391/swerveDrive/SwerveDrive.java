@@ -157,13 +157,17 @@ public class SwerveDrive {
 	private void swerveAndTurn(double pctSpeed, double angle, double rotate) 
 	{
 		double myRotate = rotate;
-		
+		double fieldAngle = angle;
+
 		if(DriverStation.getInstance().isAutonomous())// pctSpeed > 0 && rotate == 0.0)
 		{
 			myRotate = _gyro.getDriveCorrection();
 		}
 		
-		WheelPositionInfo wi = _swerveAndRotate.swerveAndTurn(angle, myRotate);
+		fieldAngle = angle - _gyro.getAngle() % 360;
+		SmartDashboard.putNumber("FieldAngle",fieldAngle);
+
+		WheelPositionInfo wi = _swerveAndRotate.swerveAndTurn(fieldAngle, myRotate);
 		
 		SmartDashboard.putNumber("srFL", wi.getFlAngle());
 		

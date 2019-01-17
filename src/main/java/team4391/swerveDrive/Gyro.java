@@ -48,7 +48,7 @@ public class Gyro extends GyroBase implements PIDOutput
 	}
 	
 	public void gyroReset(){
-		if(_isInitOk && DriverStation.getInstance().isAutonomous()) {
+		if(_isInitOk){// && DriverStation.getInstance().isAutonomous()) {
 			_pidgey.setFusedHeading(0.0, 10);
 		}
 	}

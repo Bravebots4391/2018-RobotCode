@@ -158,7 +158,8 @@ public class Robot extends TimedRobot {
 	    }
 	    
 	    public void zeroAllSensors() {
-	    	driveSubsystem.resetSensors();
+			driveSubsystem.resetSensors();
+			
 	    }	
 	
 	/**
