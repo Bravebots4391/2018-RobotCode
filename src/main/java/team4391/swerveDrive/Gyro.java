@@ -4,7 +4,6 @@ package team4391.swerveDrive;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GyroBase;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
@@ -59,8 +58,6 @@ public class Gyro extends GyroBase implements PIDOutput
 			PigeonIMU.FusionStatus fusionStatus = new PigeonIMU.FusionStatus();
 			_pidgey.getFusedHeading(fusionStatus);
 			double currentAngle = -fusionStatus.heading;
-			boolean angleIsGood = (_pidgey.getState() == PigeonIMU.PigeonState.Ready) ? true : false;
-		
 			return currentAngle;
 		}
 		else{
@@ -72,7 +69,6 @@ public class Gyro extends GyroBase implements PIDOutput
 	{
 		double kPgain = prefs.getDouble("GyroKp", Constants.GyroKp); 
 		double kDgain = prefs.getDouble("GyroKd", Constants.GyroKd); 
-		double kIgain = prefs.getDouble("GyroKi", Constants.GyroKi);
 		
 		_myHeadingPid.setP(kPgain);
 		_myHeadingPid.setD(kDgain);
@@ -194,8 +190,6 @@ public class Gyro extends GyroBase implements PIDOutput
 
 	@Override
 	public void calibrate() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -210,7 +204,6 @@ public class Gyro extends GyroBase implements PIDOutput
 
 	@Override
 	public double getRate() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
@@ -229,7 +222,6 @@ public class Gyro extends GyroBase implements PIDOutput
 
 	@Override
 	public void pidWrite(double output) {
-		// TODO Auto-generated method stub
 		_pidWriteOutput = output;
 	}
 }

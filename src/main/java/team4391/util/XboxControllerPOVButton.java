@@ -23,7 +23,6 @@ public class XboxControllerPOVButton extends Button {
 	
 	@Override
 	public boolean get() {
-		// TODO Auto-generated method stub
 		return _cntrl.getPOV()==_povLocation;
 	}
 

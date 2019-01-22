@@ -34,7 +34,6 @@ public class Drive extends Subsystem implements PIDOutput {
 	private double _myHeadingError;
 	private double _myTargetSpeed;
 	private double _myTargetDistanceIn;
-	private double _myTargetSetpoint;
 	private Preferences prefs;
 	
 	private static WPI_TalonSRX _motorFR = new WPI_TalonSRX(Constants.kFrontRightDriveMotorId);
@@ -125,7 +124,6 @@ public class Drive extends Subsystem implements PIDOutput {
 		@Override
 		public void onStop() 
 		{
-			// TODO Auto-generated method stub		
 				setOpenLoop();
 		}			
 	};	 		
@@ -336,7 +334,6 @@ public class Drive extends Subsystem implements PIDOutput {
 		_srl.update();
 		
 		// Update the PID setpoint from our current accumulated RATE limiter output
-		_myTargetSetpoint = _srl.getOutput();
 		_myHeadingPid.setSetpoint(_srl.getOutput());	
 		
 		_swerveDrive.setDrive(SwerveMode.rotate, _pidOutput, 0);			
@@ -385,7 +382,6 @@ public class Drive extends Subsystem implements PIDOutput {
     		}
     		    		    	
     		// Get drive info from the lookup
-    		double speed = _distanceSpeedProfile.getInterpolated(new InterpolatingDouble(Math.abs(distance))).value;  		
     		
     		_swerveDrive.setDrive(SwerveMode.rotate, _myTargetSpeed, 0);
     	}
@@ -486,7 +482,6 @@ public class Drive extends Subsystem implements PIDOutput {
 	@Override
 	public void pidWrite(double output) {
 		
-		// TODO Auto-generated method stub
 		_pidOutput = output;
 	}
 	

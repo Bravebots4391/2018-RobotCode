@@ -28,8 +28,6 @@ public class Lift extends Subsystem {
 	DigitalInput _limitSwitch = new DigitalInput(0);
 	private double _targetHeight;
 	private int _bottomCount;
-	private boolean _isAtBottomLimit;
-	private double _holdHeight;
 	
 	private final static int CountMax = 1;
 	
@@ -118,20 +116,17 @@ public class Lift extends Subsystem {
 				if(_bottomCount >= CountMax)
 				{
 					_bottomCount = CountMax;
-					_isAtBottomLimit = true;
 					resetPosition();
 				}				
 				else if(_bottomCount <= 0)
 				{
 					_bottomCount = 0;
-					_isAtBottomLimit = false;
 				}				
 			}													
 		}	
 	
 		@Override
 		public void onStop() {
-		// TODO Auto-generated method stub		
 			setHolding();
 		}
 		 
@@ -224,7 +219,6 @@ public class Lift extends Subsystem {
 		
 		if(weAreThereMan)
 		{
-			double _holdHeight = getHeightInches();
 			setHolding();
 		}
 		

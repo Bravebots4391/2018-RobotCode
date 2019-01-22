@@ -22,7 +22,7 @@ public class AutoLogic
 	
 	public void setupAutonomousChooser() 
 	{	
-		_chooser.addDefault("Default Auto", "switch");
+		_chooser.setDefaultOption("Default Auto", "switch");
 		_chooser.addOption("Switch", "switch");
 		_chooser.addOption("Scale", "scale");
 		_chooser.addOption("Drive Over Line", "driveOverLine");
@@ -50,8 +50,6 @@ public class AutoLogic
 		
 	    boolean switchIsRight = gameInfo.charAt(0) == 'R';
 	    boolean switchIsLeft = gameInfo.charAt(0) == 'L';
-	    boolean scaleIsRight = gameInfo.charAt(1) == 'R';
-	    boolean scaleIsLeft = gameInfo.charAt(1) == 'L';
 	    
 	    // Set the approximate starting height of the cubevator
 	    Robot.cubevatorSubsystem.setPositionInches(Constants.kCubevatorStartHeightInches);
@@ -127,7 +125,6 @@ public class AutoLogic
 			else if(chooserVal == "ScaleTest")
 			{
 				Preferences pref = Preferences.getInstance();
-		    	double _distance = pref.getDouble("DFDDistance", Constants.DriveDistance);
 		    	double _speed = pref.getDouble("DFDSpeed", Constants.Speed);
 		    	double _heading = pref.getDouble("DFDHeading", Constants.Heading);
 				CommandGroup cg = new AutoGroupToScaleDump(_heading, _speed);

@@ -30,7 +30,6 @@ public class SwerveDrive {
 	double _targetPositionDegrees;
 	private static boolean _isTurning = false;
 	private SwerveMode _swerveMode;
-	private boolean _useSpeedControl = true;
 	private SwerveAndRotate _swerveAndRotate;
 	private boolean _isOkToRotate = false;
 	
@@ -55,7 +54,7 @@ public class SwerveDrive {
 	
 	public void setUseSpeedCntrl(boolean isSpeedCntrl)
 	{
-		_useSpeedControl = isSpeedCntrl;
+		//_useSpeedControl = isSpeedCntrl;
 	}
 	
 	public void setDrive(SwerveMode mode, double pctSpeed, double angle)
@@ -506,8 +505,6 @@ public class SwerveDrive {
 	{
 		int raw = talon.getSensorCollection().getAnalogInRaw();
 		
-		int absolutePosition = talon.getSelectedSensorPosition(Constants.kTimeoutMs); 
-		
 		if(!Constants.kCalibrateSwerves)
 		{
 			talon.getSensorCollection().setAnalogPosition(raw - positionCal, Constants.kTimeoutMs);
@@ -517,7 +514,7 @@ public class SwerveDrive {
         talon.configSelectedFeedbackSensor(FeedbackDevice.Analog, Constants.kPIDLoopIdx, Constants.kTimeoutMs);
 		
 		/* lets grab the 360 degree position of the encoders absolute position */
-		absolutePosition = talon.getSelectedSensorPosition(Constants.kTimeoutMs); /* mask out the bottom12 bits, we don't care about the wrap arounds */
+		//absolutePosition = talon.getSelectedSensorPosition(Constants.kTimeoutMs); /* mask out the bottom12 bits, we don't care about the wrap arounds */
 		
         /* choose the sensor and sensor direction */
         //talon.configSelectedFeedbackSensor(FeedbackDevice.Analog, Constants.kPIDLoopIdx, Constants.kTimeoutMs);
@@ -541,7 +538,6 @@ public class SwerveDrive {
 	}
 
 	public Gyro getGyro() {
-		// TODO Auto-generated method stub
 		return _gyro;
 	}
 

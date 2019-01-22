@@ -7,15 +7,8 @@
 
 package team4391.robot;
 
-
-import org.opencv.core.Mat;
-import org.opencv.imgproc.Imgproc;
-
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
-import edu.wpi.cscore.CvSink;
-import edu.wpi.cscore.CvSource;
-import edu.wpi.cscore.UsbCamera;
 // import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.TimedRobot;
