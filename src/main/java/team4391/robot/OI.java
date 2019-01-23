@@ -61,7 +61,7 @@ public class OI {
 	// button.whenReleased(new ExampleCommand());
 			
 	public static XboxController xb = new XboxController(0);
-	public static XboxController xb2 = new XboxController(1);
+	//public static XboxController xb2 = new XboxController(1);
 	
 	public static Joystick _xBoxCntrl = new Joystick(0);
     public static Joystick _xBoxCntrl2 = new Joystick(1);
@@ -74,15 +74,15 @@ public class OI {
     Button IntakeCube = new JoystickButton(_xBoxCntrl, 1);
     Button defaultheight = new JoystickButton(_xBoxCntrl, 7);
     
-	Button inny2 = new JoystickButton(_xBoxCntrl2, 2);
-	Button outty2 = new JoystickButton(_xBoxCntrl2, 4);
-    Button liftUp2 = new JoystickButton(_xBoxCntrl2, 5);
-    Button liftDown2= new JoystickButton(_xBoxCntrl2,6);
-    Button fastoutty2 = new JoystickButton(_xBoxCntrl2,3);
-    Button IntakeCube2 = new JoystickButton(_xBoxCntrl2, 1);
+	// Button inny2 = new JoystickButton(_xBoxCntrl2, 2);
+	// Button outty2 = new JoystickButton(_xBoxCntrl2, 4);
+    // Button liftUp2 = new JoystickButton(_xBoxCntrl2, 5);
+    // Button liftDown2= new JoystickButton(_xBoxCntrl2,6);
+    // Button fastoutty2 = new JoystickButton(_xBoxCntrl2,3);
+    // Button IntakeCube2 = new JoystickButton(_xBoxCntrl2, 1);
     
-    Button winchUp1 = new XboxControllerPOVButton(xb, 0);
-    Button winchDown1 = new XboxControllerPOVButton(xb, 180);
+    public static Button winchUp1 = new XboxControllerPOVButton(xb, 0);
+    public static Button winchDown1 = new XboxControllerPOVButton(xb, 180);
 //    Button winchUp2 = new XboxControllerPOVButton(xb2, 0);
 //    Button winchDown2 = new XboxControllerPOVButton(xb2, 180);
     
@@ -91,24 +91,24 @@ public class OI {
 	public void init() {
 		
 		//IntakeCube.whenPressed(new team4391.robot.commands.IntakeCube());
-		defaultheight.whenPressed(new CubevatorDefaultHeight());
-		IntakeCube.whenPressed(new ArmPullIn());
-		inny.whileHeld(new ArmPullIn2());
-		outty.whileHeld(new ArmPushOut());
-		fastoutty.whileHeld(new FastArmPushOut());
+		//defaultheight.whenPressed(new CubevatorDefaultHeight());
+		//IntakeCube.whenPressed(new ArmPullIn());
+		//inny.whileHeld(new ArmPullIn2());
+		//outty.whileHeld(new ArmPushOut());
+		//fastoutty.whileHeld(new FastArmPushOut());
 		//liftUp.whileHeld(new LiftUp());
 		//liftDown.whileHeld(new LiftDown());
 		
 		// Toggle the cube sucker in
-		IntakeCube2.whenPressed(new ArmPullIn());
+		//IntakeCube2.whenPressed(new ArmPullIn());
 		//inny2.toggleWhenPressed(new ArmPullIn());
-		inny2.whileHeld(new ArmPullIn2());		
-		outty2.whileHeld(new ArmPushOut());
-		fastoutty2.whileHeld(new FastArmPushOut());
-		liftUp2.whileHeld(new LiftUp());
-		liftDown2.whileHeld(new LiftDown());
+		// inny2.whileHeld(new ArmPullIn2());		
+		// outty2.whileHeld(new ArmPushOut());
+		// fastoutty2.whileHeld(new FastArmPushOut());
+		// liftUp2.whileHeld(new LiftUp());
+		// liftDown2.whileHeld(new LiftDown());
 		
-		winchUp1.whileHeld(new WinchUp());
+		//winchUp1.whileHeld(new WinchUp());
 		//winchDown1.whileHeld(new WinchDown());
 		//winchUp2.whileHeld(new WinchUp());
 		//winchDown2.whileHeld(new WinchDown());
