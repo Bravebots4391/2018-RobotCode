@@ -13,9 +13,12 @@ import team4391.util.SyncronousRateLimiter;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
+import edu.wpi.first.wpilibj.PIDSource;
+import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -25,7 +28,7 @@ import team4391.robot.Robot;
 import team4391.robot.commands.TeleopDrive;
 
 
-public class Drive extends Subsystem implements PIDOutput {
+public class Drive extends Subsystem implements PIDOutput, PIDSource {
 	
 	private SwerveDrive _swerveDrive;
 	private double _pidOutput;
@@ -50,7 +53,7 @@ public class Drive extends Subsystem implements PIDOutput {
 	MaxSonar_MB1200 _sonarLeft = new MaxSonar_MB1200(1);
 	MaxSonar_MB1033 _sonarRight = new MaxSonar_MB1033(0);
 	
-	public final PIDController _myHeadingPid = new PIDController(0.010, 0, 0, _gyro, this);
+	public final PIDController _myHeadingPid = new PIDController(0.010, 0, 0, this, this);
     public SyncronousRateLimiter _srl = new SyncronousRateLimiter(Constants.kLooperDt, 1.0 , 0);
     public SyncronousRateLimiter _accelRateLimiter = new SyncronousRateLimiter(Constants.kLooperDt, 1.0, 0);
     
@@ -94,9 +97,9 @@ public class Drive extends Subsystem implements PIDOutput {
 						updateDriveForDistance();
 						break;
 						
-					case McTwist:
-						updateMcTwist();
-						break;
+					// case McTwist:
+					// 	updateMcTwist();
+					// 	break;
 						
 					case Rotate:
 						updateRotateDegrees();
@@ -107,7 +110,7 @@ public class Drive extends Subsystem implements PIDOutput {
 						break;
 						
 					case CameraHeadingControl:					
-						//updateCameraHeadingControl();
+						updateCameraHeadingControl();
 						break;
 						
 					default:
@@ -139,6 +142,7 @@ public class Drive extends Subsystem implements PIDOutput {
     }
     
     public void stopMotors(){
+		setOpenLoop();
     	_swerveDrive.setDrive(SwerveMode.crab, 0, 0);
     	_myHeadingPid.disable();
     }
@@ -290,19 +294,21 @@ public class Drive extends Subsystem implements PIDOutput {
     }
 	
     private void setupPID(double tolerance){
-    	Double myKp = prefs.getDouble("targetKp", Constants.kDriveTurnKp);
-    	Double myKi = prefs.getDouble("targetKi", Constants.kDriveTurnKi);
-    	Double myKd = prefs.getDouble("targetKd", Constants.kDriveTurnKd);
-    	Double myFF = prefs.getDouble("targetKf", Constants.kDriveTurnKf);
+    	Double myKp = Constants.kDriveTurnKp;
+    	Double myKi = Constants.kDriveTurnKi; //prefs.getDouble("targetKi", Constants.kDriveTurnKi);
+    	Double myKd = 0.0; //prefs.getDouble("targetKd", Constants.kDriveTurnKd);
+    	Double myFF = 0.02; //prefs.getDouble("targetKf", Constants.kDriveTurnKf);
     	
     	_myHeadingPid.setPID(myKp, myKi, myKd, myFF);
     	_myHeadingPid.setAbsoluteTolerance(tolerance);
     	_myHeadingPid.setOutputRange(-0.6, 0.6);
     	_myHeadingPid.reset();
-    	
+		
+		SmartDashboard.putData("myPid", _myHeadingPid);
+
     	_swerveDrive.resetDistance();
     	_srl.Reset();
-    	_swerveDrive.getGyro().reset();
+    	//_swerveDrive.getGyro().reset();
     }
     
     private synchronized void updateDegTurnHeadingControl(){
@@ -368,7 +374,50 @@ public class Drive extends Subsystem implements PIDOutput {
     		    		    	    		
     	}    	
     }
-    
+	
+	public synchronized void driveToTarget()
+	{
+		if(_myDriveState != DriveState.CameraHeadingControl)
+		{
+			_myDriveState = DriveState.CameraHeadingControl;
+			setupPID(0.5);
+			_myHeadingPid.setSetpoint(0.0);
+			_myHeadingPid.enable();
+			_myHeadingPid.setSetpoint(0.0);
+
+			updateCameraHeadingControl();
+		}
+	}
+
+	public synchronized void updateCameraHeadingControl()
+	{
+		if(_myDriveState == DriveState.CameraHeadingControl)
+		{
+			SmartDashboard.putData("myPid", _myHeadingPid);
+
+			double error = Math.abs(_myHeadingPid.getError());
+			if(error<1.0)
+			{
+				_myHeadingPid.disable();
+				stopMotors();
+			}
+
+			// drive left or right
+			double sign = Math.signum(_pidOutput);
+			double heading = 0.0;
+			if(sign >= 0)
+			{
+				heading = 270.0;
+			}
+			else
+			{
+				heading = 90.0;
+			}
+			
+			_swerveDrive.setDrive(SwerveMode.crab, Math.abs(_pidOutput), heading);
+		}
+	}
+
     public synchronized void updateRotateDegrees()
     {
     	if(_myDriveState == DriveState.Rotate)
@@ -460,34 +509,54 @@ public class Drive extends Subsystem implements PIDOutput {
     	}
     }
     
-    public void setupMcTwist(double forwardSpeedFps, double rotateRateFps)
-    {
-    	if(_myDriveState != DriveState.McTwist)
-    	{
-    		_myTargetSpeed = forwardSpeedFps;
-    		_myTurnRate = rotateRateFps;
+    // public void setupMcTwist(double forwardSpeedFps, double rotateRateFps)
+    // {
+	// 	if(_myDriveState != DriveState.McTwist)
+	
+    // 	{
+    // 		_myTargetSpeed = forwardSpeedFps;
+    // 		_myTurnRate = rotateRateFps;
     		
-    		_swerveDrive.resetDistance();
-    		_swerveDrive.getGyro().reset();
+    // 		_swerveDrive.resetDistance();
+    // 		_swerveDrive.getGyro().reset();
     		
-    		_myDriveState = DriveState.McTwist;
-    	}    	
-    }
+    // 		_myDriveState = DriveState.McTwist;
+    // 	}    	
+    // }
     
-    private void updateMcTwist()
-    {    	
-    	_swerveDrive.setDrive(SwerveMode.mcTwist, _myTargetSpeed, _myTurnRate);
-    }
+    // private void updateMcTwist()
+    // {    	
+    // 	_swerveDrive.setDrive(SwerveMode.mcTwist, _myTargetSpeed, _myTurnRate);
+    // }
 
 	@Override
 	public void pidWrite(double output) {
 		
 		_pidOutput = output;
+		SmartDashboard.putNumber("PIDOutput", output);
 	}
 	
 	public double getDistanceInches()
 	{
 		return _swerveDrive.getDistanceInches();
+	}
+
+	@Override
+	public void setPIDSourceType(PIDSourceType pidSource) {
+
+	}
+
+	@Override
+	public PIDSourceType getPIDSourceType() {
+		return PIDSourceType.kDisplacement;
+}
+
+	@Override
+	public double pidGet() {
+		double pidSource = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0);
+
+		SmartDashboard.putNumber("PIDSource", pidSource);
+		return pidSource;
 	}
 	
 }

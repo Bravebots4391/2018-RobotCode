@@ -19,6 +19,7 @@ import team4391.robot.commands.ArmPushOut;
 import team4391.robot.commands.CubevatorBumpDown;
 import team4391.robot.commands.CubevatorDefaultHeight;
 import team4391.robot.commands.DriveForDistance;
+import team4391.robot.commands.DriveToTarget;
 import team4391.robot.commands.FastArmPushOut;
 import team4391.robot.commands.LiftDown;
 import team4391.robot.commands.LiftUp;
@@ -68,9 +69,10 @@ public class OI {
     public static Joystick _xBoxCntrl2 = new Joystick(1);
 		
 	Button camera = new JoystickButton(_xBoxCntrl, 1);
+	Button driveToTarget = new JoystickButton(_xBoxCntrl, 4);
 
 	Button inny = new JoystickButton(_xBoxCntrl, 2);
-	Button outty = new JoystickButton(_xBoxCntrl, 4);
+	//Button outty = new JoystickButton(_xBoxCntrl, 4);
     //Button liftUp = new JoystickButton(_xBoxCntrl, 5);
     //Button liftDown= new JoystickButton(_xBoxCntrl, 6);
     Button fastoutty = new JoystickButton(_xBoxCntrl, 3);
@@ -94,6 +96,7 @@ public class OI {
 	public void init() {
 
 		camera.whenPressed(new ToggleCameraCmd());
+		driveToTarget.whenPressed(new DriveToTarget());
 
 		//IntakeCube.whenPressed(new team4391.robot.commands.IntakeCube());
 		//defaultheight.whenPressed(new CubevatorDefaultHeight());

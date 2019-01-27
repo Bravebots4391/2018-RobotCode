@@ -107,8 +107,8 @@ public class Constants {
 	public static final double kCubevatorFeederHeight = 26.5;
 	
     // PID gains for rotating in place
-    public static double kDriveTurnKp = 0.005;
-    public static double kDriveTurnKi = 0.0;
+    public static double kDriveTurnKp = 0.02;
+    public static double kDriveTurnKi = 0.001;
     public static double kDriveTurnKd = 0.0;
     public static double kDriveTurnKf = 0.0;
     public static double kDriveTurnAbsTollerance = 0.8;
