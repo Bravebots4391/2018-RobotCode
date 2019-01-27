@@ -173,7 +173,7 @@ public class Arm extends Subsystem {
 	 }
 
 	public void setWrist(double d) {
-		var cmd = d * 0.3;
+		var cmd = d * 1.0;
 		SmartDashboard.putNumber("Wrist", cmd);
 		_wristMotor.set(cmd);
 	}

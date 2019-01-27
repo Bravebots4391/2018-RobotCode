@@ -22,6 +22,7 @@ import team4391.robot.subsystems.Drive;
 import team4391.robot.subsystems.ExampleSubsystem;
 import team4391.robot.subsystems.LED;
 import team4391.robot.subsystems.Lift;
+import team4391.robot.subsystems.Limelight;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -40,6 +41,7 @@ public class Robot extends TimedRobot {
 	public static Arm armSubsystem;
 	public static Lift cubevatorSubsystem;
 	public static Climb climbSubsystem;
+	public static Limelight limelightSubsystem;
 	public static PowerDistributionPanel _pdpModule;
 	public static AutoLogic _autoLogic;
 	
@@ -69,6 +71,8 @@ public class Robot extends TimedRobot {
 		
 		armSubsystem = new Arm();
 		cubevatorSubsystem = new Lift();	
+		
+		limelightSubsystem = new Limelight();
 		
 		//_pdpModule = new PowerDistributionPanel(Constants.kPDP);
 		//SmartDashboard.putData("PDP", _pdpModule);

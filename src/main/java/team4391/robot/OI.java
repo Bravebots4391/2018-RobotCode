@@ -24,6 +24,7 @@ import team4391.robot.commands.LiftDown;
 import team4391.robot.commands.LiftUp;
 import team4391.robot.commands.McTwist180;
 import team4391.robot.commands.RotateDegrees;
+import team4391.robot.commands.ToggleCameraCmd;
 import team4391.robot.commands.WinchUp;
 import team4391.util.XboxControllerPOVButton;
 
@@ -65,13 +66,15 @@ public class OI {
 	
 	public static Joystick _xBoxCntrl = new Joystick(0);
     public static Joystick _xBoxCntrl2 = new Joystick(1);
-    	
+		
+	Button camera = new JoystickButton(_xBoxCntrl, 1);
+
 	Button inny = new JoystickButton(_xBoxCntrl, 2);
 	Button outty = new JoystickButton(_xBoxCntrl, 4);
     //Button liftUp = new JoystickButton(_xBoxCntrl, 5);
     //Button liftDown= new JoystickButton(_xBoxCntrl, 6);
     Button fastoutty = new JoystickButton(_xBoxCntrl, 3);
-    Button IntakeCube = new JoystickButton(_xBoxCntrl, 1);
+    //Button IntakeCube = new JoystickButton(_xBoxCntrl, 1);
     Button defaultheight = new JoystickButton(_xBoxCntrl, 7);
     
 	// Button inny2 = new JoystickButton(_xBoxCntrl2, 2);
@@ -89,7 +92,9 @@ public class OI {
     //Button mcTwist = new XboxControllerPOVButton(xb, 90);
     
 	public void init() {
-		
+
+		camera.whenPressed(new ToggleCameraCmd());
+
 		//IntakeCube.whenPressed(new team4391.robot.commands.IntakeCube());
 		//defaultheight.whenPressed(new CubevatorDefaultHeight());
 		//IntakeCube.whenPressed(new ArmPullIn());
