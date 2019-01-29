@@ -268,6 +268,7 @@ public class Drive extends Subsystem implements PIDOutput, PIDSource {
 				_swerveDrive.SetNeutralModeForDrive(NeutralMode.Coast);
 			}
 			
+			_swerveDrive.set_isFieldOriented(true);
             _swerveDrive.setDrive(SwerveMode.crab, 0, 0);
             
             _myDriveState = DriveState.OpenLoop;
@@ -385,6 +386,7 @@ public class Drive extends Subsystem implements PIDOutput, PIDSource {
 			_myHeadingPid.enable();
 			_myHeadingPid.setSetpoint(0.0);
 
+			_swerveDrive.set_isFieldOriented(false);
 			updateCameraHeadingControl();
 		}
 	}

@@ -32,6 +32,7 @@ public class SwerveDrive {
 	private SwerveMode _swerveMode;
 	private SwerveAndRotate _swerveAndRotate;
 	private boolean _isOkToRotate = false;
+	private boolean _isFieldOriented = false;
 	
 	public SwerveDrive(SwerveDriveMotorGroup motors, Gyro gyro)
 	{
@@ -52,6 +53,20 @@ public class SwerveDrive {
 		SmartDashboard.putData("pigeon", _gyro);
 	}
 	
+	/**
+	 * @return the _isFieldOriented
+	 */
+	public boolean is_isFieldOriented() {
+		return _isFieldOriented;
+	}
+
+	/**
+	 * @param _isFieldOriented the _isFieldOriented to set
+	 */
+	public void set_isFieldOriented(boolean _isFieldOriented) {
+		this._isFieldOriented = _isFieldOriented;
+	}
+
 	public void setUseSpeedCntrl(boolean isSpeedCntrl)
 	{
 		//_useSpeedControl = isSpeedCntrl;
@@ -80,15 +95,15 @@ public class SwerveDrive {
 			swerveAndTurn(pctSpeed, angle, 0.0);
 			break;
 			
-		case frontPivot:
-			_isTurning = true;
-			pivotTurn(pctSpeed);
-			break;
+		// case frontPivot:
+		// 	_isTurning = true;
+		// 	pivotTurn(pctSpeed);
+		// 	break;
 			
-		case rearPivot:
-			_isTurning = true;
-			pivotTurnReverse(pctSpeed);
-			break;
+		// case rearPivot:
+		// 	_isTurning = true;
+		// 	pivotTurnReverse(pctSpeed);
+		// 	break;
 			
 		case rotate:
 			if(!_isOkToRotate && getVelocity(_motorFR) < 0.5)
@@ -144,29 +159,32 @@ public class SwerveDrive {
 			//_gyro.reset();
 			break;
 			
-		case mcTwist:
-			mcTwist(pctSpeed, angle);
-			break;
+		// case mcTwist:
+		// 	mcTwist(pctSpeed, angle);
+		// 	break;
 			
 		}
 		
 		
 	}
-		
+
 	private void swerveAndTurn(double pctSpeed, double angle, double rotate) 
 	{
 		double myRotate = rotate;
-		double fieldAngle = angle;
+		double swerveAngle = angle;
 
 		if(DriverStation.getInstance().isAutonomous())// pctSpeed > 0 && rotate == 0.0)
 		{
 			myRotate = _gyro.getDriveCorrection();
 		}
 		
-		fieldAngle = angle - _gyro.getAngle() % 360;
-		SmartDashboard.putNumber("FieldAngle",fieldAngle);
+		if(_isFieldOriented)
+		{
+			swerveAngle = angle - _gyro.getAngle() % 360;
+			SmartDashboard.putNumber("FieldAngle",swerveAngle);
+		}
 
-		WheelPositionInfo wi = _swerveAndRotate.swerveAndTurn(fieldAngle, myRotate);
+		WheelPositionInfo wi = _swerveAndRotate.swerveAndTurn(swerveAngle, myRotate);
 		
 		SmartDashboard.putNumber("srFL", wi.getFlAngle());
 		
@@ -271,84 +289,84 @@ public class SwerveDrive {
 		_motorRL.set(ControlMode.PercentOutput, 0);
 	}
 	
-	public void pivotTurn(double speed)
-	{
-		setWheelAngle(0.0, _turnFl);
-		setWheelAngle(0.0, _turnFR);
+	// public void pivotTurn(double speed)
+	// {
+	// 	setWheelAngle(0.0, _turnFl);
+	// 	setWheelAngle(0.0, _turnFR);
 		
-		// command forward or backward on the wheels	
-		double rotateSpeed = Math.abs(speed);	
-		double hypot = Math.sqrt(Math.pow(Constants.Width, 2) + Math.pow(Constants.Length, 2));
-		double rotateShortWheel = (Constants.Width / hypot) * rotateSpeed;			
+	// 	// command forward or backward on the wheels	
+	// 	double rotateSpeed = Math.abs(speed);	
+	// 	double hypot = Math.sqrt(Math.pow(Constants.Width, 2) + Math.pow(Constants.Length, 2));
+	// 	double rotateShortWheel = (Constants.Width / hypot) * rotateSpeed;			
 		
-		_isTurning = true; // let the rest of the module know we are in a turn mode
+	// 	_isTurning = true; // let the rest of the module know we are in a turn mode
 		
-		//set all the wheels on the tangent
-		if(speed < 0)
-		{
-			setWheelAngle(90.0, _turnBl);
-			setWheelAngle(45.0, _turnBR);
+	// 	//set all the wheels on the tangent
+	// 	if(speed < 0)
+	// 	{
+	// 		setWheelAngle(90.0, _turnBl);
+	// 		setWheelAngle(45.0, _turnBR);
 			
-			_motorFL.set(ControlMode.PercentOutput, 0);
-			_motorFR.set(ControlMode.PercentOutput, rotateShortWheel);
-			_motorRL.set(ControlMode.PercentOutput, rotateShortWheel);
-			_motorRR.set(ControlMode.PercentOutput, rotateSpeed);
-		}
-		if(speed > 0)
-		{
-			setWheelAngle(315.0, _turnBl);
-			setWheelAngle(270.0, _turnBR);
+	// 		_motorFL.set(ControlMode.PercentOutput, 0);
+	// 		_motorFR.set(ControlMode.PercentOutput, rotateShortWheel);
+	// 		_motorRL.set(ControlMode.PercentOutput, rotateShortWheel);
+	// 		_motorRR.set(ControlMode.PercentOutput, rotateSpeed);
+	// 	}
+	// 	if(speed > 0)
+	// 	{
+	// 		setWheelAngle(315.0, _turnBl);
+	// 		setWheelAngle(270.0, _turnBR);
 			
-			_motorFL.set(ControlMode.PercentOutput, rotateShortWheel);
-			_motorFR.set(ControlMode.PercentOutput, 0);
-			_motorRL.set(ControlMode.PercentOutput, rotateSpeed);
-			_motorRR.set(ControlMode.PercentOutput, rotateShortWheel);
-		}					
-	}
+	// 		_motorFL.set(ControlMode.PercentOutput, rotateShortWheel);
+	// 		_motorFR.set(ControlMode.PercentOutput, 0);
+	// 		_motorRL.set(ControlMode.PercentOutput, rotateSpeed);
+	// 		_motorRR.set(ControlMode.PercentOutput, rotateShortWheel);
+	// 	}					
+	// }
 	
-	public void pivotTurnReverse(double speed)
-	{
-		setWheelAngle(180.0, _turnBl);
-		setWheelAngle(180.0, _turnBR);
+	// public void pivotTurnReverse(double speed)
+	// {
+	// 	setWheelAngle(180.0, _turnBl);
+	// 	setWheelAngle(180.0, _turnBR);
 		
-		// command forward or backward on the wheels	
-		double rotateSpeed = Math.abs(speed);
-		double hypot = Math.sqrt(Math.pow(Constants.Width, 2) + Math.pow(Constants.Length, 2));
-		double rotateShortWheel = (Constants.Width / hypot) * rotateSpeed;			
+	// 	// command forward or backward on the wheels	
+	// 	double rotateSpeed = Math.abs(speed);
+	// 	double hypot = Math.sqrt(Math.pow(Constants.Width, 2) + Math.pow(Constants.Length, 2));
+	// 	double rotateShortWheel = (Constants.Width / hypot) * rotateSpeed;			
 		
-		_isTurning = true; // let the rest of the module know we are in a turn mode
+	// 	_isTurning = true; // let the rest of the module know we are in a turn mode
 		
-		//set all the wheels on the tangent
-		if(speed < 0)
-		{
-			setWheelAngle(235, _turnFl);
-			setWheelAngle(270.0, _turnFR);
+	// 	//set all the wheels on the tangent
+	// 	if(speed < 0)
+	// 	{
+	// 		setWheelAngle(235, _turnFl);
+	// 		setWheelAngle(270.0, _turnFR);
 			
-			_motorFL.set(ControlMode.PercentOutput, rotateShortWheel);
-			_motorFR.set(ControlMode.PercentOutput, rotateSpeed);
-			_motorRL.set(ControlMode.PercentOutput, 0);
-			_motorRR.set(ControlMode.PercentOutput, rotateShortWheel);
-		}
-		if(speed > 0)
-		{
-			setWheelAngle(90.0, _turnFl);
-			setWheelAngle(135.0, _turnFR);
+	// 		_motorFL.set(ControlMode.PercentOutput, rotateShortWheel);
+	// 		_motorFR.set(ControlMode.PercentOutput, rotateSpeed);
+	// 		_motorRL.set(ControlMode.PercentOutput, 0);
+	// 		_motorRR.set(ControlMode.PercentOutput, rotateShortWheel);
+	// 	}
+	// 	if(speed > 0)
+	// 	{
+	// 		setWheelAngle(90.0, _turnFl);
+	// 		setWheelAngle(135.0, _turnFR);
 			
-			_motorFL.set(ControlMode.PercentOutput, rotateSpeed);
-			_motorFR.set(ControlMode.PercentOutput, rotateShortWheel);
-			_motorRL.set(ControlMode.PercentOutput, rotateShortWheel);
-			_motorRR.set(ControlMode.PercentOutput, 0);
-		}					
-	}	
+	// 		_motorFL.set(ControlMode.PercentOutput, rotateSpeed);
+	// 		_motorFR.set(ControlMode.PercentOutput, rotateShortWheel);
+	// 		_motorRL.set(ControlMode.PercentOutput, rotateShortWheel);
+	// 		_motorRR.set(ControlMode.PercentOutput, 0);
+	// 	}					
+	// }	
 
-	public void mcTwist(double forwardSpeedFps, double rotateRateFps) 
-	{			
-		// set all wheel positions to the negative of Heading		
-		double gyroHeading = _gyro.getAngle();
-		double wheelPos = 0.0 - gyroHeading;
+	// public void mcTwist(double forwardSpeedFps, double rotateRateFps) 
+	// {			
+	// 	// set all wheel positions to the negative of Heading		
+	// 	double gyroHeading = _gyro.getAngle();
+	// 	double wheelPos = 0.0 - gyroHeading;
 		
-		swerveAndTurn(forwardSpeedFps, wheelPos, rotateRateFps);				
-	}	
+	// 	swerveAndTurn(forwardSpeedFps, wheelPos, rotateRateFps);				
+	// }	
 	
 //	private void setAllWheelPositions(double targetAngle)
 //	{
