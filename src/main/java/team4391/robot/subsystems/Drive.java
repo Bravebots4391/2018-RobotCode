@@ -97,10 +97,6 @@ public class Drive extends Subsystem implements PIDOutput, PIDSource {
 						updateDriveForDistance();
 						break;
 						
-					// case McTwist:
-					// 	updateMcTwist();
-					// 	break;
-						
 					case Rotate:
 						updateRotateDegrees();
 						break;
@@ -211,14 +207,6 @@ public class Drive extends Subsystem implements PIDOutput, PIDSource {
 			if(DB(rX) && !isPivot) 
 			{
 				_swerveDrive.setDrive(SwerveMode.swerveAndTurn, pctSpeed, angle, rX);
-			}
-			else if(Y > 0 && DB(rX) && isPivot)
-			{
-				_swerveDrive.setDrive(SwerveMode.frontPivot, rX, 0);
-			}	
-			else if(Y < 0 && DB(rX) && isPivot)	
-			{
-				_swerveDrive.setDrive(SwerveMode.rearPivot, rX, 0);
 			}
 			else 
 			{			
@@ -510,26 +498,6 @@ public class Drive extends Subsystem implements PIDOutput, PIDSource {
     		_swerveDrive.setDrive(SwerveMode.crab, speed, _myTargetHeading);
     	}
     }
-    
-    // public void setupMcTwist(double forwardSpeedFps, double rotateRateFps)
-    // {
-	// 	if(_myDriveState != DriveState.McTwist)
-	
-    // 	{
-    // 		_myTargetSpeed = forwardSpeedFps;
-    // 		_myTurnRate = rotateRateFps;
-    		
-    // 		_swerveDrive.resetDistance();
-    // 		_swerveDrive.getGyro().reset();
-    		
-    // 		_myDriveState = DriveState.McTwist;
-    // 	}    	
-    // }
-    
-    // private void updateMcTwist()
-    // {    	
-    // 	_swerveDrive.setDrive(SwerveMode.mcTwist, _myTargetSpeed, _myTurnRate);
-    // }
 
 	@Override
 	public void pidWrite(double output) {
