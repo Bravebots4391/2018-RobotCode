@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class SwerveDrive {
 
 	public enum SwerveMode{
-		crab, frontPivot, rearPivot, rotate, stop, coast, mcTwist, swerveAndTurn, airBrakes
+		crab, rotate, stop, coast, swerveAndTurn, airBrakes
 	}
 	
 	private static WPI_TalonSRX _motorFR;

@@ -19,7 +19,6 @@ import team4391.loops.Looper;
 import team4391.robot.subsystems.Arm;
 import team4391.robot.subsystems.Climb;
 import team4391.robot.subsystems.Drive;
-import team4391.robot.subsystems.ExampleSubsystem;
 import team4391.robot.subsystems.LED;
 import team4391.robot.subsystems.Lift;
 import team4391.robot.subsystems.Limelight;
@@ -32,8 +31,6 @@ import team4391.robot.subsystems.Limelight;
  * project.
  */
 public class Robot extends TimedRobot {
-	public static final ExampleSubsystem kExampleSubsystem
-			= new ExampleSubsystem();
 	public static OI m_oi;
 	
 	public static LED ledSubsystem;
@@ -111,28 +108,6 @@ public class Robot extends TimedRobot {
         }        
         
         SmartDashboard.putData(Scheduler.getInstance());
-		
-		
-    //     CameraServer.getInstance().startAutomaticCapture();
-        
-	//       new Thread(() -> {
-	//       UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
-	//       camera.setResolution(320, 240);
-	//       //camera.setExposureAuto();
-	//       camera.setExposureManual(3);	      
-	      
-	//       CvSink cvSink = CameraServer.getInstance().getVideo();
-	//       CvSource outputStream = CameraServer.getInstance().putVideo("Blur", 320, 240);
-	      
-	//       Mat source = new Mat();
-	//       Mat output = new Mat();
-	      
-	//       while(true) {            	
-	//           cvSink.grabFrameNoTimeout(source);
-	//           Imgproc.cvtColor(source, output, Imgproc.COLOR_BGR2GRAY);
-	//           outputStream.putFrame(output);
-	//       }
-	//   }, "camera").start();
       
 	}
 
@@ -141,13 +116,9 @@ public class Robot extends TimedRobot {
 	    	driveSubsystem.updateDashboard();
 	    	armSubsystem.updateDashboard();
 	    	cubevatorSubsystem.updateDashboard();
-	    	climbSubsystem.updateDashboard();	    	
-
-//	    	SmartDashboard.putBoolean("cameraConnected", mVisionServer.isConnected());
-	    	
-	    	SmartDashboard.putNumber("Counter", _counter++);     	    	
-	        
-//	        SmartDashboard.putBoolean("CompressorEnabled", RobotMap.compressor.enabled());	            	    	
+	    	climbSubsystem.updateDashboard();	    		    	
+			SmartDashboard.putNumber("Counter", _counter++);     	    	
+			
 	    }
 
 	    public void stopAll() {
