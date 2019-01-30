@@ -12,14 +12,31 @@ import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
+import team4391.robot.Constants;
+import team4391.util.SyncronousRateLimiter;
 
 /**
  * Add your docs here.
  */
 public class VisionPIDBase implements PIDSource, PIDOutput {
 
-    PIDController _pid = new PIDController(0.010, 0, 0, this, this);
+    PIDController _pid;
+    SyncronousRateLimiter _srl;
+
     double _pidOutput = 0.0;
+    String _tableVariable = "";
+
+    public VisionPIDBase(String tableVariable)
+    {
+        _tableVariable = tableVariable;
+        Init();        
+    }
+
+    private void Init()
+    {
+        _pid = new PIDController(0.010, 0, 0, this, this);
+        _srl = new SyncronousRateLimiter(Constants.kLooperDt, 1.0 , 0);
+    }
 
     public double GetOutput()
     {
@@ -48,7 +65,7 @@ public class VisionPIDBase implements PIDSource, PIDOutput {
 
     @Override
     public double pidGet() {
-        double pidSource = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ta").getDouble(0);
+        double pidSource = NetworkTableInstance.getDefault().getTable("limelight").getEntry(_tableVariable).getDouble(0);
 		return pidSource;
 	}
 

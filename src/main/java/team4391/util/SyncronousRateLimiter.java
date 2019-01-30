@@ -32,6 +32,11 @@ public class SyncronousRateLimiter
 	public void Reset(){
 		_output=0.0;
 	}
+
+	public void Reset(double initialValue)
+	{
+		_output = initialValue;
+	}
 	
 	// comment
 	
