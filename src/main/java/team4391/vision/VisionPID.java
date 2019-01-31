@@ -7,6 +7,8 @@
 
 package team4391.vision;
 
+import edu.wpi.first.wpilibj.PIDOutput;
+import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import team4391.robot.Constants;
 import team4391.util.InterpolatingDouble;
@@ -16,16 +18,14 @@ import team4391.util.SyncronousRateLimiter;
 /**
  * Add your docs here.
  */
-public class VisionPID {
+public class VisionPID implements PIDOutput, PIDSource {
 
-    private VisionPIDBase _alignmentPID;
-    private VisionPIDBase _distancePID;
+    private VisionPIDBase _positionPID;
 
     public SyncronousRateLimiter _alignmentRate;
     public SyncronousRateLimiter _distanceRate;
 
-    private InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> _alignmentProfile;
-    private InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> _distanceProfile;
+    private InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> _positionProfile;
 
     public VisionPID()
     {
@@ -34,39 +34,32 @@ public class VisionPID {
 
     private void Init()
     {
-        _alignmentPID = new VisionPIDBase("tx");
-        _distancePID = new VisionPIDBase("ta");
+        _positionPID = new VisionPIDBase("tx");
+        //_distancePID = new VisionPIDBase("ta");
 
         _alignmentRate = new SyncronousRateLimiter(Constants.kLooperDt, 1.0 , 0);
         _distanceRate = new SyncronousRateLimiter(Constants.kLooperDt, 1.0, 0);
         
-        _alignmentProfile = new InterpolatingTreeMap<>();
-        _distanceProfile = new InterpolatingTreeMap<>();
+        _positionProfile = new InterpolatingTreeMap<>();
 
         // Setup PID parameters
-        _alignmentPID.getPid().setOutputRange(-0.5, 0.5);
-        _distancePID.getPid().setOutputRange(-0.5, 0.5);
+        _positionPID.getPid().setOutputRange(-0.5, 0.5);
 
-        _alignmentPID.getPid().setPID(0.01, 0.001, 0.0, 0.0);
-    	_alignmentPID.getPid().setAbsoluteTolerance(0.2);
-    	_alignmentPID.getPid().setOutputRange(-0.6, 0.6);
-    	_alignmentPID.getPid().reset();
+        _positionPID.getPid().setPID(0.01, 0.001, 0.0, 0.0);
+    	_positionPID.getPid().setAbsoluteTolerance(0.2);
+    	_positionPID.getPid().setOutputRange(-0.6, 0.6);
+    	_positionPID.getPid().reset();
 
         //
         // Setup Mapping Profiles
         //
         // degrees per second update based on degrees from target.
-        _alignmentProfile.put(new InterpolatingDouble(10.0), new InterpolatingDouble(-1.0));
-        _alignmentProfile.put(new InterpolatingDouble(5.0), new InterpolatingDouble(-0.5));
-        _alignmentProfile.put(new InterpolatingDouble(2.0), new InterpolatingDouble(-0.3));
-        _alignmentProfile.put(new InterpolatingDouble(-2.0), new InterpolatingDouble(0.3));
-        _alignmentProfile.put(new InterpolatingDouble(-5.0), new InterpolatingDouble(0.5));
-        _alignmentProfile.put(new InterpolatingDouble(-10.0), new InterpolatingDouble(1.0));
-
-        // % area per second update based on distance
-        _distanceProfile.put(new InterpolatingDouble(0.2), new InterpolatingDouble(1.0));
-        _distanceProfile.put(new InterpolatingDouble(2.0), new InterpolatingDouble(0.5));
-        _distanceProfile.put(new InterpolatingDouble(4.0), new InterpolatingDouble(0.1));
+        _positionProfile.put(new InterpolatingDouble(10.0), new InterpolatingDouble(-1.0));
+        _positionProfile.put(new InterpolatingDouble(5.0), new InterpolatingDouble(-0.5));
+        _positionProfile.put(new InterpolatingDouble(2.0), new InterpolatingDouble(-0.3));
+        _positionProfile.put(new InterpolatingDouble(-2.0), new InterpolatingDouble(0.3));
+        _positionProfile.put(new InterpolatingDouble(-5.0), new InterpolatingDouble(0.5));
+        _positionProfile.put(new InterpolatingDouble(-10.0), new InterpolatingDouble(1.0));
     }
 
     public void Update()
@@ -74,12 +67,11 @@ public class VisionPID {
         UpdateDashboard();
 
         // Get our current distance from the target        
-        double x = _alignmentPID.pidGet();
-        double y = _distancePID.pidGet();
+        double x = _positionPID.pidGet();
 
         // Map Speed based on how far away we are            
-        double xInterp = _alignmentProfile.getInterpolated(new InterpolatingDouble(x)).value;
-        double yInterp = _alignmentProfile.getInterpolated(new InterpolatingDouble(y)).value;
+        double xInterp = _positionProfile.getInterpolated(new InterpolatingDouble(x)).value;
+        double yInterp = _positionProfile.getInterpolated(new InterpolatingDouble(y)).value;
 
         _alignmentRate.SetOutputRate(xInterp);
         _distanceRate.SetOutputRate(yInterp);
@@ -88,15 +80,13 @@ public class VisionPID {
         _distanceRate.update();
 
         // Update PID with rate limited input
-        _alignmentPID.getPid().setSetpoint(_alignmentRate.getOutput());
-        _distancePID.getPid().setSetpoint(_distanceRate.getOutput());
+        _positionPID.getPid().setSetpoint(_alignmentRate.getOutput());
     }
 
     public VisionPIDData GetOutput()
     {
             // Get the outputs from each PID
-            double alignmentOutput = _alignmentPID.GetOutput();
-            double distanceOutput = _distancePID.GetOutput();
+            double alignmentOutput = _positionPID.GetOutput();
                         
             // Sum up the PID data to get a vector for the robot.
             var magnitude = Math.sqrt(Math.pow(alignmentOutput, 2) + Math.pow(distanceOutput, 2));
@@ -118,25 +108,22 @@ public class VisionPID {
 			}
 
 
-        return new VisionPIDData(heading, speed);
+        return new VisionPIDData(heading, speed); 
     }
 
     public void Enable()
     {
         // update the initial values for the rate limiters
         // with the current target position. 
-        _alignmentRate.Reset(_alignmentPID.pidGet());
-        _distanceRate.Reset(_distancePID.pidGet());
+        _alignmentRate.Reset(_positionPID.pidGet());
 
         // Enable the PIDs
-        _alignmentPID.enable();
-        _distancePID.enable();
+        _positionPID.enable();
     }
 
     public void Disable()
     {
-        _alignmentPID.disable();
-        _distancePID.disable();
+        _positionPID.disable();
 
         _alignmentRate.Reset();
         _distanceRate.Reset();
@@ -149,7 +136,6 @@ public class VisionPID {
     
     private void UpdateDashboard()
     {
-        SmartDashboard.putData("alignmentPID", _alignmentPID.getPid());	
-        SmartDashboard.putData("distancePID", _distancePID.getPid());
+        SmartDashboard.putData("alignmentPID", _positionPID.getPid());	
     }
 }
