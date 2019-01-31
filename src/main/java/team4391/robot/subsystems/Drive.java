@@ -9,6 +9,7 @@ import team4391.util.InterpolatingTreeMap;
 import team4391.util.MaxSonar_MB1033;
 import team4391.util.MaxSonar_MB1200;
 import team4391.util.SyncronousRateLimiter;
+import team4391.vision.VisionPID;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
@@ -56,7 +57,9 @@ public class Drive extends Subsystem implements PIDOutput, PIDSource {
 	public final PIDController _myHeadingPid = new PIDController(0.010, 0, 0, this, this);
     public SyncronousRateLimiter _srl = new SyncronousRateLimiter(Constants.kLooperDt, 1.0 , 0);
     public SyncronousRateLimiter _accelRateLimiter = new SyncronousRateLimiter(Constants.kLooperDt, 1.0, 0);
-    
+	
+	public VisionPID _myVisionPID = new VisionPID();
+
     private InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> _distanceSpeedProfile = new InterpolatingTreeMap<>();
     	
 	public enum DriveState {
@@ -369,10 +372,12 @@ public class Drive extends Subsystem implements PIDOutput, PIDSource {
 		if(_myDriveState != DriveState.CameraHeadingControl)
 		{
 			_myDriveState = DriveState.CameraHeadingControl;
-			setupPID(0.5);
-			_myHeadingPid.setSetpoint(0.0);
-			_myHeadingPid.enable();
-			_myHeadingPid.setSetpoint(0.0);
+			_myVisionPID.Reset();
+			
+			// setupPID(0.5);
+			// _myHeadingPid.setSetpoint(0.0);
+			// _myHeadingPid.enable();
+			// _myHeadingPid.setSetpoint(0.0);
 
 			_swerveDrive.set_isFieldOriented(false);
 			updateCameraHeadingControl();
@@ -383,28 +388,12 @@ public class Drive extends Subsystem implements PIDOutput, PIDSource {
 	{
 		if(_myDriveState == DriveState.CameraHeadingControl)
 		{
-			SmartDashboard.putData("myPid", _myHeadingPid);
+			_myVisionPID.Update();
 
-			double error = Math.abs(_myHeadingPid.getError());
-			if(error<1.0)
-			{
-				_myHeadingPid.disable();
-				stopMotors();
-			}
-
-			// drive left or right
-			double sign = Math.signum(_pidOutput);
-			double heading = 0.0;
-			if(sign >= 0)
-			{
-				heading = 270.0;
-			}
-			else
-			{
-				heading = 90.0;
-			}
+			SmartDashboard.putData("myPid", _myHeadingPid);			
+			var data = _myVisionPID.GetOutput();
 			
-			_swerveDrive.setDrive(SwerveMode.crab, Math.abs(_pidOutput), heading);
+			_swerveDrive.setDrive(SwerveMode.crab, data.GetSpeed(), data.GetHeading());
 		}
 	}
 

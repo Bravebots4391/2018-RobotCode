@@ -7,7 +7,7 @@
 
 package team4391.vision;
 
-import team4391.loops.Loop;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import team4391.robot.Constants;
 import team4391.util.InterpolatingDouble;
 import team4391.util.InterpolatingTreeMap;
@@ -71,6 +71,8 @@ public class VisionPID {
 
     public void Update()
     {
+        UpdateDashboard();
+
         // Get our current distance from the target        
         double x = _alignmentPID.pidGet();
         double y = _distancePID.pidGet();
@@ -100,8 +102,7 @@ public class VisionPID {
             var magnitude = Math.sqrt(Math.pow(alignmentOutput, 2) + Math.pow(distanceOutput, 2));
 
             // Get heading
-            var heading = Math.tanh(distanceOutput / alignmentOutput);                        
-
+            var heading = Math.atan(distanceOutput / alignmentOutput);
 
         	// drive left or right
 			double sign = Math.signum(alignmentOutput);
@@ -139,5 +140,16 @@ public class VisionPID {
 
         _alignmentRate.Reset();
         _distanceRate.Reset();
+    }
+
+	public void Reset() {
+        Disable();
+
+    }
+    
+    private void UpdateDashboard()
+    {
+        SmartDashboard.putData("alignmentPID", _alignmentPID.getPid());	
+        SmartDashboard.putData("distancePID", _distancePID.getPid());
     }
 }
