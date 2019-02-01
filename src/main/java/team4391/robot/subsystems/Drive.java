@@ -29,7 +29,7 @@ import team4391.robot.Robot;
 import team4391.robot.commands.TeleopDrive;
 
 
-public class Drive extends Subsystem implements PIDOutput, PIDSource {
+public class Drive extends Subsystem implements PIDOutput {
 	
 	private SwerveDrive _swerveDrive;
 	private double _pidOutput;
@@ -54,11 +54,13 @@ public class Drive extends Subsystem implements PIDOutput, PIDSource {
 	MaxSonar_MB1200 _sonarLeft = new MaxSonar_MB1200(1);
 	MaxSonar_MB1033 _sonarRight = new MaxSonar_MB1033(0);
 	
-	public final PIDController _myHeadingPid = new PIDController(0.010, 0, 0, this, this);
+	public final PIDController _myHeadingPid = new PIDController(0.010, 0.0, 0.0, _gyro, this);
     public SyncronousRateLimiter _srl = new SyncronousRateLimiter(Constants.kLooperDt, 1.0 , 0);
     public SyncronousRateLimiter _accelRateLimiter = new SyncronousRateLimiter(Constants.kLooperDt, 1.0, 0);
 	
-	public VisionPID _myVisionPID = new VisionPID();
+	public double _avgSpeed;
+
+	public VisionPID _myVisionPID = new VisionPID(this);
 
     private InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> _distanceSpeedProfile = new InterpolatingTreeMap<>();
     	
@@ -76,8 +78,8 @@ public class Drive extends Subsystem implements PIDOutput, PIDSource {
 		_swerveDrive = new SwerveDrive(sdmg, _gyro);
 	}
 	
-	private final Loop mLoop = new Loop() {
-		 
+	private final Loop mLoop = new Loop() {		 		
+
 		@Override
 		public void onStart() {
 			setOpenLoop();			
@@ -119,6 +121,7 @@ public class Drive extends Subsystem implements PIDOutput, PIDSource {
 					
 			//updateDistanceCheck();		
 			//putTargetHeadingOnDashboard();	
+			_avgSpeed = _swerveDrive.getAvgSpeedFtPerSecond();
 				
 			}
 		}
@@ -373,11 +376,6 @@ public class Drive extends Subsystem implements PIDOutput, PIDSource {
 		{
 			_myDriveState = DriveState.CameraHeadingControl;
 			_myVisionPID.Reset();
-			
-			// setupPID(0.5);
-			// _myHeadingPid.setSetpoint(0.0);
-			// _myHeadingPid.enable();
-			// _myHeadingPid.setSetpoint(0.0);
 
 			_swerveDrive.set_isFieldOriented(false);
 			updateCameraHeadingControl();
@@ -498,24 +496,6 @@ public class Drive extends Subsystem implements PIDOutput, PIDSource {
 	public double getDistanceInches()
 	{
 		return _swerveDrive.getDistanceInches();
-	}
-
-	@Override
-	public void setPIDSourceType(PIDSourceType pidSource) {
-
-	}
-
-	@Override
-	public PIDSourceType getPIDSourceType() {
-		return PIDSourceType.kDisplacement;
-}
-
-	@Override
-	public double pidGet() {
-		double pidSource = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0);
-
-		SmartDashboard.putNumber("PIDSource", pidSource);
-		return pidSource;
 	}
 	
 }
