@@ -378,6 +378,7 @@ public class Drive extends Subsystem implements PIDOutput {
 			_myVisionPID.Reset();
 
 			_swerveDrive.set_isFieldOriented(false);
+			_myVisionPID.Enable();
 			updateCameraHeadingControl();
 		}
 	}
@@ -386,11 +387,15 @@ public class Drive extends Subsystem implements PIDOutput {
 	{
 		if(_myDriveState == DriveState.CameraHeadingControl)
 		{
-			_myVisionPID.Update();
-
-			SmartDashboard.putData("myPid", _myHeadingPid);			
+			_myVisionPID.Update();			
 			var data = _myVisionPID.GetOutput();
 			
+			if(_myVisionPID.GetDistance() <= 2.0)
+			{
+				setOpenLoop();
+				return;
+			}
+
 			_swerveDrive.setDrive(SwerveMode.crab, data.GetSpeed(), data.GetHeading());
 		}
 	}

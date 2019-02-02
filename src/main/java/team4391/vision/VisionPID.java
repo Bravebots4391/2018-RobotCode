@@ -28,14 +28,19 @@ public class VisionPID implements PIDOutput, PIDSource {
 
     public SyncronousRateLimiter _speedRate;
     private InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> _speedProfile;
+    private InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> _areaToDistance;
     private VisionPIDData _output;
 
     private String _xOffsetVar = "tx";
     private String _areaVar = "ta";
 
-    private double _alignmentBias = 2.0;
+    private double _alignmentBias = 1.0;
     private double _pidOutput;
     private Drive _sd;
+
+    private Double _distance;
+
+    static int _counter = 0;
 
     public VisionPID(Drive sd)
     {
@@ -50,12 +55,13 @@ public class VisionPID implements PIDOutput, PIDSource {
         _speedRate = new SyncronousRateLimiter(Constants.kLooperDt, 1.0 , 0);
         
         _speedProfile = new InterpolatingTreeMap<>();
+        _areaToDistance = new InterpolatingTreeMap<>();
 
         // Setup PID parameters
         _pid.setOutputRange(-0.5, 0.5);
 
-        _pid.setPID(0.01, 0.001, 0.0, 0.0);
-    	_pid.setAbsoluteTolerance(0.2);
+        _pid.setPID(0.1, 0.01, 0.0, 0.0);
+    	_pid.setAbsoluteTolerance(0.1);
     	_pid.setOutputRange(-0.6, 0.6);
     	_pid.reset();
 
@@ -64,12 +70,24 @@ public class VisionPID implements PIDOutput, PIDSource {
         //
         // degrees per second update based on degrees from target.
         _speedProfile.put(new InterpolatingDouble(10.0), new InterpolatingDouble(1.0));
-        _speedProfile.put(new InterpolatingDouble(5.0), new InterpolatingDouble(0.5));
-        _speedProfile.put(new InterpolatingDouble(2.0), new InterpolatingDouble(0.2));
+        _speedProfile.put(new InterpolatingDouble(5.0), new InterpolatingDouble(0.6));
+        _speedProfile.put(new InterpolatingDouble(2.0), new InterpolatingDouble(0.1));
+
+        _areaToDistance.put(new InterpolatingDouble(6.67), new InterpolatingDouble(1.0));
+        _areaToDistance.put(new InterpolatingDouble(3.78), new InterpolatingDouble(2.0));
+        _areaToDistance.put(new InterpolatingDouble(2.37), new InterpolatingDouble(3.0));
+        _areaToDistance.put(new InterpolatingDouble(1.63), new InterpolatingDouble(4.0));
+        _areaToDistance.put(new InterpolatingDouble(1.19), new InterpolatingDouble(5.0));
+        _areaToDistance.put(new InterpolatingDouble(1.0), new InterpolatingDouble(6.0));
+        _areaToDistance.put(new InterpolatingDouble(0.76), new InterpolatingDouble(7.0));
+        _areaToDistance.put(new InterpolatingDouble(0.67), new InterpolatingDouble(8.0));
+
     }
 
     public void Update()
     {
+        _counter++;
+
         UpdateDashboard();
 
         // get xOffset (degrees xOffset from Target)
@@ -78,27 +96,41 @@ public class VisionPID implements PIDOutput, PIDSource {
         // get area (area of target)
         var area = NetworkTableInstance.getDefault().getTable("limelight").getEntry(_areaVar).getDouble(0);
         // convert area data from camera to a distance
-        var distance = area;
+        _distance = _areaToDistance.getInterpolated(new InterpolatingDouble(area)).value;
 
         // Get our heading based on x and distance vector 
-        var heading = Math.atan((distance * _alignmentBias)/ xOffset);
+        var heading = Math.atan((xOffset * _alignmentBias)/ _distance ) * (180/Math.PI);
 
         // Determine magnitude of summed vector
-        var distanceVector = Math.sqrt(Math.pow(xOffset, 2) + Math.pow(distance, 2));
+        var distanceVector = Math.sqrt(Math.pow(xOffset, 2) + Math.pow(_distance, 2));
 
         // Determine our rate of speed change based on the magnitude of the distance vector.  
         // Unless in speed control, this is really a percent speed value. 
-        double speedRate = _speedProfile.getInterpolated(new InterpolatingDouble(distanceVector)).value;
+        double speedRate = _speedProfile.getInterpolated(new InterpolatingDouble(_distance)).value;
 
         // Rate Limit Speed
         _speedRate.SetOutputRate(speedRate);
         _speedRate.update();
+        var speedR = _speedRate.getOutput();
 
         // Update PID with rate limited input
-        _pid.setSetpoint(_speedRate.getOutput());
+        _pid.setSetpoint(speedR);
 
         // get the pid output....this will be our speed
         _output = new VisionPIDData(heading, _pidOutput); 
+
+        SmartDashboard.putNumber("xxCount", _counter);
+        SmartDashboard.putNumber("speedR", speedR);
+        SmartDashboard.putNumber("xxDistance", _distance);
+        SmartDashboard.putNumber("xxHeading", heading);
+        SmartDashboard.putNumber("xxDistanceVector", distanceVector);
+        SmartDashboard.putNumber("xxSpeedRate", speedRate);
+        SmartDashboard.putNumber("xxOutput", _pidOutput);
+    }
+
+    public double GetDistance()
+    {
+        return _distance;
     }
 
     public VisionPIDData GetOutput()
@@ -111,7 +143,7 @@ public class VisionPID implements PIDOutput, PIDSource {
         // update the initial values for the rate limiters
         // with the current target position. 
         _speedRate.Reset();
-
+        _pid.reset();
         // Enable the PID
         _pid.enable();
     }
@@ -152,4 +184,5 @@ public class VisionPID implements PIDOutput, PIDSource {
     public void pidWrite(double output) {
         _pidOutput = output;
 	}
+
 }
